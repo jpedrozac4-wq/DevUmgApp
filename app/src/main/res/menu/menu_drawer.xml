@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_inicio"
+        android:title="@string/nav_inicio" />
+    <item
+        android:id="@+id/nav_estudiantes"
+        android:title="@string/nav_estudiantes" />
+    <item
+        android:id="@+id/nav_docentes"
+        android:title="@string/nav_docentes" />
+    <item
+        android:id="@+id/nav_carreras"
+        android:title="@string/nav_carreras" />
+    <item
+        android:id="@+id/nav_cursos"
+        android:title="@string/nav_cursos" />
+    <item
+        android:id="@+id/nav_inscripciones"
+        android:title="@string/nav_inscripciones" />
+    <item
+        android:id="@+id/nav_colegiaturas"
+        android:title="@string/nav_colegiaturas" />
+    <item
+        android:id="@+id/nav_notas"
+        android:title="@string/nav_notas" />
+    <item
+        android:id="@+id/nav_usuarios"
+        android:title="@string/nav_usuarios" />
+    <item
+        android:id="@+id/nav_logout"
+        android:title="@string/nav_logout" />
+
+</menu>

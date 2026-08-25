@@ -1,6 +1,7 @@
 *.iml
 .gradle
 .atl/
+/guias
 /local.properties
 /.idea/caches
 /.idea/libraries

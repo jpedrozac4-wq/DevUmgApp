@@ -1,0 +1,106 @@
+package gt.com.ro.devumgapp.core.session;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import gt.com.ro.devumgapp.App;
+import gt.com.ro.devumgapp.auth.dto.LoginResponse;
+
+/**
+ * Singleton wrapper over SharedPreferences that holds the current
+ * authenticated session. The password is NEVER stored.
+ */
+public class SessionManager {
+
+    private static final String PREF_NAME = "user_session";
+
+    private static final String KEY_AUTH_TOKEN = "auth_token";
+    private static final String KEY_IS_LOGGED_IN = "is_logged_in";
+    private static final String KEY_USUARIO_ID = "usuario_id";
+    private static final String KEY_USERNAME = "username";
+    private static final String KEY_NOMBRE = "nombre";
+    private static final String KEY_APELLIDO = "apellido";
+    private static final String KEY_ROLES = "roles";
+    private static final String KEY_REMEMBERED_USERNAME = "remembered_username";
+
+    private static SessionManager instance;
+
+    private final SharedPreferences prefs;
+
+    private SessionManager(Context context) {
+        prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static synchronized SessionManager getInstance() {
+        if (instance == null) {
+            instance = new SessionManager(App.getContext());
+        }
+        return instance;
+    }
+
+    /** Persists every session field returned by the backend. Password is not part of the response and is never stored. */
+    public void saveSession(LoginResponse response) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_AUTH_TOKEN, response.accessToken);
+        editor.putBoolean(KEY_IS_LOGGED_IN, true);
+        editor.putLong(KEY_USUARIO_ID, response.usuarioId);
+        editor.putString(KEY_USERNAME, response.username);
+        editor.putString(KEY_NOMBRE, response.nombre);
+        editor.putString(KEY_APELLIDO, response.apellido);
+        editor.putStringSet(KEY_ROLES, new HashSet<>(
+                response.roles != null ? response.roles : new HashSet<>()));
+        editor.apply();
+    }
+
+    /** Closes the session. The remembered username (if any) survives for the next login. */
+    public void logout() {
+        prefs.edit()
+                .remove(KEY_AUTH_TOKEN)
+                .remove(KEY_IS_LOGGED_IN)
+                .remove(KEY_USUARIO_ID)
+                .remove(KEY_USERNAME)
+                .remove(KEY_NOMBRE)
+                .remove(KEY_APELLIDO)
+                .remove(KEY_ROLES)
+                .apply();
+    }
+
+    /** Stores the username for pre-fill when the user chose "remember me" on login. Never the password. */
+    public void rememberUsername(String username) {
+        prefs.edit().putString(KEY_REMEMBERED_USERNAME, username).apply();
+    }
+
+    public String getRememberedUsername() {
+        return prefs.getString(KEY_REMEMBERED_USERNAME, "");
+    }
+
+    public void clearRememberedUsername() {
+        prefs.edit().remove(KEY_REMEMBERED_USERNAME).apply();
+    }
+
+    public boolean isLoggedIn() {
+        return prefs.getBoolean(KEY_IS_LOGGED_IN, false);
+    }
+
+    public String getToken() {
+        return prefs.getString(KEY_AUTH_TOKEN, "");
+    }
+
+    public String getUsername() {
+        return prefs.getString(KEY_USERNAME, "");
+    }
+
+    /** Returns "nombre apellido" of the logged user. */
+    public String getNombreCompleto() {
+        String nombre = prefs.getString(KEY_NOMBRE, "");
+        String apellido = prefs.getString(KEY_APELLIDO, "");
+        return nombre.trim() + " " + apellido.trim();
+    }
+
+    public Set<String> getRoles() {
+        return prefs.getStringSet(KEY_ROLES, new HashSet<>());
+    }
+}
