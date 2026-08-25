@@ -13,13 +13,34 @@
 
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
 
+    <!-- Errores de login -->
+    <string name="error_empty_fields">Todos los campos son obligatorios</string>
+    <string name="error_invalid_credentials">Credenciales invalidas</string>
+    <string name="error_invalid_data">Datos invalidos</string>
+    <string name="error_server">Error del servidor</string>
+    <string name="error_network">No se pudo conectar con el servidor. Revisa tu conexión.</string>
+
+    <!-- Menú lateral -->
+    <string name="nav_inicio">Inicio</string>
+    <string name="nav_estudiantes">Estudiantes</string>
+    <string name="nav_docentes">Docentes</string>
+    <string name="nav_carreras">Carreras</string>
+    <string name="nav_cursos">Cursos</string>
+    <string name="nav_inscripciones">Inscripciones</string>
+    <string name="nav_colegiaturas">Colegiaturas</string>
+    <string name="nav_notas">Notas</string>
+    <string name="nav_usuarios">Usuarios</string>
+    <string name="nav_logout">Cerrar sesión</string>
+    <string name="module_under_construction">Módulo de %1$s en construcción</string>
+    <string name="nav_open_drawer">Abrir menú</string>
+    <string name="nav_close_drawer">Cerrar menú</string>
+
     <!-- Accesibilidad -->
     <string name="logo_description">Logo de la App</string>
     <string name="show_password">Mostrar contraseña</string>
     <string name="hide_password">Ocultar contraseña</string>
 
     <!-- Footer -->
-    <string name="app_version">v1.0.0</string>
     <string name="copyright">© 2026 UmgDev. Todos los derechos reservados.</string>
 
 </resources>

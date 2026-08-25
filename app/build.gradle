@@ -18,6 +18,11 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // REST backend configuration
+        buildConfigField "String", "BASE_URL", "\"https://api-sgau-backend-746899482768.us-central1.run.app/\""
+        // Display version dynamically from versionName (guide pattern)
+        resValue "string", "app_version", "\"Versión ${versionName}\""
     }
 
     buildTypes {
@@ -31,6 +36,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+    buildFeatures {
+        resValues = true
+        buildConfig = true
+    }
 }
 
 dependencies {
@@ -39,6 +48,10 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.material
     implementation libs.cardview
+    implementation libs.retrofit
+    implementation libs.converter.gson
+    implementation libs.okhttp
+    implementation libs.logging.interceptor
     testImplementation libs.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit

@@ -29,6 +29,9 @@
     <color name="logo_border">#4DFFFFFF</color>
     <color name="divider_color">#1AFFFFFF</color>
 
+    <!-- Checkbox marcado -->
+    <color name="checkbox_green">#00C853</color>
+
     <!-- Legacy / Nexus (Fixed for themes) -->
     <color name="nexus_blue_dark">#021B3D</color>
     <color name="nexus_blue_light">#00CCFF</color>

@@ -4,16 +4,18 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <solid android:color="@color/btn_cyan" />
+                    <solid android:color="@color/checkbox_green" />
                     <corners android:radius="4dp" />
+                    <!-- Fixed: checked state must declare its own size or it collapses to 0x0 -->
+                    <size android:width="20dp" android:height="20dp" />
                 </shape>
             </item>
-            <!-- Checkmark simplified -->
-            <item android:top="4dp" android:bottom="4dp" android:left="4dp" android:right="4dp">
-                 <shape android:shape="rectangle">
-                    <solid android:color="@color/white" />
-                 </shape>
-            </item>
+            <item
+                android:top="3dp"
+                android:bottom="3dp"
+                android:left="3dp"
+                android:right="3dp"
+                android:drawable="@drawable/ic_check_white" />
         </layer-list>
     </item>
     <item>
