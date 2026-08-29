@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <gradient
-        android:angle="135"
-        android:endColor="#021B3D"
-        android:startColor="#0A3E85"
-        android:type="linear" />
+    <solid android:color="@color/login_background" />
 </shape>

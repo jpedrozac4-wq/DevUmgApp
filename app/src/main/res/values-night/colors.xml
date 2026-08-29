@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="login_background">#F7FBFF</color>
+    <color name="login_primary">#38BDF8</color>
+    <color name="login_primary_dark">#4F46E5</color>
+    <color name="login_primary_light">#DBEAFE</color>
+    <color name="login_text">#111111</color>
+    <color name="login_secondary_text">#666666</color>
+    <color name="login_field_line">#60A5FA</color>
+    <color name="login_error">#B3261E</color>
+    <color name="login_muted_line">#BFDBFE</color>
+    <color name="login_gradient_start">#67E8F9</color>
+    <color name="login_gradient_center">#38BDF8</color>
+    <color name="login_gradient_end">#6366F1</color>
+</resources>
