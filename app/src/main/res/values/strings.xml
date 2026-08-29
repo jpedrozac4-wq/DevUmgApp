@@ -1,26 +1,32 @@
 <resources>
-    <string name="app_name">DevUmgApp</string>
+    <string name="app_name">SGAU</string>
+
     <!-- Login -->
-    <string name="app_title">DEVUMGAPP</string>
-    <string name="app_subtitle">SISTEMA DE GESTIÓN</string>
+    <string name="app_title">SGAU</string>
+    <string name="app_subtitle">Sistema de Gesti&#243;n Acad&#233;mica Universitaria</string>
+    <string name="login_title">Iniciar sesi&#243;n</string>
+    <string name="login_welcome">Accede al Sistema de Gesti&#243;n Acad&#233;mica Universitaria</string>
 
     <string name="username_hint">Usuario</string>
-    <string name="password_hint">Contraseña</string>
-
-    <string name="remember_me">Recuérdame</string>
-
-    <string name="login">INICIAR SESIÓN</string>
-
-    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="password_hint">Contrase&#241;a</string>
+    <string name="remember_me">Recordar sesi&#243;n</string>
+    <string name="login">INICIAR SESI&#211;N</string>
+    <string name="login_loading">Validando...</string>
+    <string name="forgot_password">&#191;Olvidaste tu contrase&#241;a?</string>
 
     <!-- Errores de login -->
-    <string name="error_empty_fields">Todos los campos son obligatorios</string>
-    <string name="error_invalid_credentials">Credenciales invalidas</string>
-    <string name="error_invalid_data">Datos invalidos</string>
-    <string name="error_server">Error del servidor</string>
-    <string name="error_network">No se pudo conectar con el servidor. Revisa tu conexión.</string>
+    <string name="error_empty_fields">Completa los campos obligatorios.</string>
+    <string name="error_username_required">Ingresa tu usuario.</string>
+    <string name="error_password_required">Ingresa tu contrase&#241;a.</string>
+    <string name="error_invalid_credentials">El usuario o la contrase&#241;a son incorrectos.</string>
+    <string name="error_invalid_data">Revisa los datos ingresados e int&#233;ntalo nuevamente.</string>
+    <string name="error_endpoint_not_found">No fue posible encontrar el servicio de autenticaci&#243;n.</string>
+    <string name="error_server">No fue posible conectar con el servidor. Int&#233;ntalo nuevamente.</string>
+    <string name="error_timeout">El servidor tard&#243; demasiado en responder. Int&#233;ntalo nuevamente.</string>
+    <string name="error_no_internet">Verifica tu conexi&#243;n a Internet.</string>
+    <string name="error_network">No fue posible conectar con el servidor. Int&#233;ntalo nuevamente.</string>
 
-    <!-- Menú lateral -->
+    <!-- Menu lateral -->
     <string name="nav_inicio">Inicio</string>
     <string name="nav_estudiantes">Estudiantes</string>
     <string name="nav_docentes">Docentes</string>
@@ -30,17 +36,46 @@
     <string name="nav_colegiaturas">Colegiaturas</string>
     <string name="nav_notas">Notas</string>
     <string name="nav_usuarios">Usuarios</string>
-    <string name="nav_logout">Cerrar sesión</string>
-    <string name="module_under_construction">Módulo de %1$s en construcción</string>
-    <string name="nav_open_drawer">Abrir menú</string>
-    <string name="nav_close_drawer">Cerrar menú</string>
+    <string name="nav_logout">Cerrar sesi&#243;n</string>
+    <string name="module_under_construction">M&#243;dulo de %1$s en construcci&#243;n</string>
+    <string name="nav_open_drawer">Abrir men&#250;</string>
+    <string name="nav_close_drawer">Cerrar men&#250;</string>
 
     <!-- Accesibilidad -->
-    <string name="logo_description">Logo de la App</string>
-    <string name="show_password">Mostrar contraseña</string>
-    <string name="hide_password">Ocultar contraseña</string>
+    <string name="logo_description">Identificador visual de SGAU</string>
+    <string name="show_password">Mostrar contrase&#241;a</string>
+    <string name="hide_password">Ocultar contrase&#241;a</string>
 
     <!-- Footer -->
-    <string name="copyright">© 2026 UmgDev. Todos los derechos reservados.</string>
+    <string name="copyright">&#169; 2026 SGAU. Todos los derechos reservados.</string>
 
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_subtitle">Sistema de Gesti&#243;n Acad&#233;mica</string>
+    <string name="dashboard_greeting_named">&#161;Hola, %1$s!</string>
+    <string name="dashboard_greeting_default">&#161;Hola!</string>
+    <string name="dashboard_welcome">Bienvenida nuevamente</string>
+    <string name="dashboard_user_label">Usuario: %1$s</string>
+    <string name="dashboard_role_label">Rol: %1$s</string>
+    <string name="dashboard_modules_title">M&#243;dulos acad&#233;micos</string>
+    <string name="dashboard_profile_description">Perfil de usuario</string>
+    <string name="dashboard_avatar_description">Inicial del usuario</string>
+    <string name="dashboard_module_available">Abrir %1$s</string>
+    <string name="dashboard_module_coming_soon">M&#243;dulo pr&#243;ximamente disponible</string>
+    <string name="dashboard_logout_title">&#191;Deseas cerrar sesi&#243;n?</string>
+    <string name="dashboard_logout_message">Tendr&#225;s que ingresar nuevamente tus credenciales.</string>
+    <string name="dashboard_logout_cancel">Cancelar</string>
+    <string name="dashboard_logout_confirm">Cerrar sesi&#243;n</string>
+    <string name="dashboard_user_fallback">Usuario SGAU</string>
+    <string name="dashboard_roles_fallback">Rol no disponible</string>
+
+    <string name="module_carreras_description">Gesti&#243;n de carreras</string>
+    <string name="module_cursos_description">Administraci&#243;n de cursos</string>
+    <string name="module_estudiantes_description">Informaci&#243;n estudiantil</string>
+    <string name="module_docentes_description">Gesti&#243;n de docentes</string>
+    <string name="module_inscripciones_description">Control de inscripciones</string>
+    <string name="module_notas_description">Registro de calificaciones</string>
+    <string name="module_colegiaturas_description">Control de colegiaturas</string>
+    <string name="module_usuarios_description">Administraci&#243;n de usuarios</string>
+    <string name="bottom_profile">Perfil</string>
 </resources>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/moduleCard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:focusable="true"
+    android:minHeight="@dimen/dashboard_module_min_height"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/dashboard_surface"
+    app:cardCornerRadius="@dimen/dashboard_card_radius"
+    app:cardElevation="4dp"
+    app:strokeColor="@color/dashboard_border"
+    app:strokeWidth="1dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/moduleContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dashboard_card_padding"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:id="@+id/iconContainer"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_dashboard_icon"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/imgModuleIcon"
+                android:layout_width="@dimen/dashboard_module_icon_size"
+                android:layout_height="@dimen/dashboard_module_icon_size"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:importantForAccessibility="no"
+                        app:tint="@color/dashboard_primary"
+                        tools:src="@drawable/ic_career" />
+                </FrameLayout>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/imgModuleAction"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="@color/login_secondary_text" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtModuleName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="sans-serif-black"
+                android:textColor="@color/login_text"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                tools:text="Carreras" />
+
+            <TextView
+                android:id="@+id/txtModuleDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:fontFamily="sans-serif-medium"
+                android:lineSpacingExtra="2dp"
+                android:textColor="@color/login_secondary_text"
+                android:textSize="13sp"
+                tools:text="Administracion de carreras academicas" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -5,37 +5,199 @@
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard_screen"
+    android:fitsSystemWindows="true"
     tools:context=".auth.ui.HomeActivity">
 
-    <!-- Main content -->
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@drawable/bg_dashboard_screen">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/bg_blue_dark"
-            app:title="@string/app_title"
-            app:titleTextColor="@color/white" />
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dashboard_header_height"
+            android:background="@color/dashboard_surface"
+            android:elevation="1dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationContentDescription="@string/nav_open_drawer"
+            app:navigationIcon="@drawable/ic_menu">
 
-        <FrameLayout
-            android:id="@+id/contentFrame"
-            android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtToolbarTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="@string/dashboard_title"
+                    android:textColor="@color/dashboard_text_primary"
+                    android:textSize="27sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtToolbarSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="@string/dashboard_subtitle"
+                    android:textColor="@color/dashboard_text_secondary"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtToolbarAvatar"
+                android:layout_width="@dimen/dashboard_avatar_size"
+                android:layout_height="@dimen/dashboard_avatar_size"
+                android:layout_gravity="end|center_vertical"
+                android:background="@drawable/bg_dashboard_avatar"
+                android:contentDescription="@string/dashboard_avatar_description"
+                android:fontFamily="sans-serif-black"
+                android:gravity="center"
+                android:textColor="@color/dashboard_on_primary"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                tools:text="A" />
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/dashboardScroll"
+            android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="1" />
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:paddingStart="@dimen/dashboard_screen_padding"
+            android:paddingTop="18dp"
+            android:paddingEnd="@dimen/dashboard_screen_padding"
+            android:paddingBottom="22dp"
+            app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/dashboard_section_spacing">
 
-    <!-- Navigation drawer -->
+                <LinearLayout
+                    android:id="@+id/dashboardHeader"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dashboard_welcome_card_height"
+                    android:background="@drawable/bg_dashboard_welcome_card"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="20dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/txtGreeting"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-black"
+                            android:textColor="@color/dashboard_on_primary"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            tools:text="&#161;Hola, Andrea!" />
+
+                        <TextView
+                            android:id="@+id/txtWelcome"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:text="@string/dashboard_welcome"
+                            android:textColor="@color/dashboard_on_primary_secondary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/txtUserIdentity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_on_primary"
+                            android:textSize="13sp"
+                            tools:text="Usuario: admin&#10;Rol: ADMIN" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="54dp"
+                        android:layout_height="54dp"
+                        android:alpha="0.18"
+                        android:contentDescription="@null"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_career"
+                        app:tint="@color/white" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtModulesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dashboard_section_spacing"
+                    android:fontFamily="sans-serif-black"
+                    android:text="@string/dashboard_modules_title"
+                    android:textColor="@color/dashboard_text_primary"
+                    android:textSize="21sp"
+                    android:textStyle="bold" />
+
+                <GridLayout
+                    android:id="@+id/modulesGrid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:columnCount="2"
+                    android:useDefaultMargins="false" />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottomNavigation"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/dashboard_bottom_nav_height"
+            android:layout_marginBottom="@dimen/dashboard_bottom_nav_margin_bottom"
+            android:background="@color/dashboard_surface"
+            android:elevation="8dp"
+            app:itemIconTint="@color/nav_item_icon_color"
+            app:itemPaddingBottom="8dp"
+            app:itemPaddingTop="8dp"
+            app:itemRippleColor="@color/dashboard_primary_light"
+            app:itemTextAppearanceActive="@style/TextAppearance.SGAU.BottomNavigation"
+            app:itemTextAppearanceInactive="@style/TextAppearance.SGAU.BottomNavigation"
+            app:itemTextColor="@color/nav_item_text_color"
+            app:labelVisibilityMode="labeled"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:menu="@menu/menu_bottom_navigation" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
-        android:layout_width="wrap_content"
+        android:layout_width="304dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/dashboard_surface"
         app:headerLayout="@layout/nav_header"
+        app:itemBackground="@drawable/bg_nav_item_checked"
+        app:itemIconTint="@color/nav_item_icon_color"
+        app:itemTextColor="@color/nav_item_text_color"
         app:menu="@menu/menu_drawer" />
-
 </androidx.drawerlayout.widget.DrawerLayout>
