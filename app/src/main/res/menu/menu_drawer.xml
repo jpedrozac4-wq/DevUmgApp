@@ -1,35 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/nav_inicio"
-        android:title="@string/nav_inicio" />
-    <item
-        android:id="@+id/nav_estudiantes"
-        android:title="@string/nav_estudiantes" />
-    <item
-        android:id="@+id/nav_docentes"
-        android:title="@string/nav_docentes" />
-    <item
-        android:id="@+id/nav_carreras"
-        android:title="@string/nav_carreras" />
-    <item
-        android:id="@+id/nav_cursos"
-        android:title="@string/nav_cursos" />
-    <item
-        android:id="@+id/nav_inscripciones"
-        android:title="@string/nav_inscripciones" />
-    <item
-        android:id="@+id/nav_colegiaturas"
-        android:title="@string/nav_colegiaturas" />
-    <item
-        android:id="@+id/nav_notas"
-        android:title="@string/nav_notas" />
-    <item
-        android:id="@+id/nav_usuarios"
-        android:title="@string/nav_usuarios" />
-    <item
-        android:id="@+id/nav_logout"
-        android:title="@string/nav_logout" />
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_inicio"
+            android:icon="@drawable/ic_home"
+            android:title="@string/nav_inicio" />
+        <item
+            android:id="@+id/nav_carreras"
+            android:icon="@drawable/ic_career"
+            android:title="@string/nav_carreras" />
+        <item
+            android:id="@+id/nav_cursos"
+            android:icon="@drawable/ic_course"
+            android:title="@string/nav_cursos" />
+        <item
+            android:id="@+id/nav_estudiantes"
+            android:icon="@drawable/ic_student"
+            android:title="@string/nav_estudiantes" />
+        <item
+            android:id="@+id/nav_docentes"
+            android:icon="@drawable/ic_teacher"
+            android:title="@string/nav_docentes" />
+        <item
+            android:id="@+id/nav_inscripciones"
+            android:icon="@drawable/ic_enrollment"
+            android:title="@string/nav_inscripciones" />
+        <item
+            android:id="@+id/nav_notas"
+            android:icon="@drawable/ic_grade"
+            android:title="@string/nav_notas" />
+        <item
+            android:id="@+id/nav_colegiaturas"
+            android:icon="@drawable/ic_payment"
+            android:title="@string/nav_colegiaturas" />
+        <item
+            android:id="@+id/nav_usuarios"
+            android:icon="@drawable/ic_users"
+            android:title="@string/nav_usuarios" />
+    </group>
 
+    <group>
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/nav_logout" />
+    </group>
 </menu>

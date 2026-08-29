@@ -7,4 +7,9 @@
         <item name="android:navigationBarColor">@color/bg_blue_darkest</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <style name="TextAppearance.SGAU.BottomNavigation" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">11sp</item>
+    </style>
 </resources>

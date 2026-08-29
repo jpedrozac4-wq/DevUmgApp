@@ -12,4 +12,25 @@
     <color name="login_gradient_start">#67E8F9</color>
     <color name="login_gradient_center">#38BDF8</color>
     <color name="login_gradient_end">#6366F1</color>
+
+    <color name="dashboard_background">#F8F9FD</color>
+    <color name="dashboard_surface">#FFFFFF</color>
+    <color name="dashboard_primary">#4D46F2</color>
+    <color name="dashboard_primary_dark">#3730C9</color>
+    <color name="dashboard_primary_light">#EEF0FF</color>
+    <color name="dashboard_on_primary">#FFFFFF</color>
+    <color name="dashboard_on_primary_secondary">#CCFFFFFF</color>
+    <color name="dashboard_text_primary">#17171F</color>
+    <color name="dashboard_text_secondary">#7A7A89</color>
+    <color name="dashboard_border">#ECECF3</color>
+    <color name="dashboard_accent">#FFB913</color>
+    <color name="dashboard_error">#B3261E</color>
+    <color name="dashboard_career">#4D46F2</color>
+    <color name="dashboard_course">#5B6CFF</color>
+    <color name="dashboard_student">#32A7E2</color>
+    <color name="dashboard_teacher">#16A3A3</color>
+    <color name="dashboard_enrollment">#7C3AED</color>
+    <color name="dashboard_grade">#F59E0B</color>
+    <color name="dashboard_payment">#22A06B</color>
+    <color name="dashboard_users">#C026D3</color>
 </resources>

@@ -48,4 +48,34 @@
 
     <!-- Footer -->
     <string name="copyright">&#169; 2026 SGAU. Todos los derechos reservados.</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_subtitle">Sistema de Gesti&#243;n Acad&#233;mica</string>
+    <string name="dashboard_greeting_named">&#161;Hola, %1$s!</string>
+    <string name="dashboard_greeting_default">&#161;Hola!</string>
+    <string name="dashboard_welcome">Bienvenida nuevamente</string>
+    <string name="dashboard_user_label">Usuario: %1$s</string>
+    <string name="dashboard_role_label">Rol: %1$s</string>
+    <string name="dashboard_modules_title">M&#243;dulos acad&#233;micos</string>
+    <string name="dashboard_profile_description">Perfil de usuario</string>
+    <string name="dashboard_avatar_description">Inicial del usuario</string>
+    <string name="dashboard_module_available">Abrir %1$s</string>
+    <string name="dashboard_module_coming_soon">M&#243;dulo pr&#243;ximamente disponible</string>
+    <string name="dashboard_logout_title">&#191;Deseas cerrar sesi&#243;n?</string>
+    <string name="dashboard_logout_message">Tendr&#225;s que ingresar nuevamente tus credenciales.</string>
+    <string name="dashboard_logout_cancel">Cancelar</string>
+    <string name="dashboard_logout_confirm">Cerrar sesi&#243;n</string>
+    <string name="dashboard_user_fallback">Usuario SGAU</string>
+    <string name="dashboard_roles_fallback">Rol no disponible</string>
+
+    <string name="module_carreras_description">Gesti&#243;n de carreras</string>
+    <string name="module_cursos_description">Administraci&#243;n de cursos</string>
+    <string name="module_estudiantes_description">Informaci&#243;n estudiantil</string>
+    <string name="module_docentes_description">Gesti&#243;n de docentes</string>
+    <string name="module_inscripciones_description">Control de inscripciones</string>
+    <string name="module_notas_description">Registro de calificaciones</string>
+    <string name="module_colegiaturas_description">Control de colegiaturas</string>
+    <string name="module_usuarios_description">Administraci&#243;n de usuarios</string>
+    <string name="bottom_profile">Perfil</string>
 </resources>
