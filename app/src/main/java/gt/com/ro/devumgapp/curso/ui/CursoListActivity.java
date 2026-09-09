@@ -7,7 +7,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -38,6 +37,7 @@ import gt.com.ro.devumgapp.carrera.dto.EstadoRequest;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.dto.DocenteRequest;
 import gt.com.ro.devumgapp.curso.dto.DocenteResumenResponse;
@@ -63,6 +63,8 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     private TextView txtPageInfo;
     private View cursoHero;
     private View cursoFilters;
+    private View cursoFiltersHeader;
+    private View cursoFilterControls;
     private MaterialButton btnBuscar;
     private MaterialButton btnAgregar;
     private MaterialButton btnAnterior;
@@ -83,6 +85,8 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     private int totalPages;
     private boolean loading;
     private Boolean activeFilter;
+    private boolean firstResume = true;
+    private boolean filtersExpanded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +125,17 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (firstResume) {
+            firstResume = false;
+            return;
+        }
+        loadFilterData();
+        loadCursos(currentPage);
+    }
+
+    @Override
     public void onEdit(CursoResponse curso) {
         Intent intent = new Intent(this, CursoFormActivity.class);
         intent.putExtra(CursoFormActivity.EXTRA_CURSO_ID, curso.id);
@@ -135,7 +150,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     @Override
     public void onAssignTeacher(CursoResponse curso) {
         if (docenteItems.size() <= 1) {
-            Toast.makeText(this, R.string.curso_docentes_no_disponibles, Toast.LENGTH_SHORT).show();
+            UiNotifier.info(this, R.string.curso_docentes_no_disponibles);
             return;
         }
         List<NamedItem<DocenteResumenResponse>> assignable = docenteItems.subList(1, docenteItems.size());
@@ -174,6 +189,8 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         txtPageInfo = findViewById(R.id.txtCursosPageInfo);
         cursoHero = findViewById(R.id.cursoHero);
         cursoFilters = findViewById(R.id.cursoFilters);
+        cursoFiltersHeader = findViewById(R.id.cursoFiltersHeader);
+        cursoFilterControls = findViewById(R.id.cursoFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarCurso);
         btnAgregar = findViewById(R.id.btnAgregarCurso);
         btnAnterior = findViewById(R.id.btnCursosAnterior);
@@ -221,6 +238,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     }
 
     private void setupActions() {
+        cursoFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadCursos(0));
         tilBuscar.setEndIconOnClickListener(view -> loadCursos(0));
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {
@@ -244,6 +262,9 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     }
 
     private void loadFilterData() {
+        if (carrerasCall != null) {
+            carrerasCall.cancel();
+        }
         carrerasCall = carreraApiService.listarCarrerasActivas();
         carrerasCall.enqueue(new Callback<List<CarreraResumenResponse>>() {
             @Override
@@ -272,6 +293,9 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
             }
         });
 
+        if (docentesCall != null) {
+            docentesCall.cancel();
+        }
         docentesCall = cursoApiService.listarDocentesActivos();
         docentesCall.enqueue(new Callback<List<DocenteResumenResponse>>() {
             @Override
@@ -329,7 +353,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
                     renderPage(response.body());
                     return;
                 }
-                showError(CursoErrorMapper.fromResponse(CursoListActivity.this, response));
+                showSnackError(CursoErrorMapper.fromResponse(CursoListActivity.this, response));
             }
 
             @Override
@@ -339,7 +363,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
                 }
                 setLoading(false);
                 listCall = null;
-                showError(CursoErrorMapper.fromFailure(CursoListActivity.this, throwable));
+                showSnackError(CursoErrorMapper.fromFailure(CursoListActivity.this, throwable));
             }
         });
     }
@@ -361,10 +385,10 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
                     } else {
                         loadCursos(currentPage);
                     }
-                    showToast(getString(R.string.curso_accion_completada));
+                    showSuccess(getString(R.string.curso_accion_completada));
                     return;
                 }
-                showToast(CursoErrorMapper.fromResponse(CursoListActivity.this, response));
+                showListError(CursoErrorMapper.fromResponse(CursoListActivity.this, response));
             }
 
             @Override
@@ -372,7 +396,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
                 if (!call.isCanceled()) {
                     itemCalls.remove(cursoId);
                     adapter.setBusy(cursoId, false);
-                    showToast(CursoErrorMapper.fromFailure(CursoListActivity.this, throwable));
+                showListError(CursoErrorMapper.fromFailure(CursoListActivity.this, throwable));
                 }
             }
         });
@@ -388,7 +412,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         updatePaginationControls();
     }
 
-    private void showError(String message) {
+    private void showListError(String message) {
         adapter.submitList(null);
         recyclerCursos.setVisibility(View.GONE);
         txtEmptyState.setVisibility(View.GONE);
@@ -397,7 +421,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         currentPage = 0;
         totalPages = 0;
         updatePaginationControls();
-        showToast(message);
+        showSnackError(message);
     }
 
     private void setLoading(boolean loading) {
@@ -412,6 +436,27 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         spinnerDocente.setEnabled(!loading);
         spinnerCiclo.setEnabled(!loading);
         edtBuscar.setEnabled(!loading);
+    }
+
+    private void setFiltersExpanded(boolean expanded) {
+        filtersExpanded = expanded;
+        if (expanded) {
+            cursoFilterControls.setVisibility(View.VISIBLE);
+            cursoFilterControls.setAlpha(0f);
+            cursoFilterControls.setTranslationY(-8f);
+            cursoFilterControls.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(180)
+                    .start();
+            return;
+        }
+        cursoFilterControls.animate()
+                .alpha(0f)
+                .translationY(-8f)
+                .setDuration(140)
+                .withEndAction(() -> cursoFilterControls.setVisibility(View.GONE))
+                .start();
     }
 
     private void updatePaginationControls() {
@@ -489,7 +534,15 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     }
 
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        showSnackError(message);
+    }
+
+    private void showSuccess(String message) {
+        UiNotifier.success(this, message);
+    }
+
+    private void showSnackError(String message) {
+        UiNotifier.error(this, message);
     }
 
     private void cancelCalls() {

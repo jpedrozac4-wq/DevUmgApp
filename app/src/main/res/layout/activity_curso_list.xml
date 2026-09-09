@@ -87,7 +87,7 @@
                         android:contentDescription="@null"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_course"
-                        app:tint="@color/white" />
+                        app:tint="@color/dashboard_course" />
                 </FrameLayout>
             </LinearLayout>
 
@@ -109,6 +109,7 @@
                     android:padding="@dimen/dashboard_card_padding">
 
                     <LinearLayout
+                        android:id="@+id/cursoFiltersHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -137,103 +138,112 @@
                             app:iconTint="@color/white" />
                     </LinearLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilBuscarCurso"
-                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    <LinearLayout
+                        android:id="@+id/cursoFilterControls"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="@string/curso_buscar_hint"
-                        app:boxCornerRadiusBottomEnd="8dp"
-                        app:boxCornerRadiusBottomStart="8dp"
-                        app:boxCornerRadiusTopEnd="8dp"
-                        app:boxCornerRadiusTopStart="8dp"
-                        app:boxStrokeColor="@color/dashboard_course"
-                        app:endIconDrawable="@drawable/ic_search"
-                        app:endIconMode="custom"
-                        app:hintTextColor="@color/dashboard_course">
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edtBuscarCurso"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilBuscarCurso"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:imeOptions="actionSearch"
-                            android:inputType="text"
-                            android:maxLines="1"
-                            android:singleLine="true"
-                            android:textColor="@color/dashboard_text_primary" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_marginTop="12dp"
+                            android:hint="@string/curso_buscar_hint"
+                            app:boxCornerRadiusBottomEnd="8dp"
+                            app:boxCornerRadiusBottomStart="8dp"
+                            app:boxCornerRadiusTopEnd="8dp"
+                            app:boxCornerRadiusTopStart="8dp"
+                            app:boxStrokeColor="@color/dashboard_course"
+                            app:endIconDrawable="@drawable/ic_search"
+                            app:endIconMode="custom"
+                            app:hintTextColor="@color/dashboard_course">
 
-                    <Spinner
-                        android:id="@+id/spinnerFiltroCarrera"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="10dp" />
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtBuscarCurso"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionSearch"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/dashboard_text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
 
-                    <Spinner
-                        android:id="@+id/spinnerFiltroDocente"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp" />
+                        <Spinner
+                            android:id="@+id/spinnerFiltroCarrera"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="10dp" />
 
-                    <Spinner
-                        android:id="@+id/spinnerFiltroCiclo"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginTop="8dp" />
+                        <Spinner
+                            android:id="@+id/spinnerFiltroDocente"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="8dp" />
 
-                    <com.google.android.material.button.MaterialButtonToggleGroup
-                        android:id="@+id/toggleEstadoCurso"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        app:checkedButton="@id/btnFiltroCursosTodos"
-                        app:selectionRequired="true"
-                        app:singleSelection="true">
+                        <Spinner
+                            android:id="@+id/spinnerFiltroCiclo"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:layout_marginTop="8dp" />
+
+                        <com.google.android.material.button.MaterialButtonToggleGroup
+                            android:id="@+id/toggleEstadoCurso"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            app:checkedButton="@id/btnFiltroCursosTodos"
+                            app:selectionRequired="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFiltroCursosTodos"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="@string/curso_filtro_todos"
+                                android:textAllCaps="false"
+                                android:textSize="12sp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFiltroCursosActivos"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="@string/curso_filtro_activos"
+                                android:textAllCaps="false"
+                                android:textSize="12sp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFiltroCursosInactivos"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="@string/curso_filtro_inactivos"
+                                android:textAllCaps="false"
+                                android:textSize="12sp" />
+                        </com.google.android.material.button.MaterialButtonToggleGroup>
 
                         <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnFiltroCursosTodos"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:text="@string/curso_filtro_todos"
+                            android:id="@+id/btnBuscarCurso"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/curso_accion_buscar"
                             android:textAllCaps="false"
-                            android:textSize="12sp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnFiltroCursosActivos"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:text="@string/curso_filtro_activos"
-                            android:textAllCaps="false"
-                            android:textSize="12sp" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnFiltroCursosInactivos"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
-                            android:layout_width="0dp"
-                            android:layout_height="48dp"
-                            android:layout_weight="1"
-                            android:text="@string/curso_filtro_inactivos"
-                            android:textAllCaps="false"
-                            android:textSize="12sp" />
-                    </com.google.android.material.button.MaterialButtonToggleGroup>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnBuscarCurso"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="12dp"
-                        android:text="@string/curso_accion_buscar"
-                        android:textAllCaps="false"
-                        app:backgroundTint="@color/dashboard_course"
-                        app:cornerRadius="8dp"
-                        app:icon="@drawable/ic_search"
-                        app:iconGravity="textStart"
-                        app:iconTint="@color/white" />
+                            app:backgroundTint="@color/dashboard_course"
+                            app:cornerRadius="8dp"
+                            app:icon="@drawable/ic_search"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/white" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
