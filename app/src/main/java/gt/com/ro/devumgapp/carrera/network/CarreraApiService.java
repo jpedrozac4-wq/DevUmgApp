@@ -42,7 +42,7 @@ public interface CarreraApiService {
             @Body EstadoRequest request);
 
     @GET("api/carreras/activas")
-    Call<List<CarreraResponse>> listarCarrerasActivas();
+    Call<List<CarreraResumenResponse>> listarCarrerasActivas();
 
     @GET("api/carreras/nombres-activos")
     Call<List<CarreraResumenResponse>> listarNombresActivos();
