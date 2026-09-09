@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape>
+            <solid android:color="@color/dashboard_career" />
+            <corners android:radius="@dimen/dashboard_header_radius" />
+        </shape>
+    </item>
+    <item
+        android:bottom="78dp"
+        android:gravity="end|top"
+        android:left="230dp"
+        android:right="-32dp"
+        android:top="-34dp">
+        <shape android:shape="oval">
+            <size
+                android:width="118dp"
+                android:height="118dp" />
+            <solid android:color="#22FFFFFF" />
+        </shape>
+    </item>
+    <item
+        android:bottom="-48dp"
+        android:gravity="end|bottom"
+        android:left="210dp"
+        android:right="-18dp"
+        android:top="82dp">
+        <shape android:shape="oval">
+            <size
+                android:width="112dp"
+                android:height="112dp" />
+            <solid android:color="#18FFFFFF" />
+        </shape>
+    </item>
+</layer-list>

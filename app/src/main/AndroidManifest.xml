@@ -29,6 +29,13 @@
             android:name=".auth.ui.HomeActivity"
             android:exported="false"
             android:parentActivityName=".auth.ui.LoginActivity" />
+        <activity
+            android:name=".carrera.ui.CarreraListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".carrera.ui.CarreraFormActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
