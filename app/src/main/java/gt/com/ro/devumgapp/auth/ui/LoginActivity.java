@@ -28,6 +28,7 @@ import gt.com.ro.devumgapp.auth.dto.LoginResponse;
 import gt.com.ro.devumgapp.auth.network.AuthApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.session.SessionManager;
+import gt.com.ro.devumgapp.core.updates.UpdateManager;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,14 +60,36 @@ public class LoginActivity extends AppCompatActivity {
         insetsController.setAppearanceLightNavigationBars(true);
 
         if (SessionManager.getInstance().isLoggedIn()) {
-            navigateToHome();
+            // Session active: check for updates first, then continue to Home.
+            checkForUpdates(this::navigateToHome);
             return;
         }
+
+        // No active session: run the update check in background without blocking the login UI.
+        checkForUpdates(null);
 
         authApiService = RetrofitClient.getClient().create(AuthApiService.class);
         bindViews();
         restoreRememberedUsername();
         setupFormActions();
+    }
+
+    private void checkForUpdates(Runnable onFinished) {
+        new UpdateManager(this).checkForUpdates(new UpdateManager.UpdateCheckCallback() {
+            @Override
+            public void onNoUpdate() {
+                if (onFinished != null) {
+                    onFinished.run();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                if (onFinished != null) {
+                    onFinished.run();
+                }
+            }
+        });
     }
 
     @Override
