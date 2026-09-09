@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="actualizacion_titulo">Nueva versión disponible</string>
+    <string name="actualizacion_mensaje">Versión actual: %1$s\nNueva versión: %2$s\n\nHay una nueva versión disponible de la aplicación.</string>
+    <string name="actualizacion_boton">Actualizar</string>
+    <string name="actualizacion_descarga_titulo">Descargando actualización…</string>
+    <string name="actualizacion_descarga_iniciando">Iniciando descarga…</string>
+    <string name="actualizacion_progreso">%1$d%%</string>
+    <string name="actualizacion_descarga_error">Error al descargar la actualización</string>
+    <string name="actualizacion_instalar_error">No se pudo iniciar el instalador</string>
+</resources>
