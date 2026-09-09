@@ -37,7 +37,9 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.carrera.ui.CarreraListActivity;
 import gt.com.ro.devumgapp.core.session.SessionManager;
+import gt.com.ro.devumgapp.curso.ui.CursoListActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -303,7 +305,11 @@ public class HomeActivity extends AppCompatActivity {
                 ? R.string.dashboard_title
                 : moduleTitleFor(itemId));
 
-        if (itemId != R.id.nav_inicio) {
+        if (itemId == R.id.nav_inicio) {
+            return;
+        }
+
+        if (!openModule(itemId)) {
             Toast.makeText(this, R.string.dashboard_module_coming_soon, Toast.LENGTH_SHORT).show();
         }
     }
@@ -312,7 +318,9 @@ public class HomeActivity extends AppCompatActivity {
         navView.setCheckedItem(module.menuItemId);
         syncBottomSelection(module.menuItemId);
         setDashboardTitle(module.titleRes);
-        Toast.makeText(this, R.string.dashboard_module_coming_soon, Toast.LENGTH_SHORT).show();
+        if (!openModule(module.menuItemId)) {
+            Toast.makeText(this, R.string.dashboard_module_coming_soon, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupBottomNavigation() {
@@ -333,10 +341,31 @@ public class HomeActivity extends AppCompatActivity {
             }
             navView.setCheckedItem(itemId);
             setDashboardTitle(moduleTitleFor(itemId));
-            Toast.makeText(this, R.string.dashboard_module_coming_soon, Toast.LENGTH_SHORT).show();
+            if (!openModule(itemId)) {
+                Toast.makeText(this, R.string.dashboard_module_coming_soon, Toast.LENGTH_SHORT).show();
+            }
             return true;
         });
         bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+    }
+
+    private boolean openModule(int itemId) {
+        Intent intent = moduleIntentFor(itemId);
+        if (intent == null) {
+            return false;
+        }
+        startActivity(intent);
+        return true;
+    }
+
+    private Intent moduleIntentFor(int itemId) {
+        if (itemId == R.id.nav_carreras) {
+            return new Intent(this, CarreraListActivity.class);
+        }
+        if (itemId == R.id.nav_cursos) {
+            return new Intent(this, CursoListActivity.class);
+        }
+        return null;
     }
 
     private void syncBottomSelection(int itemId) {

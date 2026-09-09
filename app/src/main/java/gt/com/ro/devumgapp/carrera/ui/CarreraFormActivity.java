@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +21,7 @@ import gt.com.ro.devumgapp.carrera.dto.CarreraRequest;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -190,18 +190,18 @@ public class CarreraFormActivity extends AppCompatActivity {
                 setLoading(false);
                 saveCall = null;
                 if (response.isSuccessful()) {
-                    Toast.makeText(CarreraFormActivity.this,
+                    UiNotifier.success(
+                            CarreraFormActivity.this,
                             isEditMode()
                                     ? R.string.carrera_actualizada
-                                    : R.string.carrera_creada,
-                            Toast.LENGTH_SHORT).show();
+                                    : R.string.carrera_creada);
                     setResult(RESULT_OK);
                     finish();
                     return;
                 }
-                Toast.makeText(CarreraFormActivity.this,
-                        CarreraErrorMapper.fromResponse(CarreraFormActivity.this, response),
-                        Toast.LENGTH_SHORT).show();
+                UiNotifier.error(
+                        CarreraFormActivity.this,
+                        CarreraErrorMapper.fromResponse(CarreraFormActivity.this, response));
             }
 
             @Override
@@ -211,9 +211,9 @@ public class CarreraFormActivity extends AppCompatActivity {
                 }
                 setLoading(false);
                 saveCall = null;
-                Toast.makeText(CarreraFormActivity.this,
-                        CarreraErrorMapper.fromFailure(CarreraFormActivity.this, throwable),
-                        Toast.LENGTH_SHORT).show();
+                UiNotifier.error(
+                        CarreraFormActivity.this,
+                        CarreraErrorMapper.fromFailure(CarreraFormActivity.this, throwable));
             }
         });
     }
@@ -292,7 +292,7 @@ public class CarreraFormActivity extends AppCompatActivity {
     }
 
     private void showErrorAndFinish(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        UiNotifier.error(this, message);
         finish();
     }
 

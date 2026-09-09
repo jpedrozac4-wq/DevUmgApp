@@ -6,7 +6,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +25,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResumenResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.curso.dto.CursoRequest;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.dto.DocenteRequest;
@@ -74,6 +74,7 @@ public class CursoFormActivity extends AppCompatActivity {
     private boolean loading;
     private boolean carrerasLoaded;
     private boolean docentesLoaded;
+    private boolean carrerasAvailable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,9 +177,14 @@ public class CursoFormActivity extends AppCompatActivity {
                     for (CarreraResumenResponse carrera : response.body()) {
                         carreraItems.add(new NamedItem<>(formatCarrera(carrera), carrera));
                     }
+                    carrerasAvailable = carreraItems.size() > 1;
                     bindSpinner(spinnerCarrera, carreraItems);
                     applyPendingSelections();
+                    if (!carrerasAvailable) {
+                        showToast(getString(R.string.curso_error_carreras_no_disponibles));
+                    }
                 } else {
+                    carrerasAvailable = false;
                     showToast(CursoErrorMapper.fromResponse(CursoFormActivity.this, response));
                 }
                 finishInitialLoadIfReady();
@@ -189,6 +195,7 @@ public class CursoFormActivity extends AppCompatActivity {
                 if (!call.isCanceled()) {
                     carrerasCall = null;
                     carrerasLoaded = true;
+                    carrerasAvailable = false;
                     finishInitialLoadIfReady();
                     showToast(CursoErrorMapper.fromFailure(CursoFormActivity.this, throwable));
                 }
@@ -335,6 +342,10 @@ public class CursoFormActivity extends AppCompatActivity {
         valid = validateNumber(tilCreditos, edtCreditos, 1, 20, R.string.curso_error_creditos_rango) && valid;
         valid = validateNumber(tilHoras, edtHoras, 1, 40, R.string.curso_error_horas_rango) && valid;
         valid = validateNumber(tilCiclo, edtCiclo, 2020, 2100, R.string.curso_error_ciclo_rango) && valid;
+        if (!carrerasAvailable) {
+            showToast(getString(R.string.curso_error_carreras_no_disponibles));
+            valid = false;
+        }
         if (selectedCarreraId() <= 0) {
             showToast(getString(R.string.curso_error_carrera_requerida));
             valid = false;
@@ -428,15 +439,18 @@ public class CursoFormActivity extends AppCompatActivity {
     }
 
     private <T> void bindSpinner(Spinner spinner, List<NamedItem<T>> items) {
-        ArrayAdapter<NamedItem<T>> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, items);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<NamedItem<T>> adapter = new ArrayAdapter<>(
+                this,
+                R.layout.item_spinner_selected,
+                items);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinner.setAdapter(adapter);
     }
 
     private void setLoading(boolean loading) {
         this.loading = loading;
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        btnGuardar.setEnabled(!loading);
+        btnGuardar.setEnabled(!loading && (!carrerasLoaded || carrerasAvailable));
         tilCodigo.setEnabled(!loading);
         tilNombre.setEnabled(!loading);
         tilDescripcion.setEnabled(!loading);
@@ -457,7 +471,7 @@ public class CursoFormActivity extends AppCompatActivity {
     }
 
     private void finishSuccessfully() {
-        showToast(getString(isEditMode() ? R.string.curso_actualizado : R.string.curso_creado));
+        showSuccess(getString(isEditMode() ? R.string.curso_actualizado : R.string.curso_creado));
         setResult(RESULT_OK);
         finish();
     }
@@ -512,7 +526,15 @@ public class CursoFormActivity extends AppCompatActivity {
     }
 
     private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        showError(message);
+    }
+
+    private void showSuccess(String message) {
+        UiNotifier.success(this, message);
+    }
+
+    private void showError(String message) {
+        UiNotifier.error(this, message);
     }
 
     private void cancelCalls() {

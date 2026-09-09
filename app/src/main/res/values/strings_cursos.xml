@@ -47,8 +47,11 @@
     <string name="curso_actualizado">Curso actualizado correctamente.</string>
     <string name="curso_volver">Volver</string>
     <string name="curso_error_bad_request">Datos o referencias inv&#225;lidas.</string>
+    <string name="curso_error_unauthorized">Sesi&#243;n no v&#225;lida o vencida.</string>
+    <string name="curso_error_forbidden">Usuario sin permisos para gestionar cursos.</string>
     <string name="curso_error_not_found">Curso, carrera o docente no encontrado.</string>
     <string name="curso_error_conflict">El c&#243;digo de curso ya existe.</string>
+    <string name="curso_error_internal_server">Error interno del servidor.</string>
     <string name="curso_error_server">No fue posible procesar la solicitud.</string>
     <string name="curso_error_no_internet">Verifica tu conexi&#243;n a Internet.</string>
     <string name="curso_error_timeout">El servidor tard&#243; demasiado en responder.</string>
@@ -59,5 +62,6 @@
     <string name="curso_error_creditos_rango">Los cr&#233;ditos deben estar entre 1 y 20.</string>
     <string name="curso_error_horas_rango">Las horas semanales deben estar entre 1 y 40.</string>
     <string name="curso_error_carrera_requerida">Selecciona una carrera.</string>
+    <string name="curso_error_carreras_no_disponibles">No se pudieron cargar carreras activas. Intenta de nuevo antes de guardar.</string>
     <string name="curso_error_ciclo_rango">El ciclo debe estar entre 2020 y 2100.</string>
 </resources>

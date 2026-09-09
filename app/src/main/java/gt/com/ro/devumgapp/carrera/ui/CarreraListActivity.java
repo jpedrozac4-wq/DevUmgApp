@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -33,6 +32,7 @@ import gt.com.ro.devumgapp.carrera.dto.EstadoRequest;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +52,8 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
     private TextView txtPageInfo;
     private View carreraHero;
     private View carreraFilters;
+    private View carreraFiltersHeader;
+    private View carreraFilterControls;
     private MaterialButton btnBuscar;
     private MaterialButton btnAgregar;
     private MaterialButton btnAnterior;
@@ -67,6 +69,8 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
     private int totalPages;
     private boolean loading;
     private Boolean activeFilter;
+    private boolean firstResume = true;
+    private boolean filtersExpanded;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,16 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (firstResume) {
+            firstResume = false;
+            return;
+        }
+        loadCarreras(currentPage);
+    }
+
+    @Override
     public void onEdit(CarreraResponse carrera) {
         Intent intent = new Intent(this, CarreraFormActivity.class);
         intent.putExtra(CarreraFormActivity.EXTRA_CARRERA_ID, carrera.id);
@@ -128,14 +142,12 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
                     } else {
                         loadCarreras(currentPage);
                     }
-                    Toast.makeText(CarreraListActivity.this,
-                            R.string.carrera_estado_actualizado,
-                            Toast.LENGTH_SHORT).show();
+                    UiNotifier.success(CarreraListActivity.this, R.string.carrera_estado_actualizado);
                     return;
                 }
-                Toast.makeText(CarreraListActivity.this,
-                        CarreraErrorMapper.fromResponse(CarreraListActivity.this, response),
-                        Toast.LENGTH_SHORT).show();
+                UiNotifier.error(
+                        CarreraListActivity.this,
+                        CarreraErrorMapper.fromResponse(CarreraListActivity.this, response));
             }
 
             @Override
@@ -145,9 +157,9 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
                 }
                 adapter.setStatusChanging(carrera.id, false);
                 statusCalls.remove(carrera.id);
-                Toast.makeText(CarreraListActivity.this,
-                        CarreraErrorMapper.fromFailure(CarreraListActivity.this, throwable),
-                        Toast.LENGTH_SHORT).show();
+                UiNotifier.error(
+                        CarreraListActivity.this,
+                        CarreraErrorMapper.fromFailure(CarreraListActivity.this, throwable));
             }
         });
     }
@@ -164,6 +176,8 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
         txtPageInfo = findViewById(R.id.txtCarrerasPageInfo);
         carreraHero = findViewById(R.id.carreraHero);
         carreraFilters = findViewById(R.id.carreraFilters);
+        carreraFiltersHeader = findViewById(R.id.carreraFiltersHeader);
+        carreraFilterControls = findViewById(R.id.carreraFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarCarrera);
         btnAgregar = findViewById(R.id.btnAgregarCarrera);
         btnAnterior = findViewById(R.id.btnCarrerasAnterior);
@@ -221,6 +235,7 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
     }
 
     private void setupActions() {
+        carreraFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadCarreras(0));
         tilBuscar.setEndIconOnClickListener(view -> loadCarreras(0));
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {
@@ -305,7 +320,7 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
         currentPage = 0;
         totalPages = 0;
         updatePaginationControls();
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        UiNotifier.error(this, message);
     }
 
     private void setLoading(boolean loading) {
@@ -317,6 +332,27 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
         btnSiguiente.setEnabled(!loading && currentPage + 1 < totalPages);
         toggleEstado.setEnabled(!loading);
         edtBuscar.setEnabled(!loading);
+    }
+
+    private void setFiltersExpanded(boolean expanded) {
+        filtersExpanded = expanded;
+        if (expanded) {
+            carreraFilterControls.setVisibility(View.VISIBLE);
+            carreraFilterControls.setAlpha(0f);
+            carreraFilterControls.setTranslationY(-8f);
+            carreraFilterControls.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(180)
+                    .start();
+            return;
+        }
+        carreraFilterControls.animate()
+                .alpha(0f)
+                .translationY(-8f)
+                .setDuration(140)
+                .withEndAction(() -> carreraFilterControls.setVisibility(View.GONE))
+                .start();
     }
 
     private void updatePaginationControls() {

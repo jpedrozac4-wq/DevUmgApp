@@ -32,8 +32,11 @@
     <string name="carrera_actualizada">Carrera actualizada correctamente.</string>
     <string name="carrera_estado_actualizado">Estado actualizado correctamente.</string>
     <string name="carrera_error_bad_request">Datos inv&#225;lidos.</string>
+    <string name="carrera_error_unauthorized">Sesi&#243;n no v&#225;lida o vencida.</string>
+    <string name="carrera_error_forbidden">Usuario sin permisos para gestionar carreras.</string>
     <string name="carrera_error_not_found">Carrera no encontrada.</string>
     <string name="carrera_error_conflict">La carrera ya existe.</string>
+    <string name="carrera_error_internal_server">Error interno del servidor.</string>
     <string name="carrera_error_server">No fue posible procesar la solicitud.</string>
     <string name="carrera_error_no_internet">Verifica tu conexi&#243;n a Internet.</string>
     <string name="carrera_error_timeout">El servidor tard&#243; demasiado en responder.</string>
