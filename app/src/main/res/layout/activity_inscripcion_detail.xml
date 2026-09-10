@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard_screen"
+    tools:context=".inscripcion.ui.InscripcionDetailActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarInscripcionDetail"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dashboard_header_height"
+        android:background="@color/dashboard_surface"
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationContentDescription="@string/inscripcion_volver"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/inscripcion_detalle_titulo"
+        app:titleTextColor="@color/dashboard_text_primary" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/inscripcionDetailActions"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarInscripcionDetail">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dashboard_screen_padding">
+
+            <LinearLayout
+                android:id="@+id/inscripcionDetailHero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_inscripcion_header"
+                android:gravity="center_vertical"
+                android:minHeight="116dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/dashboard_card_padding">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/inscripcion_detalle_titulo"
+                        android:textColor="@color/dashboard_on_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/inscripcion_detalle_subtitulo"
+                        android:textColor="@color/dashboard_on_primary_secondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_enrollment"
+                    app:tint="@color/white" />
+            </LinearLayout>
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressInscripcionDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorColor="@color/dashboard_enrollment"
+                tools:visibility="visible" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/inscripcionDetailPanel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="@color/dashboard_surface"
+                app:cardCornerRadius="@dimen/dashboard_card_radius"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/dashboard_border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dashboard_card_padding">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_estado"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleEstado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_inscripcion_status_active"
+                            android:paddingStart="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="4dp"
+                            android:textColor="@color/white"
+                            android:textSize="12sp"
+                            tools:text="@string/inscripcion_estado_activa" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_estudiante"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleEstudiante"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_carrera"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleCarrera"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_curso"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleCurso"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="1" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_grado"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleGrado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="5" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_seccion"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleSeccion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="A" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_ciclo"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleCiclo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="2026" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_fecha"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleFecha"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="2026-01-15" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_activo"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleActivo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="Sí" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/inscripcion_detalle_observaciones"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleObservaciones"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="Observaciones de la inscripción." />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_fecha_creacion"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleFechaCreacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="2026-01-15" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/inscripcion_detalle_fecha_actualizacion"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtInscripcionDetalleFechaActualizacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-medium"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="14sp"
+                            tools:text="2026-01-15" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/inscripcionDetailActions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/dashboard_surface"
+        android:elevation="4dp"
+        android:orientation="horizontal"
+        android:padding="@dimen/dashboard_screen_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAnularInscripcion"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            android:text="@string/inscripcion_accion_anular"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/dashboard_error"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_power"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnReactivarInscripcion"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:text="@string/inscripcion_accion_reactivar"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            app:backgroundTint="@color/dashboard_enrollment"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_power"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
