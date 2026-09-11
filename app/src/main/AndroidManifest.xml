@@ -54,6 +54,16 @@
         <activity
             android:name=".inscripcion.ui.InscripcionDetailActivity"
             android:exported="false" />
+        <activity
+            android:name=".nota.ui.NotaListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nota.ui.NotaFormActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".nota.ui.PromedioNotasActivity"
+            android:exported="false" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
