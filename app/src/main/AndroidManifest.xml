@@ -65,7 +65,35 @@
             android:name=".nota.ui.PromedioNotasActivity"
             android:exported="false" />
 
-        <provider
+        <activity
+            android:name=".colegiatura.ui.ColegiaturaListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".colegiatura.ui.ColegiaturaFormActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".colegiatura.ui.PagoColegiaturaActivity"
+            android:exported="false" />
+
+
+
+        <activity
+            android:name=".estudiante.ui.EstudianteListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".estudiante.ui.EstudianteFormActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".estudiante.ui.EstudianteDetailActivity"
+            android:exported="false" />
+
+
+
+    <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="gt.com.ro.devumgapp.fileprovider"
             android:exported="false"

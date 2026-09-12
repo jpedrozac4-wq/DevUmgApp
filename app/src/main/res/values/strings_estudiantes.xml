@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Lista de estudiantes -->
+    <string name="estudiante_titulo">Estudiantes</string>
+    <string name="estudiante_subtitulo">Gestiona el registro académico de estudiantes</string>
+    <string name="estudiante_filtros_titulo">Búsqueda y filtros</string>
+    <string name="estudiante_buscar_hint">Buscar por código, nombres, apellidos o correo</string>
+
+    <string name="estudiante_filtro_todas">Todos</string>
+    <string name="estudiante_filtro_activos">Activos</string>
+    <string name="estudiante_filtro_inactivos">Inactivos</string>
+
+    <string name="estudiante_accion_buscar">Buscar</string>
+    <string name="estudiante_accion_agregar">Agregar estudiante</string>
+    <string name="estudiante_accion_editar">Editar</string>
+    <string name="estudiante_accion_activar">Activar</string>
+    <string name="estudiante_accion_inactivar">Inactivar</string>
+    <string name="estudiante_accion_procesando">Procesando...</string>
+    <string name="estudiante_accion_anterior">Anterior</string>
+    <string name="estudiante_accion_siguiente">Siguiente</string>
+
+    <string name="estudiante_estado_activo">Activo</string>
+    <string name="estudiante_estado_inactivo">Inactivo</string>
+    <string name="estudiante_empty">No se encontraron estudiantes.</string>
+    <string name="estudiante_pagina_info">Página %1$d de %2$d</string>
+    <string name="estudiante_item_identificacion">Identificación: %1$s</string>
+    <string name="estudiante_estado_actualizado">Estado actualizado correctamente.</string>
+    <string name="estudiante_form_pendiente">Formulario de estudiante: siguiente etapa.</string>
+
+    <!-- Errores -->
+    <string name="estudiante_error_bad_request">Datos inválidos.</string>
+    <string name="estudiante_error_unauthorized">Sesión no válida o vencida.</string>
+    <string name="estudiante_error_forbidden">Usuario sin permisos para gestionar estudiantes.</string>
+    <string name="estudiante_error_not_found">Estudiante no encontrado.</string>
+    <string name="estudiante_error_conflict">El estudiante ya existe.</string>
+    <string name="estudiante_error_internal_server">Error interno del servidor.</string>
+    <string name="estudiante_error_server">No fue posible procesar la solicitud.</string>
+    <string name="estudiante_error_no_internet">Verifica tu conexión a Internet.</string>
+    <string name="estudiante_error_timeout">El servidor tardó demasiado en responder.</string>
+    <string name="estudiante_error_network">No fue posible conectar con el servidor.</string>
+
+    <string name="estudiante_volver">Volver</string>
+
+    <!-- Formulario -->
+    <string name="estudiante_form_titulo_crear">Nuevo estudiante</string>
+    <string name="estudiante_form_titulo_editar">Editar estudiante</string>
+    <string name="estudiante_form_subtitulo">Completa los datos del estudiante</string>
+    <string name="estudiante_form_datos_titulo">Datos del estudiante</string>
+
+    <string name="estudiante_codigo_hint">Código estudiantil</string>
+    <string name="estudiante_identificacion_hint">Número de identificación</string>
+    <string name="estudiante_nombres_hint">Nombres</string>
+    <string name="estudiante_apellidos_hint">Apellidos</string>
+    <string name="estudiante_fecha_nacimiento_hint">Fecha de nacimiento</string>
+    <string name="estudiante_correo_hint">Correo electrónico</string>
+    <string name="estudiante_telefono_hint">Teléfono</string>
+    <string name="estudiante_direccion_hint">Dirección</string>
+
+    <string name="estudiante_accion_guardar">Guardar estudiante</string>
+    <string name="estudiante_creado">Estudiante creado correctamente.</string>
+    <string name="estudiante_actualizado">Estudiante actualizado correctamente.</string>
+
+    <string name="estudiante_error_codigo_requerido">Ingresa el código estudiantil.</string>
+    <string name="estudiante_error_identificacion_requerida">Ingresa el número de identificación.</string>
+    <string name="estudiante_error_nombres_requeridos">Ingresa los nombres.</string>
+    <string name="estudiante_error_apellidos_requeridos">Ingresa los apellidos.</string>
+    <string name="estudiante_error_fecha_requerida">Selecciona la fecha de nacimiento.</string>
+    <string name="estudiante_error_correo_requerido">Ingresa el correo electrónico.</string>
+    <string name="estudiante_error_correo_formato">Ingresa un correo válido.</string>
+
+    <!-- Detalle -->
+    <string name="estudiante_detalle_titulo">Detalle de estudiante</string>
+    <string name="estudiante_detalle_subtitulo">Información académica y general</string>
+
+    <string name="estudiante_detalle_seccion_resumen">Resumen</string>
+    <string name="estudiante_detalle_resumen">
+        Código: %1$s Nombre: %2$s Estado: %3$s
+    </string>
+
+    <string name="estudiante_detalle_seccion_historial">Historial académico</string>
+    <string name="estudiante_detalle_historial">
+        Promedio general: %1$s Total de cursos: %2$s Aprobados: %3$s Reprobados: %4$s Sin calificación: %5$s
+    </string>
+
+    <string name="estudiante_detalle_sin_cursos">No hay cursos registrados.</string>
+
+    <string name="estudiante_detalle_seccion_estado_general">Estado general</string>
+    <string name="estudiante_detalle_estado_general">
+        Código: %1$s Correo: %2$s Fecha de registro: %3$s Estado general: %4$s
+    </string>
+
+    <string name="estudiante_detalle_no_disponible">Información no disponible.</string>
+    <string name="estudiante_detalle_estado_general_no_disponible">Estado general no disponible.</string>
+
+</resources>

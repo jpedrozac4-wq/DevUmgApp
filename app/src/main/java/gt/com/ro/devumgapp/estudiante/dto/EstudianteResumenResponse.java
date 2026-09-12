@@ -18,4 +18,15 @@ public class EstudianteResumenResponse {
 
     @SerializedName("activo")
     public boolean activo;
+
+    public String getDisplayName() {
+        String codigo = codigoEstudiantil == null ? "" : codigoEstudiantil;
+        String nombre = ((nombres == null ? "" : nombres) + " " +
+                (apellidos == null ? "" : apellidos)).trim();
+
+        if (codigo.isEmpty()) return nombre;
+        if (nombre.isEmpty()) return codigo;
+
+        return codigo + " - " + nombre;
+    }
 }
