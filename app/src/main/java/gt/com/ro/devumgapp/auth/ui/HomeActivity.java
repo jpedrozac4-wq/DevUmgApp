@@ -37,6 +37,8 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.colegiatura.ui.ColegiaturaListActivity;
+import gt.com.ro.devumgapp.estudiante.ui.EstudianteListActivity;
 import gt.com.ro.devumgapp.carrera.ui.CarreraListActivity;
 import gt.com.ro.devumgapp.core.session.SessionManager;
 import gt.com.ro.devumgapp.curso.ui.CursoListActivity;
@@ -372,6 +374,12 @@ public class HomeActivity extends AppCompatActivity {
         }
         if (itemId == R.id.nav_notas) {
             return new Intent(this, NotaListActivity.class);
+        }
+        if (itemId == R.id.nav_colegiaturas) {
+            return new Intent(this, ColegiaturaListActivity.class);
+        }
+        if (itemId == R.id.nav_estudiantes) {
+            return new Intent(this, EstudianteListActivity.class);
         }
         return null;
     }
