@@ -91,6 +91,14 @@
             android:name=".estudiante.ui.EstudianteDetailActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".docente.ui.DocenteListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".docente.ui.DocenteFormActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
 
     <provider
