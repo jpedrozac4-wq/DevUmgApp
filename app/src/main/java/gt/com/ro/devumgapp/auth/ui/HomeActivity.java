@@ -42,6 +42,7 @@ import gt.com.ro.devumgapp.estudiante.ui.EstudianteListActivity;
 import gt.com.ro.devumgapp.carrera.ui.CarreraListActivity;
 import gt.com.ro.devumgapp.core.session.SessionManager;
 import gt.com.ro.devumgapp.curso.ui.CursoListActivity;
+import gt.com.ro.devumgapp.docente.ui.DocenteListActivity;
 import gt.com.ro.devumgapp.inscripcion.ui.InscripcionListActivity;
 import gt.com.ro.devumgapp.nota.ui.NotaListActivity;
 
@@ -380,6 +381,9 @@ public class HomeActivity extends AppCompatActivity {
         }
         if (itemId == R.id.nav_estudiantes) {
             return new Intent(this, EstudianteListActivity.class);
+        }
+        if (itemId == R.id.nav_docentes) {
+            return new Intent(this, DocenteListActivity.class);
         }
         return null;
     }
