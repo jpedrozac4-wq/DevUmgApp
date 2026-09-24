@@ -78,4 +78,6 @@
     <string name="module_colegiaturas_description">Control de colegiaturas</string>
     <string name="module_usuarios_description">Administraci&#243;n de usuarios</string>
     <string name="bottom_profile">Perfil</string>
+
+
 </resources>
