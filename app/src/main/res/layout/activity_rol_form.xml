@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtTituloFormRol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rol_form_titulo"
+            android:textSize="20sp"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/edtNombreRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nombre del Rol"/>
+
+        <Button
+            android:id="@+id/btnGuardarRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rol_btn_guardar"/>
+
+        <Button
+            android:id="@+id/btnCancelarRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/rol_btn_cancelar"/>
+    </LinearLayout>
+</ScrollView>

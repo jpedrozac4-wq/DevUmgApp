@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="usuario_titulo">Gestión de Usuarios</string>
+    <string name="usuario_lista_titulo">Lista de Usuarios</string>
+    <string name="usuario_form_titulo">Formulario de Usuario</string>
+    <string name="usuario_btn_guardar">Guardar Usuario</string>
+    <string name="usuario_btn_cancelar">Cancelar</string>
+    <string name="usuario_mensaje_exito">Usuario guardado correctamente</string>
+    <string name="usuario_mensaje_error">Error al guardar usuario</string>
+    <string name="usuario_volver">Volver</string>
+    <string name="usuario_nombre_hint">Nombre del usuario</string>
+    <string name="usuario_correo_hint">Correo electrónico</string>
+</resources>

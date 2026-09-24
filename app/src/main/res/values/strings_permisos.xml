@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="permiso_titulo">Gestión de Permisos</string>
+    <string name="permiso_lista_titulo">Lista de Permisos</string>
+    <string name="permiso_form_titulo">Formulario de Permiso</string>
+    <string name="permiso_btn_guardar">Guardar Permiso</string>
+    <string name="permiso_btn_cancelar">Cancelar</string>
+    <string name="permiso_mensaje_exito">Permiso guardado correctamente</string>
+    <string name="permiso_mensaje_error">Error al guardar permiso</string>
+</resources>

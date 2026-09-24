@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rol_titulo">Gestión de Roles</string>
+    <string name="rol_lista_titulo">Lista de Roles</string>
+    <string name="rol_form_titulo">Formulario de Rol</string>
+    <string name="rol_btn_guardar">Guardar Rol</string>
+    <string name="rol_btn_cancelar">Cancelar</string>
+    <string name="rol_mensaje_exito">Rol guardado correctamente</string>
+    <string name="rol_mensaje_error">Error al guardar rol</string>
+</resources>
