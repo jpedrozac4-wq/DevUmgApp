@@ -110,7 +110,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/usuario_username"
-                        app:boxStrokeColor="@color/dashboard_grade">
+                        app:boxStrokeColor="@color/dashboard_users">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtUsuarioUsername"
@@ -126,7 +126,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:hint="@string/usuario_email"
-                        app:boxStrokeColor="@color/dashboard_grade">
+                        app:boxStrokeColor="@color/dashboard_users">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtUsuarioEmail"
@@ -142,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:hint="@string/usuario_password"
-                        app:boxStrokeColor="@color/dashboard_grade">
+                        app:boxStrokeColor="@color/dashboard_users">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtUsuarioPassword"
@@ -160,7 +160,7 @@
                         android:layout_marginTop="20dp"
                         android:text="@string/guardar"
                         android:textAllCaps="false"
-                        app:backgroundTint="@color/dashboard_grade"
+                        app:backgroundTint="@color/dashboard_users"
                         app:icon="@drawable/ic_save"
                         app:iconGravity="textStart"
                         app:iconTint="@color/white"/>
@@ -183,7 +183,7 @@
                         android:layout_marginTop="12dp"
                         android:indeterminate="true"
                         android:visibility="gone"
-                        app:indicatorColor="@color/dashboard_grade"/>
+                        app:indicatorColor="@color/dashboard_users"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

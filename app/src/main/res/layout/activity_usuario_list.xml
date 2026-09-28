@@ -120,7 +120,7 @@
                         android:layout_marginTop="16dp"
                         android:text="@string/guardar"
                         android:textAllCaps="false"
-                        app:backgroundTint="@color/dashboard_grade"
+                        app:backgroundTint="@color/dashboard_users"
                         app:icon="@drawable/ic_save"
                         app:iconGravity="textStart"
                         app:iconTint="@color/white"/>

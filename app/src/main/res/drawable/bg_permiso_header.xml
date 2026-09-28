@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="@color/dashboard_users" />
+            <solid android:color="@color/dashboard_permiso" />
             <corners android:radius="@dimen/dashboard_header_radius" />
         </shape>
     </item>
