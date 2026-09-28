@@ -1,7 +1,21 @@
 package gt.com.ro.devumgapp.permiso.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 public class PermisoRequest {
-    public String codigo;      // 3 a 80, patron A-Za-z0-9_
-    public String nombre;      // 3 a 120
-    public String descripcion; // Máximo 300
+
+    @SerializedName("codigo")
+    public String codigo;
+
+    @SerializedName("nombre")
+    public String nombre;
+
+    @SerializedName("descripcion")
+    public String descripcion;
+
+    public PermisoRequest(String codigo, String nombre, String descripcion) {
+        this.codigo = codigo;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+    }
 }
