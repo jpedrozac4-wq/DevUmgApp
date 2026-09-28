@@ -38,6 +38,14 @@
             android:id="@+id/nav_usuarios"
             android:icon="@drawable/ic_users"
             android:title="@string/nav_usuarios" />
+        <item
+            android:id="@+id/nav_roles"
+            android:icon="@drawable/ic_badge"
+            android:title="@string/nav_roles" />
+        <item
+            android:id="@+id/nav_permisos"
+            android:icon="@drawable/ic_lock"
+            android:title="@string/nav_permisos" />
     </group>
 
     <group>

@@ -62,7 +62,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
-                        android:text="@string/usuario_form_titulo"
+                        android:text="@string/usuario_form_titulo_crear"
                         android:textColor="@color/dashboard_on_primary"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
@@ -72,7 +72,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:fontFamily="sans-serif-medium"
-                        android:text="@string/usuario_lista_titulo"
+                        android:text="@string/usuario_form_subtitulo"
                         android:textColor="@color/dashboard_on_primary_secondary"
                         android:textSize="14sp"/>
                 </LinearLayout>
@@ -80,6 +80,7 @@
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:alpha="0.9"
                     android:src="@drawable/ic_user"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
@@ -104,51 +105,157 @@
                     android:orientation="vertical"
                     android:padding="@dimen/dashboard_card_padding">
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/usuario_form_datos_titulo"
+                        android:textColor="@color/dashboard_text_primary"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+
                     <!-- Campo Usuario -->
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUsuarioUsername"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/usuario_username"
-                        app:boxStrokeColor="@color/dashboard_users">
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/usuario_username_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_users"
+                        app:hintTextColor="@color/dashboard_users"
+                        app:startIconDrawable="@drawable/ic_user"
+                        app:startIconTint="@color/dashboard_users">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtUsuarioUsername"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textPersonName"/>
+                            android:imeOptions="actionNext"
+                            android:inputType="text"
+                            android:maxLength="50"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/dashboard_text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Campo Email -->
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUsuarioEmail"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="@string/usuario_email"
-                        app:boxStrokeColor="@color/dashboard_users">
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/usuario_email_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_users"
+                        app:hintTextColor="@color/dashboard_users"
+                        app:startIconDrawable="@drawable/ic_badge"
+                        app:startIconTint="@color/dashboard_users">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtUsuarioEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"/>
+                            android:imeOptions="actionNext"
+                            android:inputType="textEmailAddress"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/dashboard_text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Campo Password -->
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUsuarioPassword"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="@string/usuario_password"
-                        app:boxStrokeColor="@color/dashboard_users">
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/usuario_password_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_users"
+                        app:hintTextColor="@color/dashboard_users"
+                        app:startIconDrawable="@drawable/ic_lock"
+                        app:startIconTint="@color/dashboard_users">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtUsuarioPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textPassword"/>
+                            android:imeOptions="actionNext"
+                            android:importantForAutofill="no"
+                            android:inputType="textPassword"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/dashboard_text_primary"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Campo Nombre -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUsuarioNombre"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/usuario_nombre_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_users"
+                        app:hintTextColor="@color/dashboard_users"
+                        app:startIconDrawable="@drawable/ic_badge"
+                        app:startIconTint="@color/dashboard_users">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtUsuarioNombre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapWords"
+                            android:maxLength="100"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/dashboard_text_primary"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Campo Apellido -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUsuarioApellido"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/usuario_apellido_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_users"
+                        app:hintTextColor="@color/dashboard_users"
+                        app:startIconDrawable="@drawable/ic_badge"
+                        app:startIconTint="@color/dashboard_users">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtUsuarioApellido"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapWords"
+                            android:maxLength="100"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/dashboard_text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Botón Guardar -->
@@ -156,11 +263,12 @@
                         android:id="@+id/btnGuardarUsuario"
                         style="@style/Widget.Material3.Button"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/login_button_height"
                         android:layout_marginTop="20dp"
-                        android:text="@string/guardar"
+                        android:text="@string/usuario_btn_guardar"
                         android:textAllCaps="false"
                         app:backgroundTint="@color/dashboard_users"
+                        app:cornerRadius="8dp"
                         app:icon="@drawable/ic_save"
                         app:iconGravity="textStart"
                         app:iconTint="@color/white"/>
@@ -168,14 +276,14 @@
                     <!-- Botón Cancelar -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCancelarUsuario"
-                        style="@style/Widget.Material3.Button"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/login_button_height"
                         android:layout_marginTop="8dp"
-                        android:text="@string/cancelar"
-                        android:textAllCaps="false"/>
+                        android:text="@string/usuario_btn_cancelar"
+                        android:textAllCaps="false"
+                        app:cornerRadius="8dp"/>
 
-                    <!-- ProgressBar -->
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/progressUsuarioForm"
                         android:layout_width="match_parent"
@@ -183,7 +291,8 @@
                         android:layout_marginTop="12dp"
                         android:indeterminate="true"
                         android:visibility="gone"
-                        app:indicatorColor="@color/dashboard_users"/>
+                        app:indicatorColor="@color/dashboard_users"
+                        tools:visibility="visible"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

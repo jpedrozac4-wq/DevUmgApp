@@ -3,29 +3,89 @@
     <!-- Títulos -->
     <string name="usuario_titulo">Gestión de Usuarios</string>
     <string name="usuario_lista_titulo">Lista de Usuarios</string>
+    <string name="usuario_subtitulo">Administra los usuarios y sus roles</string>
     <string name="usuario_form_titulo">Formulario de Usuario</string>
+    <string name="usuario_form_titulo_crear">Nuevo usuario</string>
+    <string name="usuario_form_titulo_editar">Editar usuario</string>
+    <string name="usuario_form_subtitulo">Completa los datos del usuario</string>
+    <string name="usuario_filtros_titulo">Búsqueda</string>
+    <string name="usuario_form_datos_titulo">Datos del usuario</string>
+
+    <!-- Roles del usuario -->
+    <string name="usuario_roles_titulo">Roles del usuario</string>
+    <string name="usuario_roles_subtitulo">Selecciona los roles que tendrá el usuario</string>
+    <string name="usuario_roles_ayuda">Al guardar se reemplaza el conjunto completo de roles: lo que no marques se quita del usuario.</string>
+    <string name="usuario_roles_nota_inactivo">Un rol ya asignado que ahora está inactivo también se muestra para que no se pierda al guardar.</string>
+    <string name="usuario_roles_vacio">No hay roles disponibles para asignar.</string>
+    <string name="usuario_roles_item_formato">%1$s · %2$s</string>
+    <string name="usuario_roles_item_inactivo_formato">%1$s (%2$s)</string>
+    <string name="usuario_roles_separador">" · "</string>
 
     <!-- Botones -->
     <string name="usuario_btn_guardar">Guardar Usuario</string>
     <string name="usuario_btn_cancelar">Cancelar</string>
+    <string name="usuario_btn_guardar_roles">Guardar Roles</string>
+    <string name="usuario_accion_buscar">Buscar</string>
+    <string name="usuario_accion_agregar">Agregar</string>
+    <string name="usuario_accion_editar">Editar</string>
+    <string name="usuario_accion_eliminar">Eliminar</string>
+    <string name="usuario_accion_roles">Roles</string>
+
+    <!-- Búsqueda -->
+    <string name="usuario_buscar_hint">Buscar por nombre, usuario o correo</string>
+
+    <!-- Estado -->
+    <string name="usuario_estado_activo">Activo</string>
+    <string name="usuario_estado_inactivo">Inactivo</string>
+    <string name="usuario_sin_roles">Sin roles</string>
+
+    <!-- Hints -->
+    <string name="usuario_username_hint">Usuario</string>
+    <string name="usuario_email_hint">Correo electrónico</string>
+    <string name="usuario_password_hint">Contraseña</string>
+    <string name="usuario_password_editar_hint">Contraseña (dejar vacío para no cambiarla)</string>
+    <string name="usuario_nombre_hint">Nombre</string>
+    <string name="usuario_apellido_hint">Apellido</string>
+
+    <!-- Listado -->
+    <string name="usuario_empty">No se encontraron usuarios.</string>
+
+    <!-- Confirmación de eliminación -->
+    <string name="usuario_eliminar_titulo">Eliminar usuario</string>
+    <string name="usuario_eliminar_mensaje">¿Seguro que quieres eliminar a %1$s? Esta acción no se puede deshacer.</string>
+    <string name="usuario_eliminar_confirmar">Eliminar</string>
+    <string name="usuario_eliminar_cancelar">Cancelar</string>
 
     <!-- Mensajes -->
     <string name="usuario_mensaje_exito">Usuario guardado correctamente</string>
     <string name="usuario_mensaje_error">Error al guardar usuario</string>
+    <string name="usuario_creado">Usuario creado correctamente.</string>
+    <string name="usuario_actualizado">Usuario actualizado correctamente.</string>
+    <string name="usuario_eliminado">Usuario eliminado correctamente.</string>
+    <string name="usuario_roles_actualizados">Roles del usuario actualizados correctamente.</string>
     <string name="usuario_volver">Volver</string>
 
-    <!-- Hints -->
-    <string name="usuario_nombre_hint">Nombre del usuario</string>
-    <string name="usuario_correo_hint">Correo electrónico</string>
-    <string name="usuario_username_hint">Usuario</string>
-    <string name="usuario_password_hint">Contraseña</string>
+    <!-- Errores HTTP -->
+    <string name="usuario_error_bad_request">Datos inválidos.</string>
+    <string name="usuario_error_unauthorized">Sesión no válida o vencida.</string>
+    <string name="usuario_error_forbidden">Requiere rol ADMIN</string>
+    <string name="usuario_error_not_found">Usuario no encontrado.</string>
+    <string name="usuario_error_conflict">El usuario ya existe.</string>
+    <string name="usuario_error_internal_server">Error interno del servidor.</string>
+    <string name="usuario_error_server">No fue posible procesar la solicitud.</string>
+    <string name="usuario_error_no_internet">Verifica tu conexión a Internet.</string>
+    <string name="usuario_error_timeout">El servidor tardó demasiado en responder.</string>
+    <string name="usuario_error_network">No fue posible conectar con el servidor.</string>
 
-    <!-- Campos usados en layouts -->
-    <string name="usuario_username">Usuario</string>
-    <string name="usuario_email">Correo electrónico</string>
-    <string name="usuario_password">Contraseña</string>
-
-    <!-- Botones generales -->
-    <string name="guardar">Guardar</string>
-    <string name="cancelar">Cancelar</string>
+    <!-- Errores de validación -->
+    <string name="usuario_error_username_requerido">Ingresa el usuario.</string>
+    <string name="usuario_error_username_longitud">El usuario debe tener entre 3 y 50 caracteres.</string>
+    <string name="usuario_error_password_requerido">Ingresa la contraseña.</string>
+    <string name="usuario_error_password_longitud">La contraseña debe tener al menos 8 caracteres.</string>
+    <string name="usuario_error_email_requerido">Ingresa el correo electrónico.</string>
+    <string name="usuario_error_email_formato">Ingresa un correo electrónico válido.</string>
+    <string name="usuario_error_nombre_requerido">Ingresa el nombre.</string>
+    <string name="usuario_error_nombre_longitud">El nombre debe tener entre 3 y 100 caracteres.</string>
+    <string name="usuario_error_apellido_requerido">Ingresa el apellido.</string>
+    <string name="usuario_error_apellido_longitud">El apellido debe tener entre 3 y 100 caracteres.</string>
 </resources>
