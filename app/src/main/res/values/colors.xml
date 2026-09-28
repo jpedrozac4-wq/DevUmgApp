@@ -71,4 +71,6 @@
     <color name="dashboard_grade">#F59E0B</color>
     <color name="dashboard_payment">#22A06B</color>
     <color name="dashboard_users">#C026D3</color>
+    <color name="dashboard_rol">#DC2626</color>
+    <color name="dashboard_permiso">#0891B2</color>
 </resources>

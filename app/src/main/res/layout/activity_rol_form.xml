@@ -45,7 +45,7 @@
                 android:id="@+id/rolFormHero"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_usuario_header"
+                android:background="@drawable/bg_rol_header"
                 android:gravity="center_vertical"
                 android:minHeight="116dp"
                 android:orientation="horizontal"
@@ -126,10 +126,10 @@
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
-                        app:boxStrokeColor="@color/dashboard_grade"
-                        app:hintTextColor="@color/dashboard_grade"
+                        app:boxStrokeColor="@color/dashboard_rol"
+                        app:hintTextColor="@color/dashboard_rol"
                         app:startIconDrawable="@drawable/ic_badge"
-                        app:startIconTint="@color/dashboard_grade">
+                        app:startIconTint="@color/dashboard_rol">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtRolCodigo"
@@ -155,10 +155,10 @@
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
-                        app:boxStrokeColor="@color/dashboard_grade"
-                        app:hintTextColor="@color/dashboard_grade"
+                        app:boxStrokeColor="@color/dashboard_rol"
+                        app:hintTextColor="@color/dashboard_rol"
                         app:startIconDrawable="@drawable/ic_badge"
-                        app:startIconTint="@color/dashboard_grade">
+                        app:startIconTint="@color/dashboard_rol">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtRolNombre"
@@ -183,12 +183,12 @@
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
-                        app:boxStrokeColor="@color/dashboard_grade"
+                        app:boxStrokeColor="@color/dashboard_rol"
                         app:counterEnabled="true"
                         app:counterMaxLength="300"
-                        app:hintTextColor="@color/dashboard_grade"
+                        app:hintTextColor="@color/dashboard_rol"
                         app:startIconDrawable="@drawable/ic_description"
-                        app:startIconTint="@color/dashboard_grade">
+                        app:startIconTint="@color/dashboard_rol">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtRolDescripcion"
@@ -231,7 +231,7 @@
                         android:fontFamily="sans-serif-medium"
                         android:lineSpacingExtra="2dp"
                         android:text="@string/rol_permisos_nota_inactivo"
-                        android:textColor="@color/dashboard_grade"
+                        android:textColor="@color/dashboard_accent"
                         android:textSize="13sp"
                         android:visibility="gone"
                         tools:visibility="visible"/>
@@ -263,7 +263,7 @@
                         android:layout_marginTop="20dp"
                         android:text="@string/rol_btn_guardar"
                         android:textAllCaps="false"
-                        app:backgroundTint="@color/dashboard_grade"
+                        app:backgroundTint="@color/dashboard_rol"
                         app:cornerRadius="8dp"
                         app:icon="@drawable/ic_save"
                         app:iconGravity="textStart"

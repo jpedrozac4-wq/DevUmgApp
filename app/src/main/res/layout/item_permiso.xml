@@ -38,7 +38,7 @@
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_lock"
-                    app:tint="@color/dashboard_grade" />
+                    app:tint="@color/dashboard_permiso" />
             </FrameLayout>
 
             <LinearLayout
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
-                    android:textColor="@color/dashboard_grade"
+                    android:textColor="@color/dashboard_permiso"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="CARRERAS_LEER" />
@@ -99,7 +99,7 @@
                 app:cornerRadius="8dp"
                 app:icon="@drawable/ic_power"
                 app:iconGravity="textStart"
-                app:iconTint="@color/dashboard_grade"
+                app:iconTint="@color/dashboard_permiso"
                 tools:text="@string/permiso_accion_desactivar" />
         </LinearLayout>
     </LinearLayout>

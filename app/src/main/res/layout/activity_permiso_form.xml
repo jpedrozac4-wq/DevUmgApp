@@ -45,7 +45,7 @@
                 android:id="@+id/permisoFormHero"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_usuario_header"
+                android:background="@drawable/bg_permiso_header"
                 android:gravity="center_vertical"
                 android:minHeight="116dp"
                 android:orientation="horizontal"
@@ -126,10 +126,10 @@
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
-                        app:boxStrokeColor="@color/dashboard_grade"
-                        app:hintTextColor="@color/dashboard_grade"
+                        app:boxStrokeColor="@color/dashboard_permiso"
+                        app:hintTextColor="@color/dashboard_permiso"
                         app:startIconDrawable="@drawable/ic_badge"
-                        app:startIconTint="@color/dashboard_grade">
+                        app:startIconTint="@color/dashboard_permiso">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtPermisoCodigo"
@@ -155,10 +155,10 @@
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
-                        app:boxStrokeColor="@color/dashboard_grade"
-                        app:hintTextColor="@color/dashboard_grade"
+                        app:boxStrokeColor="@color/dashboard_permiso"
+                        app:hintTextColor="@color/dashboard_permiso"
                         app:startIconDrawable="@drawable/ic_lock"
-                        app:startIconTint="@color/dashboard_grade">
+                        app:startIconTint="@color/dashboard_permiso">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtPermisoNombre"
@@ -183,12 +183,12 @@
                         app:boxCornerRadiusBottomStart="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusTopStart="8dp"
-                        app:boxStrokeColor="@color/dashboard_grade"
+                        app:boxStrokeColor="@color/dashboard_permiso"
                         app:counterEnabled="true"
                         app:counterMaxLength="300"
-                        app:hintTextColor="@color/dashboard_grade"
+                        app:hintTextColor="@color/dashboard_permiso"
                         app:startIconDrawable="@drawable/ic_description"
-                        app:startIconTint="@color/dashboard_grade">
+                        app:startIconTint="@color/dashboard_permiso">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/edtPermisoDescripcion"
@@ -210,7 +210,7 @@
                         android:layout_marginTop="20dp"
                         android:text="@string/permiso_btn_guardar"
                         android:textAllCaps="false"
-                        app:backgroundTint="@color/dashboard_grade"
+                        app:backgroundTint="@color/dashboard_permiso"
                         app:cornerRadius="8dp"
                         app:icon="@drawable/ic_save"
                         app:iconGravity="textStart"

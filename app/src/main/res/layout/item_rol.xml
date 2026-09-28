@@ -38,7 +38,7 @@
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_badge"
-                    app:tint="@color/dashboard_grade" />
+                    app:tint="@color/dashboard_rol" />
             </FrameLayout>
 
             <LinearLayout
@@ -53,7 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-black"
-                    android:textColor="@color/dashboard_grade"
+                    android:textColor="@color/dashboard_rol"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="GESTOR" />
@@ -99,7 +99,7 @@
                 app:cornerRadius="8dp"
                 app:icon="@drawable/ic_power"
                 app:iconGravity="textStart"
-                app:iconTint="@color/dashboard_grade"
+                app:iconTint="@color/dashboard_rol"
                 tools:text="@string/rol_accion_desactivar" />
         </LinearLayout>
     </LinearLayout>
