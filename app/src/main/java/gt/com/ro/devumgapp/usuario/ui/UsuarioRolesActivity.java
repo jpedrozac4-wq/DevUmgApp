@@ -24,6 +24,7 @@ import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.rol.dto.RolResumenResponse;
@@ -70,6 +71,7 @@ public class UsuarioRolesActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.requireAll(this, Permissions.USUARIOS_LEER, "USUARIOS_ASIGNAR_ROLES")) return;
         setContentView(R.layout.activity_usuario_roles);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));

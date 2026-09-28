@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.rol.dto.RolResponse;
 
 class RolAdapter extends RecyclerView.Adapter<RolAdapter.RolViewHolder> {
@@ -26,6 +27,8 @@ class RolAdapter extends RecyclerView.Adapter<RolAdapter.RolViewHolder> {
         void onEdit(RolResponse rol);
 
         void onToggleStatus(RolResponse rol);
+
+        void onManagePermissions(RolResponse rol);
     }
 
     private final Listener listener;
@@ -113,6 +116,7 @@ class RolAdapter extends RecyclerView.Adapter<RolAdapter.RolViewHolder> {
         private final TextView txtNombre;
         private final TextView txtEstado;
         private final MaterialButton btnEstado;
+        private final MaterialButton btnPermisos;
 
         RolViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -120,6 +124,7 @@ class RolAdapter extends RecyclerView.Adapter<RolAdapter.RolViewHolder> {
             txtNombre = itemView.findViewById(R.id.txtRolNombre);
             txtEstado = itemView.findViewById(R.id.txtRolEstado);
             btnEstado = itemView.findViewById(R.id.btnToggleRolEstado);
+            btnPermisos = itemView.findViewById(R.id.btnGestionarPermisosRol);
         }
 
         void bind(RolResponse rol, boolean changingStatus) {
@@ -139,9 +144,13 @@ class RolAdapter extends RecyclerView.Adapter<RolAdapter.RolViewHolder> {
             btnEstado.setText(actionLabel);
             btnEstado.setContentDescription(itemView.getContext().getString(actionLabel));
             btnEstado.setEnabled(!changingStatus);
-            itemView.setEnabled(!changingStatus);
+            itemView.setClickable(Permissions.has("ROLES_EDITAR"));
+            itemView.setEnabled(Permissions.has("ROLES_EDITAR") && !changingStatus);
+            btnEstado.setVisibility(Permissions.has("ROLES_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
+            btnPermisos.setVisibility(Permissions.has("ROLES_ASIGNAR_PERMISOS") ? View.VISIBLE : View.GONE);
             itemView.setOnClickListener(view -> listener.onEdit(rol));
             btnEstado.setOnClickListener(view -> animatePress(view, () -> listener.onToggleStatus(rol)));
+            btnPermisos.setOnClickListener(view -> listener.onManagePermissions(rol));
         }
 
         private String nonNull(String value) {

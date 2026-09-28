@@ -132,6 +132,7 @@
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
                 app:iconTint="@color/dashboard_teacher" />
+
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

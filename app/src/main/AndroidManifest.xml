@@ -34,6 +34,11 @@
             android:parentActivityName=".auth.ui.LoginActivity" />
 
         <activity
+            android:name=".auth.ui.ProfileActivity"
+            android:exported="false"
+            android:parentActivityName=".auth.ui.HomeActivity" />
+
+        <activity
             android:name=".carrera.ui.CarreraListActivity"
             android:exported="false" />
 

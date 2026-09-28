@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResumenResponse;
 import gt.com.ro.devumgapp.carrera.dto.EstadoRequest;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
@@ -91,6 +92,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "CURSOS_LEER")) return;
         setContentView(R.layout.activity_curso_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -193,6 +195,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         cursoFilterControls = findViewById(R.id.cursoFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarCurso);
         btnAgregar = findViewById(R.id.btnAgregarCurso);
+        btnAgregar.setVisibility(Permissions.has("CURSOS_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnCursosAnterior);
         btnSiguiente = findViewById(R.id.btnCursosSiguiente);
         toolbar.setNavigationOnClickListener(view -> finish());

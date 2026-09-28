@@ -56,10 +56,25 @@
     <string name="dashboard_subtitle">Sistema de Gesti&#243;n Acad&#233;mica</string>
     <string name="dashboard_greeting_named">&#161;Hola, %1$s!</string>
     <string name="dashboard_greeting_default">&#161;Hola!</string>
+    <string name="dashboard_greeting_morning">Buenos d&#237;as</string>
+    <string name="dashboard_greeting_afternoon">Buenas tardes</string>
+    <string name="dashboard_greeting_evening">Buenas noches</string>
     <string name="dashboard_welcome">Bienvenida nuevamente</string>
     <string name="dashboard_user_label">Usuario: %1$s</string>
     <string name="dashboard_role_label">Rol: %1$s</string>
     <string name="dashboard_modules_title">M&#243;dulos acad&#233;micos</string>
+    <string name="dashboard_access_title">Accesos disponibles</string>
+    <string name="dashboard_student_summary_title">Resumen acad&#233;mico</string>
+    <string name="dashboard_student_summary_unavailable">A&#250;n no es posible cargar tus cursos ni calcular tu promedio: el perfil autenticado no incluye el identificador de estudiante.</string>
+    <string name="dashboard_teacher_summary_title">Cursos asignados</string>
+    <string name="dashboard_teacher_summary_unavailable">A&#250;n no es posible identificar tus cursos asignados: el perfil autenticado no incluye el identificador de docente.</string>
+    <string name="dashboard_admin_summary_title">Panel de gesti&#243;n</string>
+    <string name="dashboard_admin_summary">Tienes acceso a %1$d m&#243;dulos de SGAU. Usa los accesos disponibles para administrarlos.</string>
+    <string name="dashboard_admin_access_summary">Acceso a %1$d m&#243;dulos de SGAU</string>
+    <string name="dashboard_daily_title">Pr&#243;xima clase y actividades de hoy</string>
+    <string name="dashboard_schedule_unavailable">La API no proporciona d&#237;as, horas ni salones para los cursos. Esta secci&#243;n se activar&#225; cuando exista informaci&#243;n de horario.</string>
+    <string name="dashboard_action_courses">Ver cursos</string>
+    <string name="dashboard_action_grades">Ver notas</string>
     <string name="dashboard_profile_description">Perfil de usuario</string>
     <string name="dashboard_avatar_description">Inicial del usuario</string>
     <string name="dashboard_module_available">Abrir %1$s</string>
@@ -82,6 +97,24 @@
     <string name="module_roles_description">Gesti&#243;n de roles y sus permisos</string>
     <string name="module_permisos_description">Cat&#225;logo de permisos</string>
     <string name="bottom_profile">Perfil</string>
+
+    <!-- Perfil autenticado -->
+    <string name="profile_title">Mi perfil</string>
+    <string name="profile_back">Volver al dashboard</string>
+    <string name="profile_account_subtitle">Cuenta SGAU</string>
+    <string name="profile_information">Informaci&#243;n personal</string>
+    <string name="profile_username">Usuario</string>
+    <string name="profile_email">Correo electr&#243;nico</string>
+    <string name="profile_roles">Roles</string>
+    <string name="profile_security">Cuenta y seguridad</string>
+    <string name="profile_edit_action">Editar usuario y correo</string>
+    <string name="profile_password_action">Cambiar contrase&#241;a</string>
+    <string name="profile_actions_note">Estas opciones estar&#225;n disponibles cuando el servidor habilite la edici&#243;n segura del perfil.</string>
+    <string name="profile_edit_unavailable">El servidor todav&#237;a no ofrece una ruta segura para realizar este cambio.</string>
+    <string name="profile_not_available">No disponible</string>
+    <string name="profile_load_error">No se pudo actualizar el perfil. Se muestran los datos guardados.</string>
+    <string name="profile_network_error">Sin conexi&#243;n con el servidor. Se muestran los datos guardados.</string>
+    <string name="profile_retry">Reintentar</string>
 
 
 </resources>

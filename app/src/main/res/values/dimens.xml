@@ -48,7 +48,7 @@
     <dimen name="dashboard_module_icon_size">34dp</dimen>
     <dimen name="dashboard_module_min_height">142dp</dimen>
     <dimen name="dashboard_grid_gap">12dp</dimen>
-    <dimen name="dashboard_nav_header_height">188dp</dimen>
+    <dimen name="dashboard_nav_header_height">204dp</dimen>
     <dimen name="dashboard_avatar_size">44dp</dimen>
     <dimen name="dashboard_welcome_card_height">150dp</dimen>
     <dimen name="dashboard_bottom_nav_height">72dp</dimen>

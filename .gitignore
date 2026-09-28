@@ -1,5 +1,7 @@
 *.iml
 .gradle
+*.md
+*.json
 .atl/
 *.md
 /guias

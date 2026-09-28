@@ -30,9 +30,9 @@
     <color name="dashboard_student">#32A7E2</color>
     <color name="dashboard_teacher">#16A3A3</color>
     <color name="dashboard_enrollment">#7C3AED</color>
-    <color name="dashboard_grade">#F59E0B</color>
-    <color name="dashboard_payment">#22A06B</color>
-    <color name="dashboard_users">#C026D3</color>
-    <color name="dashboard_rol">#DC2626</color>
-    <color name="dashboard_permiso">#0891B2</color>
+    <color name="dashboard_grade">#818CF8</color>
+    <color name="dashboard_payment">#38BDF8</color>
+    <color name="dashboard_users">#60A5FA</color>
+    <color name="dashboard_rol">#0EA5E9</color>
+    <color name="dashboard_permiso">#A5B4FC</color>
 </resources>

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.permiso.dto.PermisoResponse;
 
 class PermisoAdapter extends RecyclerView.Adapter<PermisoAdapter.PermisoViewHolder> {
@@ -139,6 +140,9 @@ class PermisoAdapter extends RecyclerView.Adapter<PermisoAdapter.PermisoViewHold
             btnEstado.setText(actionLabel);
             btnEstado.setContentDescription(itemView.getContext().getString(actionLabel));
             btnEstado.setEnabled(!changingStatus);
+            itemView.setClickable(Permissions.has("PERMISOS_EDITAR"));
+            itemView.setEnabled(Permissions.has("PERMISOS_EDITAR") && !changingStatus);
+            btnEstado.setVisibility(Permissions.has("PERMISOS_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
             itemView.setEnabled(!changingStatus);
             itemView.setOnClickListener(view -> listener.onEdit(permiso));
             btnEstado.setOnClickListener(view -> animatePress(view, () -> listener.onToggleStatus(permiso)));

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.docente.dto.DocenteResponse;
 
 class DocenteAdapter extends RecyclerView.Adapter<DocenteAdapter.DocenteViewHolder> {
@@ -26,6 +27,7 @@ class DocenteAdapter extends RecyclerView.Adapter<DocenteAdapter.DocenteViewHold
         void onEdit(DocenteResponse docente);
 
         void onToggleStatus(DocenteResponse docente);
+
     }
 
     private final Listener listener;
@@ -155,6 +157,8 @@ class DocenteAdapter extends RecyclerView.Adapter<DocenteAdapter.DocenteViewHold
 
             btnEditar.setEnabled(!busy);
             btnEstado.setEnabled(!busy);
+            btnEditar.setVisibility(Permissions.has("DOCENTES_EDITAR") ? View.VISIBLE : View.GONE);
+            btnEstado.setVisibility(Permissions.has("DOCENTES_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
             btnEditar.setOnClickListener(view -> animatePress(view, () -> listener.onEdit(docente)));
             btnEstado.setOnClickListener(view -> animatePress(view, () -> listener.onToggleStatus(docente)));
         }

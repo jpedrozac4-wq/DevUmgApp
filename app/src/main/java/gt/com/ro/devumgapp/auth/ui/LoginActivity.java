@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private TextView txtLoginError;
     private AuthApiService authApiService;
     private Call<LoginResponse> loginCall;
+    private Call<LoginResponse> profileCall;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +60,15 @@ public class LoginActivity extends AppCompatActivity {
         insetsController.setAppearanceLightStatusBars(true);
         insetsController.setAppearanceLightNavigationBars(true);
 
-        if (SessionManager.getInstance().isLoggedIn()) {
-            // Session active: check for updates first, then continue to Home.
-            checkForUpdates(this::navigateToHome);
-            return;
-        }
-
-        // No active session: run the update check in background without blocking the login UI.
-        checkForUpdates(null);
-
         authApiService = RetrofitClient.getClient().create(AuthApiService.class);
         bindViews();
         restoreRememberedUsername();
         setupFormActions();
+        if (SessionManager.getInstance().isLoggedIn()) {
+            refreshSavedProfile();
+        } else {
+            checkForUpdates(null);
+        }
     }
 
     private void checkForUpdates(Runnable onFinished) {
@@ -97,7 +94,34 @@ public class LoginActivity extends AppCompatActivity {
         if (loginCall != null) {
             loginCall.cancel();
         }
+        if (profileCall != null) profileCall.cancel();
         super.onDestroy();
+    }
+
+    private void refreshSavedProfile() {
+        setLoading(true);
+        profileCall = authApiService.me();
+        profileCall.enqueue(new Callback<LoginResponse>() {
+            @Override public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (isFinishing()) return;
+                setLoading(false);
+                if (response.isSuccessful() && response.body() != null) {
+                    SessionManager.getInstance().refreshProfile(response.body());
+                    checkForUpdates(LoginActivity.this::navigateToHome);
+                } else if (response.code() == 401) {
+                    SessionManager.getInstance().logout();
+                    showGeneralError(getString(R.string.error_invalid_credentials));
+                    checkForUpdates(null);
+                } else {
+                    showGeneralError("No se pudo actualizar la sesión. Intenta iniciar sesión de nuevo.");
+                }
+            }
+            @Override public void onFailure(Call<LoginResponse> call, Throwable error) {
+                if (call.isCanceled() || isFinishing()) return;
+                setLoading(false);
+                showGeneralError(resolveFailureMessage(error));
+            }
+        });
     }
 
     private void bindViews() {
@@ -217,7 +241,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void navigateToHome() {
-        startActivity(new Intent(this, HomeActivity.class));
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra("profileVerified", true);
+        startActivity(intent);
         finish();
     }
 

@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResponse;
 
 final class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.ViewHolder> {
@@ -215,6 +216,8 @@ final class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vie
 
             estadoBtn.setEnabled(!changing);
             editar.setEnabled(!changing);
+            editar.setVisibility(Permissions.has("ESTUDIANTES_EDITAR") ? View.VISIBLE : View.GONE);
+            estadoBtn.setVisibility(Permissions.has("ESTUDIANTES_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
 
             editar.setOnClickListener(
                     v -> listener.onEdit(e)

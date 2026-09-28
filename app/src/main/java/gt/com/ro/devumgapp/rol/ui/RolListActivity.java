@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.dto.EstadoRequest;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
@@ -76,6 +77,7 @@ public class RolListActivity extends AppCompatActivity implements RolAdapter.Lis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "ROLES_LEER")) return;
         setContentView(R.layout.activity_rol_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -121,6 +123,15 @@ public class RolListActivity extends AppCompatActivity implements RolAdapter.Lis
     public void onEdit(RolResponse rol) {
         Intent intent = new Intent(this, RolFormActivity.class);
         intent.putExtra(RolFormActivity.EXTRA_ID, rol.id);
+        formLauncher.launch(intent);
+    }
+
+    @Override
+    public void onManagePermissions(RolResponse rol) {
+        if (!Permissions.has("ROLES_ASIGNAR_PERMISOS")) return;
+        Intent intent = new Intent(this, RolFormActivity.class);
+        intent.putExtra(RolFormActivity.EXTRA_ID, rol.id);
+        intent.putExtra(RolFormActivity.EXTRA_PERMISSION_ONLY, true);
         formLauncher.launch(intent);
     }
 
@@ -183,6 +194,7 @@ public class RolListActivity extends AppCompatActivity implements RolAdapter.Lis
         rolFilterControls = findViewById(R.id.rolFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarRol);
         btnAgregar = findViewById(R.id.btnAgregarRol);
+        btnAgregar.setVisibility(Permissions.has("ROLES_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnRolesAnterior);
         btnSiguiente = findViewById(R.id.btnRolesSiguiente);
     }

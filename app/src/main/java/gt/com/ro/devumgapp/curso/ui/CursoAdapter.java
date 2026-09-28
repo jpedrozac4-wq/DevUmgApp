@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 
 class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.CursoViewHolder> {
@@ -160,6 +161,10 @@ class CursoAdapter extends RecyclerView.Adapter<CursoAdapter.CursoViewHolder> {
                     ? R.string.curso_accion_procesando
                     : curso.activo ? R.string.curso_accion_inactivar : R.string.curso_accion_activar));
             btnQuitarDocente.setVisibility(curso.docenteId == null ? View.GONE : View.VISIBLE);
+            btnEditar.setVisibility(Permissions.has("CURSOS_EDITAR") ? View.VISIBLE : View.GONE);
+            btnEstado.setVisibility(Permissions.has("CURSOS_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
+            btnDocente.setVisibility(Permissions.has("CURSOS_ASIGNAR_DOCENTE") ? View.VISIBLE : View.GONE);
+            if (!Permissions.has("CURSOS_ASIGNAR_DOCENTE")) btnQuitarDocente.setVisibility(View.GONE);
 
             btnEditar.setEnabled(!busy);
             btnEstado.setEnabled(!busy);

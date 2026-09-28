@@ -27,6 +27,7 @@
     <string name="rol_accion_editar">Editar</string>
     <string name="rol_accion_activar">Activar</string>
     <string name="rol_accion_desactivar">Desactivar</string>
+    <string name="rol_accion_permisos">Asignar permisos</string>
     <string name="rol_accion_procesando">Procesando...</string>
     <string name="rol_accion_anterior">Anterior</string>
     <string name="rol_accion_siguiente">Siguiente</string>

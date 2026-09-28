@@ -17,6 +17,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteRequest;
@@ -61,6 +62,8 @@ public class EstudianteFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String permission = getIntent().hasExtra("estudianteId") ? "ESTUDIANTES_EDITAR" : "ESTUDIANTES_CREAR";
+        if (!Permissions.requireAll(this, Permissions.ESTUDIANTES_LEER, permission)) return;
         setContentView(R.layout.activity_estudiante_form);
 
         service = RetrofitClient.getClient().create(EstudianteApiService.class);

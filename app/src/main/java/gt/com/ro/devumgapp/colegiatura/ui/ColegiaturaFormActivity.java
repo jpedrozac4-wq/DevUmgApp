@@ -21,11 +21,13 @@ import java.util.List;
 import java.util.Locale;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaRequest;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaResponse;
 import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import gt.com.ro.devumgapp.core.network.ApiResponses;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +45,8 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String permission = getIntent().hasExtra("colegiaturaId") ? "COLEGIATURAS_EDITAR" : "COLEGIATURAS_CREAR";
+        if (!Permissions.requireAll(this, Permissions.COLEGIATURAS_LEER, permission)) return;
         setContentView(R.layout.activity_colegiatura_form);
         service = RetrofitClient.getClient().create(ColegiaturaApiService.class);
         bindViews();
@@ -206,6 +210,8 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
     }
 
     private String leerError(Response<?> response) {
+        String authorizationMessage = ApiResponses.authorizationMessage(this, response);
+        if (authorizationMessage != null) return authorizationMessage;
         try {
             if (response.errorBody() != null) {
                 String texto = response.errorBody().string();

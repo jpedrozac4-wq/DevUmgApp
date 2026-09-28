@@ -17,6 +17,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraRequest;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
@@ -55,6 +56,8 @@ public class CarreraFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String permission = getIntent().hasExtra(EXTRA_CARRERA_ID) ? "CARRERAS_EDITAR" : "CARRERAS_CREAR";
+        if (!Permissions.requireAll(this, Permissions.CARRERAS_LEER, permission)) return;
         setContentView(R.layout.activity_carrera_form);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));

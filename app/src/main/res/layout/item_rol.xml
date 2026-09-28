@@ -101,6 +101,18 @@
                 app:iconGravity="textStart"
                 app:iconTint="@color/dashboard_rol"
                 tools:text="@string/rol_accion_desactivar" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGestionarPermisosRol"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@string/rol_accion_permisos"
+                app:icon="@drawable/ic_lock"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconTint="@color/dashboard_rol" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

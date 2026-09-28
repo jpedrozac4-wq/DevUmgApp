@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResponse;
 import gt.com.ro.devumgapp.carrera.dto.EstadoRequest;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
@@ -75,6 +76,7 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "CARRERAS_LEER")) return;
         setContentView(R.layout.activity_carrera_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -180,6 +182,7 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
         carreraFilterControls = findViewById(R.id.carreraFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarCarrera);
         btnAgregar = findViewById(R.id.btnAgregarCarrera);
+        btnAgregar.setVisibility(Permissions.has("CARRERAS_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnCarrerasAnterior);
         btnSiguiente = findViewById(R.id.btnCarrerasSiguiente);
     }

@@ -18,6 +18,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.docente.dto.DocenteRequest;
@@ -61,6 +62,8 @@ public class DocenteFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String permission = getIntent().hasExtra(EXTRA_DOCENTE_ID) ? "DOCENTES_EDITAR" : "DOCENTES_CREAR";
+        if (!Permissions.requireAll(this, Permissions.DOCENTES_LEER, permission)) return;
         setContentView(R.layout.activity_docente_form);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));

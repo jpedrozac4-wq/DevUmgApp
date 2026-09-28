@@ -18,10 +18,12 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaResponse;
 import gt.com.ro.devumgapp.colegiatura.dto.PagoRequest;
 import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import gt.com.ro.devumgapp.core.network.ApiResponses;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +38,7 @@ public class PagoColegiaturaActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.requireAll(this, Permissions.COLEGIATURAS_LEER, "COLEGIATURAS_REGISTRAR_PAGO")) return;
         setContentView(R.layout.activity_colegiatura_pago);
         colegiaturaId = getIntent().getLongExtra("colegiaturaId", -1L);
         service = RetrofitClient.getClient().create(ColegiaturaApiService.class);
@@ -111,6 +114,8 @@ public class PagoColegiaturaActivity extends AppCompatActivity {
     private Double parseDouble() { try { return Double.valueOf(textOf(edtMonto)); } catch(Exception e){ return null; } }
     private void setLoading(boolean b) { progress.setVisibility(b?View.VISIBLE:View.GONE); findViewById(R.id.btnRegistrarPago).setEnabled(!b); }
     private String leerError(Response<?> response) {
+        String authorizationMessage = ApiResponses.authorizationMessage(this, response);
+        if (authorizationMessage != null) return authorizationMessage;
         try { if (response.errorBody()!=null) { String texto=response.errorBody().string(); if (texto!=null && !texto.trim().isEmpty()) return texto.trim(); } } catch(IOException ignored){}
         if(response.code()==400) return getString(R.string.colegiatura_error_bad_request);
         if(response.code()==404) return getString(R.string.colegiatura_error_not_found);

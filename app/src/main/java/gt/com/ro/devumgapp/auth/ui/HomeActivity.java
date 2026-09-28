@@ -28,11 +28,13 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -41,6 +43,13 @@ import gt.com.ro.devumgapp.colegiatura.ui.ColegiaturaListActivity;
 import gt.com.ro.devumgapp.estudiante.ui.EstudianteListActivity;
 import gt.com.ro.devumgapp.carrera.ui.CarreraListActivity;
 import gt.com.ro.devumgapp.core.session.SessionManager;
+import gt.com.ro.devumgapp.core.session.Permissions;
+import gt.com.ro.devumgapp.auth.dto.LoginResponse;
+import gt.com.ro.devumgapp.auth.network.AuthApiService;
+import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import gt.com.ro.devumgapp.curso.ui.CursoListActivity;
 import gt.com.ro.devumgapp.docente.ui.DocenteListActivity;
 import gt.com.ro.devumgapp.inscripcion.ui.InscripcionListActivity;
@@ -59,11 +68,42 @@ public class HomeActivity extends AppCompatActivity {
     private View dashboardHeader;
     private View txtModulesTitle;
     private TextView txtGreeting;
+    private TextView txtWelcome;
     private TextView txtUserIdentity;
+    private TextView txtAdminAccessSummary;
     private TextView txtToolbarTitle;
     private TextView txtToolbarAvatar;
+    private View contextSummaryCard;
+    private View contextActions;
+    private TextView txtContextTitle;
+    private TextView txtContextDescription;
+    private TextView txtDailyTitle;
+    private TextView txtDailyState;
+    private MaterialButton btnContextCourses;
+    private MaterialButton btnContextGrades;
     private SessionManager sessionManager;
     private boolean syncingBottomNavigation;
+    private boolean profileRefreshNeeded;
+    private Call<LoginResponse> profileCall;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (modulesGrid != null) {
+            applyMenuPermissions();
+            renderContextualDashboard();
+            renderModules();
+            navView.setCheckedItem(R.id.nav_inicio);
+            syncingBottomNavigation = true;
+            try {
+                bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+            } finally {
+                syncingBottomNavigation = false;
+            }
+            setDashboardTitle(R.string.dashboard_title);
+            if (profileRefreshNeeded && profileCall == null) refreshProfileThenInitialize();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +114,15 @@ public class HomeActivity extends AppCompatActivity {
             navigateToLogin();
             return;
         }
+
+        if (!getIntent().getBooleanExtra("profileVerified", false) || savedInstanceState != null) {
+            refreshProfileThenInitialize();
+            return;
+        }
+        initializeHomeUi();
+    }
+
+    private void initializeHomeUi() {
 
         setContentView(R.layout.activity_home);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -90,8 +139,44 @@ public class HomeActivity extends AppCompatActivity {
         setupBottomNavigation();
         setupBackHandling();
         renderUserSummary();
+        renderContextualDashboard();
         renderModules();
         animateDashboardIntro();
+    }
+
+    private void refreshProfileThenInitialize() {
+        AuthApiService auth = RetrofitClient.getClient().create(AuthApiService.class);
+        profileCall = auth.me();
+        profileCall.enqueue(new Callback<LoginResponse>() {
+            @Override public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (isFinishing()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    sessionManager.refreshProfile(response.body());
+                    getIntent().putExtra("profileVerified", true);
+                    initializeHomeUi();
+                } else if (response.code() == 401) {
+                    SessionManager.handleUnauthorized(HomeActivity.this);
+                } else {
+                    profileRefreshNeeded = true;
+                    Toast.makeText(HomeActivity.this,
+                            "No se pudo actualizar el perfil. Se muestra la sesion guardada.", Toast.LENGTH_LONG).show();
+                    initializeHomeUi();
+                }
+            }
+            @Override public void onFailure(Call<LoginResponse> call, Throwable error) {
+                if (call.isCanceled() || isFinishing()) return;
+                profileRefreshNeeded = true;
+                Toast.makeText(HomeActivity.this,
+                        "No se pudo actualizar el perfil. Se muestra la sesion guardada.", Toast.LENGTH_LONG).show();
+                initializeHomeUi();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (profileCall != null) profileCall.cancel();
+        super.onDestroy();
     }
 
     private void bindViews() {
@@ -103,9 +188,19 @@ public class HomeActivity extends AppCompatActivity {
         dashboardHeader = findViewById(R.id.dashboardHeader);
         txtModulesTitle = findViewById(R.id.txtModulesTitle);
         txtGreeting = findViewById(R.id.txtGreeting);
+        txtWelcome = findViewById(R.id.txtWelcome);
         txtUserIdentity = findViewById(R.id.txtUserIdentity);
+        txtAdminAccessSummary = findViewById(R.id.txtAdminAccessSummary);
         txtToolbarTitle = findViewById(R.id.txtToolbarTitle);
         txtToolbarAvatar = findViewById(R.id.txtToolbarAvatar);
+        contextSummaryCard = findViewById(R.id.contextSummaryCard);
+        contextActions = findViewById(R.id.contextActions);
+        txtContextTitle = findViewById(R.id.txtContextTitle);
+        txtContextDescription = findViewById(R.id.txtContextDescription);
+        txtDailyTitle = findViewById(R.id.txtDailyTitle);
+        txtDailyState = findViewById(R.id.txtDailyState);
+        btnContextCourses = findViewById(R.id.btnContextCourses);
+        btnContextGrades = findViewById(R.id.btnContextGrades);
     }
 
     private void setupToolbar() {
@@ -127,6 +222,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupDrawer() {
         renderDrawerHeader();
+        applyMenuPermissions();
         navView.setCheckedItem(R.id.nav_inicio);
         navView.setNavigationItemSelectedListener(item -> {
             handleNavigationItem(item);
@@ -165,43 +261,111 @@ public class HomeActivity extends AppCompatActivity {
         View header = navView.getHeaderView(0);
         TextView tvNavNombre = header.findViewById(R.id.tvNavNombre);
         TextView tvNavRoles = header.findViewById(R.id.tvNavRoles);
-        TextView tvNavAvatar = header.findViewById(R.id.tvNavAvatar);
-
-        String displayName = getDisplayName();
-        tvNavAvatar.setText(getInitial(displayName));
-        tvNavNombre.setText(displayName.isEmpty()
+        String username = sessionManager.getUsername().trim();
+        tvNavNombre.setText(username.isEmpty()
                 ? getString(R.string.dashboard_user_fallback)
-                : displayName);
+                : username);
 
-        String roles = formatRoles();
-        tvNavRoles.setText(roles.isEmpty()
-                ? getString(R.string.dashboard_roles_fallback)
-                : roles);
+        String email = sessionManager.getEmail().trim();
+        tvNavRoles.setText(email.isEmpty()
+                ? getString(R.string.profile_not_available)
+                : email);
     }
 
     private void renderUserSummary() {
         String displayName = getDisplayName();
         txtToolbarAvatar.setText(getInitial(displayName));
-        txtGreeting.setText(displayName.isEmpty()
-                ? getString(R.string.dashboard_greeting_default)
-                : getString(R.string.dashboard_greeting_named, displayName));
+        txtGreeting.setText(getTimeGreeting());
+        txtWelcome.setText(displayName.isEmpty()
+                ? getString(R.string.dashboard_user_fallback)
+                : displayName);
 
         String username = sessionManager.getUsername().trim();
-        String roles = formatRoles();
+        String email = sessionManager.getEmail().trim();
         List<String> identityRows = new ArrayList<>();
-        if (!username.isEmpty()) {
-            identityRows.add(getString(R.string.dashboard_user_label, username));
+        if (!email.isEmpty()) {
+            identityRows.add(email);
         }
-        if (!roles.isEmpty()) {
-            identityRows.add(getString(R.string.dashboard_role_label, roles));
+        if (!username.isEmpty()) {
+            identityRows.add(username);
         }
         txtUserIdentity.setText(String.join("\n", identityRows));
         txtUserIdentity.setVisibility(identityRows.isEmpty() ? View.GONE : View.VISIBLE);
     }
 
+    private String getTimeGreeting() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if (hour >= 5 && hour < 12) return getString(R.string.dashboard_greeting_morning);
+        if (hour >= 12 && hour < 19) return getString(R.string.dashboard_greeting_afternoon);
+        return getString(R.string.dashboard_greeting_evening);
+    }
+
+    private void renderContextualDashboard() {
+        Set<String> roles = sessionManager.getRoles();
+        boolean admin = hasRole(roles, "ADMIN");
+        boolean student = hasRole(roles, "ESTUDIANTE");
+        boolean teacher = hasRole(roles, "DOCENTE");
+
+        btnContextCourses.setOnClickListener(view -> openModule(R.id.nav_cursos));
+        btnContextGrades.setOnClickListener(view -> openModule(R.id.nav_notas));
+        btnContextCourses.setVisibility(Permissions.has(Permissions.CURSOS_LEER) ? View.VISIBLE : View.GONE);
+        btnContextGrades.setVisibility(Permissions.has(Permissions.NOTAS_LEER) ? View.VISIBLE : View.GONE);
+        contextActions.setVisibility(
+                btnContextCourses.getVisibility() == View.VISIBLE
+                        || btnContextGrades.getVisibility() == View.VISIBLE
+                        ? View.VISIBLE : View.GONE);
+
+        if (admin || (!student && !teacher)) {
+            int availableModules = countAvailableModules();
+            contextSummaryCard.setVisibility(View.GONE);
+            txtAdminAccessSummary.setText(
+                    getString(R.string.dashboard_admin_access_summary, availableModules));
+            txtAdminAccessSummary.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        contextSummaryCard.setVisibility(View.VISIBLE);
+        txtAdminAccessSummary.setVisibility(View.GONE);
+        txtDailyTitle.setVisibility(View.VISIBLE);
+        txtDailyState.setVisibility(View.VISIBLE);
+        txtDailyState.setText(R.string.dashboard_schedule_unavailable);
+        if (student) {
+            txtContextTitle.setText(R.string.dashboard_student_summary_title);
+            txtContextDescription.setText(R.string.dashboard_student_summary_unavailable);
+        } else {
+            txtContextTitle.setText(R.string.dashboard_teacher_summary_title);
+            txtContextDescription.setText(R.string.dashboard_teacher_summary_unavailable);
+        }
+    }
+
+    private boolean hasRole(Set<String> roles, String expected) {
+        if (roles == null) return false;
+        for (String role : roles) {
+            if (role != null && (role.equalsIgnoreCase(expected)
+                    || role.equalsIgnoreCase("ROLE_" + expected))) return true;
+        }
+        return false;
+    }
+
+    private int countAvailableModules() {
+        int count = 0;
+        for (DashboardModule module : createModules()) {
+            if (Permissions.canOpenDestination(module.menuItemId)) count++;
+        }
+        return count;
+    }
+
     private void renderModules() {
         modulesGrid.removeAllViews();
-        List<DashboardModule> modules = createModules();
+        List<DashboardModule> modules = new ArrayList<>();
+        for (DashboardModule module : createModules()) {
+            if (Permissions.has(module.permission)) modules.add(module);
+        }
+        if (modules.isEmpty()) {
+            ((TextView) txtModulesTitle).setText("No tienes módulos habilitados para esta cuenta.");
+            return;
+        }
+        ((TextView) txtModulesTitle).setText(R.string.dashboard_access_title);
 
         for (int index = 0; index < modules.size(); index++) {
             DashboardModule module = modules.get(index);
@@ -214,6 +378,9 @@ public class HomeActivity extends AppCompatActivity {
             View iconContainer = card.findViewById(R.id.iconContainer);
 
             icon.setImageResource(module.iconRes);
+            icon.setVisibility(View.VISIBLE);
+            icon.setAlpha(1f);
+            icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
             name.setText(module.titleRes);
             description.setText(module.descriptionRes);
             applyModuleStyle(module, card, icon, iconContainer);
@@ -242,14 +409,14 @@ public class HomeActivity extends AppCompatActivity {
             ImageView icon,
             View iconContainer) {
         int accentColor = ContextCompat.getColor(this, module.accentColorRes);
-        int iconAccent = blendWithWhite(accentColor, 0.12f);
+        int iconBackgroundColor = blendWithBlack(accentColor, 0.72f);
 
         card.setCardBackgroundColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         card.setStrokeColor(ContextCompat.getColor(this, R.color.dashboard_border));
-        icon.setImageTintList(ColorStateList.valueOf(accentColor));
+        icon.setImageTintList(ColorStateList.valueOf(Color.WHITE));
 
         GradientDrawable iconBackground = new GradientDrawable();
-        iconBackground.setColor(iconAccent);
+        iconBackground.setColor(iconBackgroundColor);
         iconBackground.setCornerRadius(getResources().getDimension(R.dimen.dashboard_card_radius));
         iconContainer.setBackground(iconBackground);
     }
@@ -332,6 +499,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupBottomNavigation() {
+        rebuildBottomNavigation();
         bottomNavigation.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
             if (syncingBottomNavigation) {
@@ -344,7 +512,7 @@ public class HomeActivity extends AppCompatActivity {
             }
             if (itemId == R.id.nav_profile) {
                 setDashboardTitle(R.string.bottom_profile);
-                Toast.makeText(this, R.string.dashboard_module_coming_soon, Toast.LENGTH_SHORT).show();
+                showProfile();
                 return true;
             }
             navView.setCheckedItem(itemId);
@@ -358,12 +526,61 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private boolean openModule(int itemId) {
+        DashboardModule target = findModule(itemId);
+        if (target == null || !Permissions.canOpenDestination(itemId)) {
+            Toast.makeText(this, "No tienes permiso para consultar este módulo.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         Intent intent = moduleIntentFor(itemId);
         if (intent == null) {
             return false;
         }
         startActivity(intent);
         return true;
+    }
+
+    private void showProfile() {
+        startActivity(new Intent(this, ProfileActivity.class));
+    }
+
+    private DashboardModule findModule(int itemId) {
+        for (DashboardModule module : createModules()) if (module.menuItemId == itemId) return module;
+        return null;
+    }
+
+    private void applyMenuPermissions() {
+        for (DashboardModule module : createModules()) {
+            MenuItem drawerItem = navView.getMenu().findItem(module.menuItemId);
+            if (drawerItem != null) drawerItem.setVisible(Permissions.canOpenDestination(module.menuItemId));
+        }
+        rebuildBottomNavigation();
+    }
+
+    /** Re-inflation makes permission gains and removals deterministic and leaves no empty slots. */
+    private void rebuildBottomNavigation() {
+        if (bottomNavigation == null) return;
+        int selectedItem = bottomNavigation.getSelectedItemId();
+        syncingBottomNavigation = true;
+        try {
+            bottomNavigation.getMenu().clear();
+            bottomNavigation.inflateMenu(R.menu.menu_bottom_navigation);
+            List<Integer> candidates = new ArrayList<>();
+            candidates.add(R.id.nav_cursos);
+            candidates.add(R.id.nav_estudiantes);
+            candidates.add(R.id.nav_notas);
+            for (int itemId : candidates) {
+                if (!Permissions.canOpenDestination(itemId)) {
+                    bottomNavigation.getMenu().removeItem(itemId);
+                }
+            }
+            if (bottomNavigation.getMenu().findItem(selectedItem) != null) {
+                bottomNavigation.setSelectedItemId(selectedItem);
+            } else {
+                bottomNavigation.setSelectedItemId(R.id.nav_inicio);
+            }
+        } finally {
+            syncingBottomNavigation = false;
+        }
     }
 
     private Intent moduleIntentFor(int itemId) {
@@ -455,68 +672,68 @@ public class HomeActivity extends AppCompatActivity {
                 R.string.nav_carreras,
                 R.string.module_carreras_description,
                 R.drawable.ic_career,
-                R.color.dashboard_career));
+                R.color.dashboard_career, Permissions.CARRERAS_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_cursos,
                 R.string.nav_cursos,
                 R.string.module_cursos_description,
                 R.drawable.ic_course,
-                R.color.dashboard_course));
+                R.color.dashboard_course, Permissions.CURSOS_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_estudiantes,
                 R.string.nav_estudiantes,
                 R.string.module_estudiantes_description,
                 R.drawable.ic_student,
-                R.color.dashboard_student));
+                R.color.dashboard_student, Permissions.ESTUDIANTES_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_docentes,
                 R.string.nav_docentes,
                 R.string.module_docentes_description,
                 R.drawable.ic_teacher,
-                R.color.dashboard_teacher));
+                R.color.dashboard_teacher, Permissions.DOCENTES_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_inscripciones,
                 R.string.nav_inscripciones,
                 R.string.module_inscripciones_description,
                 R.drawable.ic_enrollment,
-                R.color.dashboard_enrollment));
+                R.color.dashboard_enrollment, Permissions.INSCRIPCIONES_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_notas,
                 R.string.nav_notas,
                 R.string.module_notas_description,
                 R.drawable.ic_grade,
-                R.color.dashboard_grade));
+                R.color.dashboard_grade, Permissions.NOTAS_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_colegiaturas,
                 R.string.nav_colegiaturas,
                 R.string.module_colegiaturas_description,
                 R.drawable.ic_payment,
-                R.color.dashboard_payment));
+                R.color.dashboard_payment, Permissions.COLEGIATURAS_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_usuarios,
                 R.string.nav_usuarios,
                 R.string.module_usuarios_description,
                 R.drawable.ic_users,
-                R.color.dashboard_users));
+                R.color.dashboard_users, Permissions.USUARIOS_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_roles,
                 R.string.nav_roles,
                 R.string.module_roles_description,
                 R.drawable.ic_badge,
-                R.color.dashboard_rol));
+                R.color.dashboard_rol, Permissions.ROLES_LEER));
         modules.add(new DashboardModule(
                 R.id.nav_permisos,
                 R.string.nav_permisos,
                 R.string.module_permisos_description,
                 R.drawable.ic_lock,
-                R.color.dashboard_permiso));
+                R.color.dashboard_permiso, Permissions.PERMISOS_LEER));
         return modules;
     }
 
-    private int blendWithWhite(int color, float accentRatio) {
-        int red = (int) (Color.red(color) * accentRatio + 255 * (1f - accentRatio));
-        int green = (int) (Color.green(color) * accentRatio + 255 * (1f - accentRatio));
-        int blue = (int) (Color.blue(color) * accentRatio + 255 * (1f - accentRatio));
+    private int blendWithBlack(int color, float accentRatio) {
+        int red = (int) (Color.red(color) * accentRatio);
+        int green = (int) (Color.green(color) * accentRatio);
+        int blue = (int) (Color.blue(color) * accentRatio);
         return Color.rgb(red, green, blue);
     }
 
@@ -549,18 +766,21 @@ public class HomeActivity extends AppCompatActivity {
         private final int descriptionRes;
         private final int iconRes;
         private final int accentColorRes;
+        private final String permission;
 
         private DashboardModule(
                 int menuItemId,
                 int titleRes,
                 int descriptionRes,
                 int iconRes,
-                int accentColorRes) {
+                int accentColorRes,
+                String permission) {
             this.menuItemId = menuItemId;
             this.titleRes = titleRes;
             this.descriptionRes = descriptionRes;
             this.iconRes = iconRes;
             this.accentColorRes = accentColorRes;
+            this.permission = permission;
         }
     }
 }

@@ -22,6 +22,9 @@ public class LoginResponse {
     @SerializedName("username")
     public String username;
 
+    @SerializedName("email")
+    public String email;
+
     @SerializedName("nombre")
     public String nombre;
 
@@ -30,4 +33,7 @@ public class LoginResponse {
 
     @SerializedName("roles")
     public List<String> roles;
+
+    @SerializedName("permisos")
+    public List<String> permisos;
 }

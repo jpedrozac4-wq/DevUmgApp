@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResponse;
 
 class CarreraAdapter extends RecyclerView.Adapter<CarreraAdapter.CarreraViewHolder> {
@@ -149,6 +150,8 @@ class CarreraAdapter extends RecyclerView.Adapter<CarreraAdapter.CarreraViewHold
                     : R.string.carrera_accion_activar));
             btnEstado.setEnabled(!changingStatus);
             btnEditar.setEnabled(!changingStatus);
+            btnEditar.setVisibility(Permissions.has("CARRERAS_EDITAR") ? View.VISIBLE : View.GONE);
+            btnEstado.setVisibility(Permissions.has("CARRERAS_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
             btnEditar.setOnClickListener(view -> animatePress(view, () -> listener.onEdit(carrera)));
             btnEstado.setOnClickListener(view -> animatePress(view, () -> listener.onToggleStatus(carrera)));
         }

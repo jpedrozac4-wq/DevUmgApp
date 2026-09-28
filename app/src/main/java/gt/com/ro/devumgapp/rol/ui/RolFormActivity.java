@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.permiso.dto.PermisoResumenResponse;
@@ -41,6 +42,7 @@ import retrofit2.Response;
 public class RolFormActivity extends AppCompatActivity {
 
     public static final String EXTRA_ID = "rolId";
+    public static final String EXTRA_PERMISSION_ONLY = "permissionOnly";
     private static final long NEW_ROL_ID = -1L;
 
     private MaterialToolbar toolbar;
@@ -72,6 +74,7 @@ public class RolFormActivity extends AppCompatActivity {
     private boolean editMode;
     private boolean loading;
     private boolean permissionsReady;
+    private boolean permissionOnly;
 
     private List<PermisoResumenResponse> activePermissions = new ArrayList<>();
     private List<PermisoResumenResponse> assignedPermissions = new ArrayList<>();
@@ -81,6 +84,10 @@ public class RolFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String permission = getIntent().hasExtra(EXTRA_ID) ? "ROLES_EDITAR" : "ROLES_CREAR";
+        permissionOnly = getIntent().getBooleanExtra(EXTRA_PERMISSION_ONLY, false);
+        if (!Permissions.requireAll(this, Permissions.ROLES_LEER,
+                permissionOnly ? "ROLES_ASIGNAR_PERMISOS" : permission)) return;
         setContentView(R.layout.activity_rol_form);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -94,6 +101,11 @@ public class RolFormActivity extends AppCompatActivity {
         apiService = RetrofitClient.getClient().create(RolApiService.class);
         permisoApiService = RetrofitClient.getClient().create(PermisoApiService.class);
         bindViews();
+        if (permissionOnly) {
+            tilCodigo.setEnabled(false);
+            tilNombre.setEnabled(false);
+            tilDescripcion.setEnabled(false);
+        }
         setupToolbar();
         setupActions();
         animateIntro();
@@ -123,6 +135,12 @@ public class RolFormActivity extends AppCompatActivity {
         txtHeroTitle = findViewById(R.id.txtRolFormHeroTitle);
         rolFormHero = findViewById(R.id.rolFormHero);
         rolFormPanel = findViewById(R.id.cardRolForm);
+        if (!Permissions.has("ROLES_ASIGNAR_PERMISOS")) {
+            layoutPermisos.setVisibility(View.GONE);
+            txtPermisosNota.setVisibility(View.GONE);
+            txtPermisosVacio.setVisibility(View.GONE);
+            permissionsReady = true;
+        }
     }
 
     private void applyModeTitle() {
@@ -180,7 +198,8 @@ public class RolFormActivity extends AppCompatActivity {
             loadRolDetails();
             return;
         }
-        loadActivePermissions();
+        if (Permissions.has("ROLES_ASIGNAR_PERMISOS")) loadActivePermissions();
+        else permissionsReady = true;
     }
 
     private void loadRolDetails() {
@@ -193,7 +212,8 @@ public class RolFormActivity extends AppCompatActivity {
                 loadRolCall = null;
                 if (response.isSuccessful() && response.body() != null) {
                     fillForm(response.body());
-                    loadActivePermissions();
+                    if (Permissions.has("ROLES_ASIGNAR_PERMISOS")) loadActivePermissions();
+                    else permissionsReady = true;
                     return;
                 }
                 showErrorAndFinish(RolErrorMapper.fromResponse(RolFormActivity.this, response));
@@ -379,6 +399,11 @@ public class RolFormActivity extends AppCompatActivity {
     }
 
     private void saveRol() {
+        if (permissionOnly) {
+            if (!Permissions.has("ROLES_ASIGNAR_PERMISOS") || loading || !permissionsReady) return;
+            assignPermissions(false);
+            return;
+        }
         if (loading || !permissionsReady || !validateForm()) {
             return;
         }
@@ -408,7 +433,14 @@ public class RolFormActivity extends AppCompatActivity {
                         }
                         rolId = created.id;
                     }
-                    assignPermissions(createRequest);
+                    if (Permissions.has("ROLES_ASIGNAR_PERMISOS")) {
+                        assignPermissions(createRequest);
+                    } else {
+                        UiNotifier.success(RolFormActivity.this,
+                                createRequest ? R.string.rol_creado : R.string.rol_actualizado);
+                        setResult(RESULT_OK);
+                        finish();
+                    }
                     return;
                 }
                 UiNotifier.error(

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.rol.dto.RolResumenResponse;
 import gt.com.ro.devumgapp.usuario.dto.UsuarioResponse;
 
@@ -122,6 +123,10 @@ class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHold
             btnRoles.setContentDescription(
                     itemView.getContext().getString(R.string.usuario_accion_roles));
             itemView.setOnClickListener(view -> listener.onEdit(usuario));
+            itemView.setClickable(Permissions.has("USUARIOS_EDITAR"));
+            itemView.setEnabled(Permissions.has("USUARIOS_EDITAR"));
+            btnRoles.setVisibility(Permissions.has("USUARIOS_ASIGNAR_ROLES") ? View.VISIBLE : View.GONE);
+            btnEliminar.setVisibility(Permissions.has("USUARIOS_ELIMINAR") ? View.VISIBLE : View.GONE);
             btnRoles.setOnClickListener(view -> listener.onManageRoles(usuario));
             btnEliminar.setOnClickListener(view ->
                     animatePress(view, () -> listener.onDelete(usuario)));

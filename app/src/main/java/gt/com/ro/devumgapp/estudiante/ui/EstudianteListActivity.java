@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
@@ -47,6 +48,7 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "ESTUDIANTES_LEER")) return;
         setContentView(R.layout.activity_estudiante_list);
         service = RetrofitClient.getClient().create(EstudianteApiService.class);
         bindViews();
@@ -75,6 +77,7 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
         btnAnterior = findViewById(R.id.btnEstudiantesAnterior);
         btnSiguiente = findViewById(R.id.btnEstudiantesSiguiente);
         btnAgregar = findViewById(R.id.btnAgregarEstudiante);
+        btnAgregar.setVisibility(Permissions.has("ESTUDIANTES_CREAR") ? View.VISIBLE : View.GONE);
     }
 
     private void setupToolbar() {

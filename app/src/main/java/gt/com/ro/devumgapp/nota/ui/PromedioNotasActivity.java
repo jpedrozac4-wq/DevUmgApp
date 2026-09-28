@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResumenResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
@@ -98,6 +99,7 @@ public class PromedioNotasActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "NOTAS_LEER")) return;
         setContentView(R.layout.activity_nota_promedio);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));

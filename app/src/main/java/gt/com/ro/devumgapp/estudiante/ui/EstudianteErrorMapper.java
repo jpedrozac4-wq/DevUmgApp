@@ -7,12 +7,15 @@ import java.net.UnknownHostException;
 import android.content.Context;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.network.ApiResponses;
 import retrofit2.Response;
 
 final class EstudianteErrorMapper {
     private EstudianteErrorMapper() {}
 
     static String fromResponse(Context context, Response<?> response) {
+        String authMessage = ApiResponses.authorizationMessage(context, response);
+        if (authMessage != null) return authMessage;
         try {
             if (response.errorBody() != null) {
                 String text = response.errorBody().string();

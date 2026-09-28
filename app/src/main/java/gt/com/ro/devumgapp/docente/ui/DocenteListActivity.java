@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.EstadoRequest;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
@@ -72,6 +73,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "DOCENTES_LEER")) return;
         setContentView(R.layout.activity_docente_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -125,6 +127,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
         enqueueItemCall(docente.id, docenteApiService.cambiarEstado(docente.id, new EstadoRequest(!docente.activo)));
     }
 
+
     private void bindViews() {
         MaterialToolbar toolbar = findViewById(R.id.toolbarDocentes);
         toolbar.setTitle("");
@@ -142,6 +145,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
         docenteFilterControls = findViewById(R.id.docenteFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarDocente);
         btnAgregar = findViewById(R.id.btnAgregarDocente);
+        btnAgregar.setVisibility(Permissions.has("DOCENTES_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnDocentesAnterior);
         btnSiguiente = findViewById(R.id.btnDocentesSiguiente);
         toolbar.setNavigationOnClickListener(view -> finish());

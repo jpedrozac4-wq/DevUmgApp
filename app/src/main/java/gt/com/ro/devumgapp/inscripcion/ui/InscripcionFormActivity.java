@@ -36,6 +36,7 @@ import java.util.TimeZone;
 import java.util.function.Consumer;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResumenResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
@@ -105,6 +106,8 @@ public class InscripcionFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String permission = getIntent().hasExtra(EXTRA_INSCRIPCION_ID) ? "INSCRIPCIONES_EDITAR" : "INSCRIPCIONES_CREAR";
+        if (!Permissions.requireAll(this, Permissions.INSCRIPCIONES_LEER, permission)) return;
         setContentView(R.layout.activity_inscripcion_form);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));

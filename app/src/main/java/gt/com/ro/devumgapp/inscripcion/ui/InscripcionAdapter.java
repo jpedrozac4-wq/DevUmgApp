@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.inscripcion.dto.InscripcionResponse;
 
 class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.InscripcionViewHolder> {
@@ -193,6 +194,7 @@ class InscripcionAdapter extends RecyclerView.Adapter<InscripcionAdapter.Inscrip
             btnEditar.setEnabled(!changingStatus);
             btnVer.setEnabled(!changingStatus);
             btnEditar.setOnClickListener(view -> animatePress(view, () -> listener.onEdit(inscripcion)));
+            btnEditar.setVisibility(Permissions.has("INSCRIPCIONES_EDITAR") ? View.VISIBLE : View.GONE);
             btnVer.setOnClickListener(view -> animatePress(view, () -> listener.onOpenDetail(inscripcion)));
         }
 

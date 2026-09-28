@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaResponse;
 
 public class ColegiaturaAdapter extends RecyclerView.Adapter<ColegiaturaAdapter.ViewHolder> {
@@ -69,6 +70,11 @@ public class ColegiaturaAdapter extends RecyclerView.Adapter<ColegiaturaAdapter.
         h.pagar.setVisibility("PAGADA".equalsIgnoreCase(item.estado) || anulada
                 ? View.GONE : View.VISIBLE);
         h.estadoAccion.setVisibility(anulada ? View.GONE : View.VISIBLE);
+        h.editar.setVisibility(Permissions.has("COLEGIATURAS_EDITAR") ? View.VISIBLE : View.GONE);
+        h.pagar.setVisibility(Permissions.has("COLEGIATURAS_REGISTRAR_PAGO")
+                && !"PAGADA".equalsIgnoreCase(item.estado) && !anulada ? View.VISIBLE : View.GONE);
+        h.estadoAccion.setVisibility(Permissions.has("COLEGIATURAS_CAMBIAR_ESTADO") && !anulada
+                ? View.VISIBLE : View.GONE);
     }
 
     private void setStatusBackground(TextView view, String estado) {

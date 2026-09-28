@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
@@ -109,6 +110,7 @@ public class NotaListActivity extends AppCompatActivity implements NotaAdapter.L
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "NOTAS_LEER")) return;
         setContentView(R.layout.activity_nota_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -232,6 +234,7 @@ public class NotaListActivity extends AppCompatActivity implements NotaAdapter.L
         notaFilterControls = findViewById(R.id.notaFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarNota);
         btnAgregar = findViewById(R.id.btnAgregarNota);
+        btnAgregar.setVisibility(Permissions.has("NOTAS_CREAR") ? View.VISIBLE : View.GONE);
         btnPromedio = findViewById(R.id.btnPromedioNotas);
         btnAnterior = findViewById(R.id.btnNotasAnterior);
         btnSiguiente = findViewById(R.id.btnNotasSiguiente);

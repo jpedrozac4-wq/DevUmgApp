@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 
 import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.network.ApiCallLogger;
+import gt.com.ro.devumgapp.core.network.ApiResponses;
 import retrofit2.Response;
 
 final class NotaErrorMapper {
@@ -20,6 +21,8 @@ final class NotaErrorMapper {
 
     static String fromResponse(Context context, Response<?> response) {
         ApiCallLogger.logResponse(TAG, response);
+        String authMessage = ApiResponses.authorizationMessage(context, response);
+        if (authMessage != null) return authMessage;
         String errorBody = ApiCallLogger.readAndLogErrorBody(TAG, response);
         if (errorBody != null && !errorBody.trim().isEmpty()) {
             return errorBody.trim();

@@ -20,6 +20,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
@@ -73,6 +74,7 @@ public class InscripcionDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "INSCRIPCIONES_LEER")) return;
         setContentView(R.layout.activity_inscripcion_detail);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -133,6 +135,8 @@ public class InscripcionDetailActivity extends AppCompatActivity {
     private void setupActions() {
         btnAnular.setOnClickListener(view -> showAnularDialog());
         btnReactivar.setOnClickListener(view -> showReactivarDialog());
+        btnAnular.setVisibility(Permissions.has("INSCRIPCIONES_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
+        btnReactivar.setVisibility(Permissions.has("INSCRIPCIONES_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
     }
 
     private void animateIntro() {

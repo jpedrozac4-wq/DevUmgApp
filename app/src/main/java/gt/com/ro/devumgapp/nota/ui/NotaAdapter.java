@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.nota.dto.NotaResponse;
 
 class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder> {
@@ -182,6 +183,7 @@ class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder> {
 
             switchActivo.setChecked(nota.activo);
             switchActivo.setEnabled(!changingStatus);
+            switchActivo.setVisibility(Permissions.has("NOTAS_CAMBIAR_ESTADO") ? View.VISIBLE : View.GONE);
             switchActivo.setOnCheckedChangeListener(null);
             switchActivo.setOnCheckedChangeListener(
                     (buttonView, isChecked) -> {
@@ -192,6 +194,7 @@ class NotaAdapter extends RecyclerView.Adapter<NotaAdapter.NotaViewHolder> {
 
             btnEditar.setEnabled(!changingStatus);
             btnPromedio.setEnabled(!changingStatus);
+            btnEditar.setVisibility(Permissions.has("NOTAS_EDITAR") ? View.VISIBLE : View.GONE);
             btnEditar.setOnClickListener(view -> animatePress(view, () -> listener.onEdit(nota)));
             btnPromedio.setOnClickListener(view -> animatePress(view, () -> listener.onOpenPromedio(nota)));
         }

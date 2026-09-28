@@ -13,6 +13,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 import java.io.IOException;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.estudiante.dto.DetalleCursoResponse;
 import gt.com.ro.devumgapp.estudiante.dto.EstadoGeneralResponse;
@@ -34,6 +35,7 @@ public class EstudianteDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "ESTUDIANTES_LEER")) return;
         setContentView(R.layout.activity_estudiante_detail);
         estudianteId = getIntent().getLongExtra("estudianteId", -1L);
         if (estudianteId <= 0) { finish(); return; }

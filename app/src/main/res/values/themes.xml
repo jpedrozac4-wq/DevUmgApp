@@ -12,4 +12,27 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">11sp</item>
     </style>
+
+    <style name="ProfileLabel" parent="TextAppearance.Material3.LabelMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/dashboard_text_secondary</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="ProfileValue" parent="TextAppearance.Material3.BodyLarge">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">3dp</item>
+        <item name="android:textColor">@color/dashboard_text_primary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ProfileDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:layout_marginBottom">14dp</item>
+        <item name="android:background">@color/dashboard_border</item>
+    </style>
 </resources>

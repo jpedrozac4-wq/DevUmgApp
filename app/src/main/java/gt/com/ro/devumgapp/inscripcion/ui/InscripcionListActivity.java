@@ -36,6 +36,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.carrera.dto.CarreraResumenResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
@@ -117,6 +118,7 @@ public class InscripcionListActivity extends AppCompatActivity implements Inscri
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "INSCRIPCIONES_LEER")) return;
         setContentView(R.layout.activity_inscripcion_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -205,6 +207,7 @@ public class InscripcionListActivity extends AppCompatActivity implements Inscri
         inscripcionFilterControls = findViewById(R.id.inscripcionFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarInscripcion);
         btnAgregar = findViewById(R.id.btnAgregarInscripcion);
+        btnAgregar.setVisibility(Permissions.has("INSCRIPCIONES_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnInscripcionesAnterior);
         btnSiguiente = findViewById(R.id.btnInscripcionesSiguiente);
     }

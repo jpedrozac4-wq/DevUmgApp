@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaResponse;
 import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
+import gt.com.ro.devumgapp.core.network.ApiResponses;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +56,7 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "COLEGIATURAS_LEER")) return;
         setContentView(R.layout.activity_colegiatura_list);
 
         service = RetrofitClient.getClient().create(ColegiaturaApiService.class);
@@ -101,6 +104,7 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
             cargarColegiaturas();
         });
 
+        findViewById(R.id.btnAgregarColegiatura).setVisibility(Permissions.has("COLEGIATURAS_CREAR") ? View.VISIBLE : View.GONE);
         findViewById(R.id.btnAgregarColegiatura).setOnClickListener(v ->
                 startActivity(new Intent(this, ColegiaturaFormActivity.class)));
 
@@ -259,6 +263,8 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
     }
 
     private String leerError(Response<?> response) {
+        String authorizationMessage = ApiResponses.authorizationMessage(this, response);
+        if (authorizationMessage != null) return authorizationMessage;
         try {
             if (response.errorBody() != null) {
                 String texto = response.errorBody().string();

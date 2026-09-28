@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.usuario.dto.UsuarioResponse;
@@ -63,6 +64,7 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "USUARIOS_LEER")) return;
         setContentView(R.layout.activity_usuario_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -150,6 +152,7 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
         usuarioFilters = findViewById(R.id.usuarioFilters);
         btnBuscar = findViewById(R.id.btnBuscarUsuario);
         btnAgregar = findViewById(R.id.btnAgregarUsuario);
+        btnAgregar.setVisibility(Permissions.has("USUARIOS_CREAR") ? View.VISIBLE : View.GONE);
     }
 
     private void setupToolbar() {

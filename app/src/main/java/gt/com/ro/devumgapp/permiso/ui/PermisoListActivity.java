@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.dto.EstadoRequest;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
@@ -75,6 +76,7 @@ public class PermisoListActivity extends AppCompatActivity implements PermisoAda
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Permissions.require(this, "PERMISOS_LEER")) return;
         setContentView(R.layout.activity_permiso_list);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -182,6 +184,7 @@ public class PermisoListActivity extends AppCompatActivity implements PermisoAda
         permisoFilterControls = findViewById(R.id.permisoFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarPermiso);
         btnAgregar = findViewById(R.id.btnAgregarPermiso);
+        btnAgregar.setVisibility(Permissions.has("PERMISOS_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnPermisosAnterior);
         btnSiguiente = findViewById(R.id.btnPermisosSiguiente);
     }

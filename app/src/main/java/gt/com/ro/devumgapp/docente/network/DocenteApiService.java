@@ -33,4 +33,5 @@ public interface DocenteApiService {
 
     @PATCH("api/docentes/{id}/estado")
     Call<DocenteResponse> cambiarEstado(@Path("id") long id, @Body EstadoRequest request);
+
 }

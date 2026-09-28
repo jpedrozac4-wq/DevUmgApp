@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
@@ -85,6 +86,8 @@ public class NotaFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String permission = getIntent().hasExtra(EXTRA_NOTA_ID) ? "NOTAS_EDITAR" : "NOTAS_CREAR";
+        if (!Permissions.requireAll(this, Permissions.NOTAS_LEER, permission)) return;
         setContentView(R.layout.activity_nota_form);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));

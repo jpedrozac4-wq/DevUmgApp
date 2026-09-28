@@ -42,12 +42,14 @@
 
                     <ImageView
                         android:id="@+id/imgModuleIcon"
-                android:layout_width="@dimen/dashboard_module_icon_size"
-                android:layout_height="@dimen/dashboard_module_icon_size"
+                        android:layout_width="@dimen/dashboard_module_icon_size"
+                        android:layout_height="@dimen/dashboard_module_icon_size"
                         android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_career"
+                        android:visibility="visible"
                         android:contentDescription="@null"
                         android:importantForAccessibility="no"
-                        app:tint="@color/dashboard_primary"
                         tools:src="@drawable/ic_career" />
                 </FrameLayout>
 

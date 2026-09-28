@@ -70,16 +70,21 @@
                 tools:text="A" />
         </com.google.android.material.appbar.MaterialToolbar>
 
-        <androidx.core.widget.NestedScrollView
+        <ScrollView
             android:id="@+id/dashboardScroll"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:clickable="true"
             android:clipToPadding="false"
+            android:fadeScrollbars="false"
             android:fillViewport="true"
+            android:focusable="true"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
             android:paddingStart="@dimen/dashboard_screen_padding"
             android:paddingTop="18dp"
             android:paddingEnd="@dimen/dashboard_screen_padding"
-            android:paddingBottom="22dp"
+            android:paddingBottom="40dp"
             app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -94,58 +99,153 @@
                 <LinearLayout
                     android:id="@+id/dashboardHeader"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dashboard_welcome_card_height"
+                    android:layout_height="wrap_content"
+                    android:minHeight="@dimen/dashboard_welcome_card_height"
                     android:background="@drawable/bg_dashboard_welcome_card"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="20dp">
+                    android:orientation="vertical"
+                    android:padding="22dp">
+
+                    <TextView
+                        android:id="@+id/txtGreeting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/dashboard_on_primary_secondary"
+                        android:textSize="15sp"
+                        tools:text="Buenas tardes" />
+
+                    <TextView
+                        android:id="@+id/txtWelcome"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-black"
+                        android:maxLines="2"
+                        android:textColor="@color/dashboard_on_primary"
+                        android:textSize="26sp"
+                        android:textStyle="bold"
+                        tools:text="Andrea López Martínez" />
+
+                    <TextView
+                        android:id="@+id/txtUserIdentity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-medium"
+                        android:maxLines="2"
+                        android:textColor="@color/dashboard_on_primary_secondary"
+                        android:textSize="13sp"
+                        tools:text="andrea@universidad.edu.gt&#10;andrea.lopez" />
+
+                    <TextView
+                        android:id="@+id/txtAdminAccessSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/dashboard_on_primary"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        tools:text="Acceso a 10 módulos de SGAU" />
+
+                </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/contextSummaryCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dashboard_section_spacing"
+                    app:cardBackgroundColor="@color/dashboard_surface"
+                    app:cardCornerRadius="@dimen/dashboard_card_radius"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/dashboard_border"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
                         <TextView
-                            android:id="@+id/txtGreeting"
+                            android:id="@+id/txtContextTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-black"
-                            android:textColor="@color/dashboard_on_primary"
-                            android:textSize="24sp"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="20sp"
                             android:textStyle="bold"
-                            tools:text="&#161;Hola, Andrea!" />
+                            tools:text="Resumen académico" />
 
                         <TextView
-                            android:id="@+id/txtWelcome"
+                            android:id="@+id/txtContextDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="6dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:text="@string/dashboard_welcome"
-                            android:textColor="@color/dashboard_on_primary_secondary"
-                            android:textSize="14sp" />
+                            android:layout_marginTop="7dp"
+                            android:lineSpacingExtra="2dp"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="14sp"
+                            tools:text="Información académica de la cuenta." />
+
+                        <LinearLayout
+                            android:id="@+id/contextActions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:gravity="start"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnContextCourses"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="@string/dashboard_action_courses"
+                                app:icon="@drawable/ic_course"
+                                app:iconGravity="textStart" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnContextGrades"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="10dp"
+                                android:layout_weight="1"
+                                android:text="@string/dashboard_action_grades"
+                                app:icon="@drawable/ic_grade"
+                                app:iconGravity="textStart" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="18dp"
+                            android:background="@color/dashboard_border" />
 
                         <TextView
-                            android:id="@+id/txtUserIdentity"
+                            android:id="@+id/txtDailyTitle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:textColor="@color/dashboard_on_primary"
-                            android:textSize="13sp"
-                            tools:text="Usuario: admin&#10;Rol: ADMIN" />
-                    </LinearLayout>
+                            android:fontFamily="sans-serif-black"
+                            android:text="@string/dashboard_daily_title"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
-                    <ImageView
-                        android:layout_width="54dp"
-                        android:layout_height="54dp"
-                        android:alpha="0.18"
-                        android:contentDescription="@null"
-                        android:importantForAccessibility="no"
-                        android:src="@drawable/ic_career"
-                        app:tint="@color/white" />
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/txtDailyState"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:lineSpacingExtra="2dp"
+                            android:textColor="@color/dashboard_text_secondary"
+                            android:textSize="14sp"
+                            tools:text="El backend no proporciona horarios." />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/txtModulesTitle"
@@ -166,7 +266,7 @@
                     android:columnCount="2"
                     android:useDefaultMargins="false" />
             </LinearLayout>
-        </androidx.core.widget.NestedScrollView>
+        </ScrollView>
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"
