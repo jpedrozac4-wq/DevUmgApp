@@ -3,17 +3,80 @@
     <!-- Títulos -->
     <string name="rol_titulo">Gestión de Roles</string>
     <string name="rol_lista_titulo">Lista de Roles</string>
+    <string name="rol_subtitulo">Administra los roles y sus permisos</string>
     <string name="rol_form_titulo">Formulario de Rol</string>
+    <string name="rol_form_titulo_crear">Nuevo rol</string>
+    <string name="rol_form_titulo_editar">Editar rol</string>
+    <string name="rol_form_subtitulo">Completa los datos del rol y sus permisos</string>
+    <string name="rol_filtros_titulo">Búsqueda y filtros</string>
+    <string name="rol_form_datos_titulo">Datos del rol</string>
+
+    <!-- Permisos del rol -->
+    <string name="rol_permisos_titulo">Permisos del rol</string>
+    <string name="rol_permisos_ayuda">Al guardar se reemplaza el conjunto completo de permisos: lo que no marques se quita del rol.</string>
+    <string name="rol_permisos_nota_inactivo">Un permiso ya asignado que ahora está inactivo también se muestra para que no se pierda al guardar.</string>
+    <string name="rol_permisos_vacio">No hay permisos disponibles para asignar.</string>
+    <string name="rol_permisos_item_formato">%1$s · %2$s</string>
+    <string name="rol_permisos_item_inactivo_formato">%1$s (%2$s)</string>
 
     <!-- Botones -->
     <string name="rol_btn_guardar">Guardar Rol</string>
     <string name="rol_btn_cancelar">Cancelar</string>
+    <string name="rol_accion_buscar">Buscar</string>
+    <string name="rol_accion_agregar">Agregar</string>
+    <string name="rol_accion_editar">Editar</string>
+    <string name="rol_accion_activar">Activar</string>
+    <string name="rol_accion_desactivar">Desactivar</string>
+    <string name="rol_accion_procesando">Procesando...</string>
+    <string name="rol_accion_anterior">Anterior</string>
+    <string name="rol_accion_siguiente">Siguiente</string>
+
+    <!-- Filtros -->
+    <string name="rol_buscar_hint">Buscar por código, nombre o descripción</string>
+    <string name="rol_filtro_todos">Todos</string>
+    <string name="rol_filtro_activos">Activos</string>
+    <string name="rol_filtro_inactivos">Inactivos</string>
+
+    <!-- Estado -->
+    <string name="rol_estado_activo">Activo</string>
+    <string name="rol_estado_inactivo">Inactivo</string>
+
+    <!-- Hints -->
+    <string name="rol_codigo_hint">Código</string>
+    <string name="rol_nombre_hint">Nombre del rol</string>
+    <string name="rol_descripcion_hint">Descripción</string>
+
+    <!-- Listado -->
+    <string name="rol_empty">No se encontraron roles.</string>
+    <string name="rol_pagina_info">Página %1$d de %2$d</string>
 
     <!-- Mensajes -->
     <string name="rol_mensaje_exito">Rol guardado correctamente</string>
     <string name="rol_mensaje_error">Error al guardar rol</string>
+    <string name="rol_creado">Rol creado correctamente.</string>
+    <string name="rol_actualizado">Rol actualizado correctamente.</string>
+    <string name="rol_estado_actualizado">Estado actualizado correctamente.</string>
+    <string name="rol_creado_permisos_error">El rol se creó, pero no se pudieron asignar los permisos: %1$s</string>
+    <string name="rol_actualizado_permisos_error">El rol se actualizó, pero no se pudieron asignar los permisos: %1$s</string>
     <string name="rol_volver">Volver</string>
 
-    <!-- Hints -->
-    <string name="rol_nombre_hint">Nombre del rol</string>
+    <!-- Errores HTTP -->
+    <string name="rol_error_bad_request">Datos inválidos.</string>
+    <string name="rol_error_unauthorized">Sesión no válida o vencida.</string>
+    <string name="rol_error_forbidden">Requiere rol ADMIN</string>
+    <string name="rol_error_not_found">Rol no encontrado.</string>
+    <string name="rol_error_conflict">El rol ya existe.</string>
+    <string name="rol_error_internal_server">Error interno del servidor.</string>
+    <string name="rol_error_server">No fue posible procesar la solicitud.</string>
+    <string name="rol_error_no_internet">Verifica tu conexión a Internet.</string>
+    <string name="rol_error_timeout">El servidor tardó demasiado en responder.</string>
+    <string name="rol_error_network">No fue posible conectar con el servidor.</string>
+
+    <!-- Errores de validación -->
+    <string name="rol_error_codigo_requerido">Ingresa el código.</string>
+    <string name="rol_error_codigo_longitud">El código debe tener entre 3 y 50 caracteres.</string>
+    <string name="rol_error_codigo_formato">Usa solo letras, números y guiones bajos.</string>
+    <string name="rol_error_nombre_requerido">Ingresa el nombre.</string>
+    <string name="rol_error_nombre_longitud">El nombre debe tener entre 3 y 100 caracteres.</string>
+    <string name="rol_error_descripcion_longitud">La descripción no debe superar 300 caracteres.</string>
 </resources>
