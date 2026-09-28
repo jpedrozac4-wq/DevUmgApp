@@ -45,6 +45,7 @@ import gt.com.ro.devumgapp.curso.ui.CursoListActivity;
 import gt.com.ro.devumgapp.docente.ui.DocenteListActivity;
 import gt.com.ro.devumgapp.inscripcion.ui.InscripcionListActivity;
 import gt.com.ro.devumgapp.nota.ui.NotaListActivity;
+import gt.com.ro.devumgapp.usuario.ui.UsuarioListActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -384,6 +385,9 @@ public class HomeActivity extends AppCompatActivity {
         }
         if (itemId == R.id.nav_docentes) {
             return new Intent(this, DocenteListActivity.class);
+        }
+        if (itemId == R.id.nav_usuarios) {
+            return new Intent(this, UsuarioListActivity.class);
         }
         return null;
     }
