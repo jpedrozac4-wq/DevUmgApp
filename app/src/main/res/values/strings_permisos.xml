@@ -3,17 +3,70 @@
     <!-- Títulos -->
     <string name="permiso_titulo">Gestión de Permisos</string>
     <string name="permiso_lista_titulo">Lista de Permisos</string>
+    <string name="permiso_subtitulo">Administra los permisos disponibles para roles</string>
     <string name="permiso_form_titulo">Formulario de Permiso</string>
+    <string name="permiso_form_titulo_crear">Nuevo permiso</string>
+    <string name="permiso_form_titulo_editar">Editar permiso</string>
+    <string name="permiso_form_subtitulo">Completa los datos del permiso</string>
+    <string name="permiso_filtros_titulo">Búsqueda y filtros</string>
+    <string name="permiso_form_datos_titulo">Datos del permiso</string>
 
     <!-- Botones -->
     <string name="permiso_btn_guardar">Guardar Permiso</string>
     <string name="permiso_btn_cancelar">Cancelar</string>
+    <string name="permiso_accion_buscar">Buscar</string>
+    <string name="permiso_accion_agregar">Agregar</string>
+    <string name="permiso_accion_editar">Editar</string>
+    <string name="permiso_accion_activar">Activar</string>
+    <string name="permiso_accion_desactivar">Desactivar</string>
+    <string name="permiso_accion_procesando">Procesando...</string>
+    <string name="permiso_accion_anterior">Anterior</string>
+    <string name="permiso_accion_siguiente">Siguiente</string>
+
+    <!-- Filtros -->
+    <string name="permiso_buscar_hint">Buscar por código, nombre o descripción</string>
+    <string name="permiso_filtro_todos">Todos</string>
+    <string name="permiso_filtro_activos">Activos</string>
+    <string name="permiso_filtro_inactivos">Inactivos</string>
+
+    <!-- Estado -->
+    <string name="permiso_estado_activo">Activo</string>
+    <string name="permiso_estado_inactivo">Inactivo</string>
+
+    <!-- Hints -->
+    <string name="permiso_codigo_hint">Código</string>
+    <string name="permiso_nombre_hint">Nombre del permiso</string>
+    <string name="permiso_descripcion_hint">Descripción</string>
+
+    <!-- Listado -->
+    <string name="permiso_empty">No se encontraron permisos.</string>
+    <string name="permiso_pagina_info">Página %1$d de %2$d</string>
 
     <!-- Mensajes -->
     <string name="permiso_mensaje_exito">Permiso guardado correctamente</string>
     <string name="permiso_mensaje_error">Error al guardar permiso</string>
+    <string name="permiso_creado">Permiso creado correctamente.</string>
+    <string name="permiso_actualizado">Permiso actualizado correctamente.</string>
+    <string name="permiso_estado_actualizado">Estado actualizado correctamente.</string>
     <string name="permiso_volver">Volver</string>
 
-    <!-- Hints -->
-    <string name="permiso_nombre_hint">Nombre del permiso</string>
+    <!-- Errores HTTP -->
+    <string name="permiso_error_bad_request">Datos inválidos.</string>
+    <string name="permiso_error_unauthorized">Sesión no válida o vencida.</string>
+    <string name="permiso_error_forbidden">Requiere rol ADMIN</string>
+    <string name="permiso_error_not_found">Permiso no encontrado.</string>
+    <string name="permiso_error_conflict">El permiso ya existe.</string>
+    <string name="permiso_error_internal_server">Error interno del servidor.</string>
+    <string name="permiso_error_server">No fue posible procesar la solicitud.</string>
+    <string name="permiso_error_no_internet">Verifica tu conexión a Internet.</string>
+    <string name="permiso_error_timeout">El servidor tardó demasiado en responder.</string>
+    <string name="permiso_error_network">No fue posible conectar con el servidor.</string>
+
+    <!-- Errores de validación -->
+    <string name="permiso_error_codigo_requerido">Ingresa el código.</string>
+    <string name="permiso_error_codigo_longitud">El código debe tener entre 3 y 80 caracteres.</string>
+    <string name="permiso_error_codigo_formato">Usa solo letras, números y guiones bajos.</string>
+    <string name="permiso_error_nombre_requerido">Ingresa el nombre.</string>
+    <string name="permiso_error_nombre_longitud">El nombre debe tener entre 3 y 120 caracteres.</string>
+    <string name="permiso_error_descripcion_longitud">La descripción no debe superar 300 caracteres.</string>
 </resources>

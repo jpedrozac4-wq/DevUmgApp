@@ -21,7 +21,7 @@
         app:title="@string/permiso_form_titulo"
         app:titleTextColor="@color/dashboard_text_primary"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationContentDescription="@string/usuario_volver"/>
+        app:navigationContentDescription="@string/permiso_volver"/>
 
     <!-- Contenido scrollable -->
     <ScrollView
@@ -62,15 +62,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
-                        android:text="@string/permiso_form_titulo"
+                        android:text="@string/permiso_form_titulo_crear"
                         android:textColor="@color/dashboard_on_primary"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/permiso_form_subtitulo"
+                        android:textColor="@color/dashboard_on_primary_secondary"
+                        android:textSize="14sp"/>
                 </LinearLayout>
 
                 <ImageView
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:alpha="0.9"
                     android:src="@drawable/ic_lock"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
@@ -95,19 +105,100 @@
                     android:orientation="vertical"
                     android:padding="@dimen/dashboard_card_padding">
 
-                    <!-- Campo Nombre del Permiso -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/permiso_form_datos_titulo"
+                        android:textColor="@color/dashboard_text_primary"
+                        android:textSize="17sp"
+                        android:textStyle="bold"/>
+
+                    <!-- Campo Código -->
                     <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilPermisoCodigo"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/permiso_nombre_hint"
-                        app:boxStrokeColor="@color/dashboard_grade">
+                        android:layout_marginTop="12dp"
+                        android:hint="@string/permiso_codigo_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_grade"
+                        app:hintTextColor="@color/dashboard_grade"
+                        app:startIconDrawable="@drawable/ic_badge"
+                        app:startIconTint="@color/dashboard_grade">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/edtNombrePermiso"
+                            android:id="@+id/edtPermisoCodigo"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:inputType="textPersonName"/>
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapCharacters"
+                            android:maxLength="80"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textColor="@color/dashboard_text_primary"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Campo Nombre -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilPermisoNombre"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/permiso_nombre_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_grade"
+                        app:hintTextColor="@color/dashboard_grade"
+                        app:startIconDrawable="@drawable/ic_lock"
+                        app:startIconTint="@color/dashboard_grade">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPermisoNombre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapWords"
+                            android:maxLength="120"
+                            android:maxLines="2"
+                            android:textColor="@color/dashboard_text_primary"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Campo Descripción -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilPermisoDescripcion"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="@string/permiso_descripcion_hint"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/dashboard_grade"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="300"
+                        app:hintTextColor="@color/dashboard_grade"
+                        app:startIconDrawable="@drawable/ic_description"
+                        app:startIconTint="@color/dashboard_grade">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtPermisoDescripcion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:maxLength="300"
+                            android:minLines="3"
+                            android:textColor="@color/dashboard_text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Botón Guardar -->
@@ -115,11 +206,12 @@
                         android:id="@+id/btnGuardarPermiso"
                         style="@style/Widget.Material3.Button"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/login_button_height"
                         android:layout_marginTop="20dp"
                         android:text="@string/permiso_btn_guardar"
                         android:textAllCaps="false"
                         app:backgroundTint="@color/dashboard_grade"
+                        app:cornerRadius="8dp"
                         app:icon="@drawable/ic_save"
                         app:iconGravity="textStart"
                         app:iconTint="@color/white"/>
@@ -127,12 +219,23 @@
                     <!-- Botón Cancelar -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCancelarPermiso"
-                        style="@style/Widget.Material3.Button"
+                        style="@style/Widget.Material3.Button.OutlinedButton"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/login_button_height"
                         android:layout_marginTop="8dp"
                         android:text="@string/permiso_btn_cancelar"
-                        android:textAllCaps="false"/>
+                        android:textAllCaps="false"
+                        app:cornerRadius="8dp"/>
+
+                    <com.google.android.material.progressindicator.LinearProgressIndicator
+                        android:id="@+id/progressPermisoForm"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:indeterminate="true"
+                        android:visibility="gone"
+                        app:indicatorColor="@color/dashboard_primary"
+                        tools:visibility="visible"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

@@ -1,21 +1,334 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@drawable/bg_dashboard_screen"
+    tools:context=".permiso.ui.PermisoListActivity">
 
-    <TextView
-        android:id="@+id/txtTituloPermisos"
-        android:layout_width="wrap_content"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarPermisos"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dashboard_header_height"
+        android:background="@color/dashboard_surface"
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationContentDescription="@string/permiso_volver"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:title="@string/permiso_titulo"
+        app:titleTextColor="@color/dashboard_text_primary" />
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/permisoTopContent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/permiso_lista_titulo"
-        android:textSize="20sp"
-        android:textStyle="bold"/>
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/dashboard_screen_padding"
+        android:paddingTop="14dp"
+        android:paddingEnd="@dimen/dashboard_screen_padding"
+        android:paddingBottom="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarPermisos">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/permisoHero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_usuario_header"
+                android:gravity="center_vertical"
+                android:minHeight="128dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/dashboard_card_padding">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/permiso_titulo"
+                        android:textColor="@color/dashboard_on_primary"
+                        android:textSize="25sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:text="@string/permiso_subtitulo"
+                        android:textColor="@color/dashboard_on_primary_secondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/bg_dashboard_avatar_light"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_lock"
+                        app:tint="@color/white" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/permisoFilters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/dashboard_surface"
+                app:cardCornerRadius="@dimen/dashboard_card_radius"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/dashboard_border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dashboard_card_padding">
+
+                    <LinearLayout
+                        android:id="@+id/permisoFiltersHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="sans-serif-black"
+                            android:text="@string/permiso_filtros_titulo"
+                            android:textColor="@color/dashboard_text_primary"
+                            android:textSize="17sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAgregarPermiso"
+                            android:layout_width="44dp"
+                            android:layout_height="44dp"
+                            android:contentDescription="@string/permiso_accion_agregar"
+                            app:backgroundTint="@color/dashboard_grade"
+                            app:cornerRadius="8dp"
+                            app:icon="@drawable/ic_add"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0dp"
+                            app:iconTint="@color/white" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/permisoFilterControls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/tilBuscarPermiso"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:hint="@string/permiso_buscar_hint"
+                            app:boxCornerRadiusBottomEnd="8dp"
+                            app:boxCornerRadiusBottomStart="8dp"
+                            app:boxCornerRadiusTopEnd="8dp"
+                            app:boxCornerRadiusTopStart="8dp"
+                            app:boxStrokeColor="@color/dashboard_primary"
+                            app:endIconDrawable="@drawable/ic_search"
+                            app:endIconMode="custom"
+                            app:hintTextColor="@color/dashboard_primary">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/edtBuscarPermiso"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:imeOptions="actionSearch"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:textColor="@color/dashboard_text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.button.MaterialButtonToggleGroup
+                            android:id="@+id/toggleEstadoPermisos"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            app:checkedButton="@id/btnFiltroTodosPermisos"
+                            app:selectionRequired="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFiltroTodosPermisos"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="@string/permiso_filtro_todos"
+                                android:textAllCaps="false"
+                                android:textSize="12sp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFiltroActivosPermisos"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="@string/permiso_filtro_activos"
+                                android:textAllCaps="false"
+                                android:textSize="12sp" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnFiltroInactivosPermisos"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="48dp"
+                                android:layout_weight="1"
+                                android:text="@string/permiso_filtro_inactivos"
+                                android:textAllCaps="false"
+                                android:textSize="12sp" />
+                        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnBuscarPermiso"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_marginTop="12dp"
+                            android:text="@string/permiso_accion_buscar"
+                            android:textAllCaps="false"
+                            app:cornerRadius="8dp"
+                            app:icon="@drawable/ic_search"
+                            app:iconGravity="textStart"
+                            app:iconTint="@color/white" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressPermisos"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/dashboard_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/permisoTopContent"
+        tools:visibility="visible" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerPermisos"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"/>
-</LinearLayout>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/dashboard_screen_padding"
+        android:paddingTop="8dp"
+        android:paddingEnd="@dimen/dashboard_screen_padding"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@id/permisoPagination"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressPermisos"
+        tools:listitem="@layout/item_permiso" />
+
+    <TextView
+        android:id="@+id/txtPermisosEmpty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dashboard_screen_padding"
+        android:text="@string/permiso_empty"
+        android:textColor="@color/dashboard_text_secondary"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/permisoPagination"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressPermisos"
+        tools:visibility="visible" />
+
+    <TextView
+        android:id="@+id/txtPermisosError"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="@dimen/dashboard_screen_padding"
+        android:textColor="@color/dashboard_error"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/permisoPagination"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressPermisos"
+        tools:text="@string/permiso_error_network"
+        tools:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/permisoPagination"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/dashboard_surface"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="@dimen/dashboard_screen_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPermisosAnterior"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/permiso_accion_anterior"
+            android:textAllCaps="false"
+            app:cornerRadius="8dp" />
+
+        <TextView
+            android:id="@+id/txtPermisosPageInfo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/dashboard_text_secondary"
+            android:textSize="13sp"
+            tools:text="Página 1 de 3" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPermisosSiguiente"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:text="@string/permiso_accion_siguiente"
+            android:textAllCaps="false"
+            app:cornerRadius="8dp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
