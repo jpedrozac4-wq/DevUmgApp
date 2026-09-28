@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard_screen"
+    tools:context=".usuario.ui.UsuarioListActivity">
+
+    <!-- Toolbar -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarUsuarioList"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dashboard_header_height"
+        android:background="@color/dashboard_surface"
+        android:elevation="1dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:title="@string/usuario_lista_titulo"
+        app:titleTextColor="@color/dashboard_text_primary"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:navigationContentDescription="@string/usuario_volver"/>
+
+    <!-- Contenido scrollable -->
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/toolbarUsuarioList"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/dashboard_screen_padding">
+
+            <!-- Hero/banner -->
+            <LinearLayout
+                android:id="@+id/usuarioListHero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_usuario_header"
+                android:gravity="center_vertical"
+                android:minHeight="116dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/dashboard_card_padding">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtUsuarioListHeroTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:text="@string/usuario_lista_titulo"
+                        android:textColor="@color/dashboard_on_primary"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_user"
+                    android:contentDescription="@null"
+                    android:importantForAccessibility="no"
+                    app:tint="@color/white"/>
+            </LinearLayout>
+
+            <!-- Card con lista -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardUsuarioList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardBackgroundColor="@color/dashboard_surface"
+                app:cardCornerRadius="@dimen/dashboard_card_radius"
+                app:cardElevation="4dp"
+                app:strokeColor="@color/dashboard_border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/dashboard_card_padding">
+
+                    <!-- RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerUsuarios"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:scrollbars="vertical"/>
+
+                    <!-- ProgressBar -->
+                    <ProgressBar
+                        android:id="@+id/progressUsuarios"
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"/>
+
+                    <!-- Botones -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGuardarUsuario"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="@string/guardar"
+                        android:textAllCaps="false"
+                        app:backgroundTint="@color/dashboard_grade"
+                        app:icon="@drawable/ic_save"
+                        app:iconGravity="textStart"
+                        app:iconTint="@color/white"/>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnCancelarUsuario"
+                        style="@style/Widget.Material3.Button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="@string/cancelar"
+                        android:textAllCaps="false"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

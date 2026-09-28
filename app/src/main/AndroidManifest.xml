@@ -16,6 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NexusApp">
+
         <activity
             android:name=".auth.ui.LoginActivity"
             android:exported="true"
@@ -26,41 +27,52 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".auth.ui.HomeActivity"
             android:exported="false"
             android:parentActivityName=".auth.ui.LoginActivity" />
+
         <activity
             android:name=".carrera.ui.CarreraListActivity"
             android:exported="false" />
+
         <activity
             android:name=".carrera.ui.CarreraFormActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".curso.ui.CursoListActivity"
             android:exported="false" />
+
         <activity
             android:name=".curso.ui.CursoFormActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".inscripcion.ui.InscripcionListActivity"
             android:exported="false" />
+
         <activity
             android:name=".inscripcion.ui.InscripcionFormActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".inscripcion.ui.InscripcionDetailActivity"
             android:exported="false" />
+
         <activity
             android:name=".nota.ui.NotaListActivity"
             android:exported="false" />
+
         <activity
             android:name=".nota.ui.NotaFormActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
         <activity
             android:name=".nota.ui.PromedioNotasActivity"
             android:exported="false" />
@@ -76,8 +88,6 @@
         <activity
             android:name=".colegiatura.ui.PagoColegiaturaActivity"
             android:exported="false" />
-
-
 
         <activity
             android:name=".estudiante.ui.EstudianteListActivity"
@@ -100,8 +110,36 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Módulo de Usuarios, Roles y Permisos -->
+        <activity
+            android:name=".usuario.ui.UsuarioListActivity"
+            android:exported="false" />
 
-    <provider
+        <activity
+            android:name=".usuario.ui.UsuarioFormActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".usuario.ui.UsuarioRolesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".rol.ui.RolListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".rol.ui.RolFormActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".permiso.ui.PermisoListActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".permiso.ui.PermisoFormActivity"
+            android:exported="false" />
+
+        <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="gt.com.ro.devumgapp.fileprovider"
             android:exported="false"
@@ -110,6 +148,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
     </application>
 
 </manifest>

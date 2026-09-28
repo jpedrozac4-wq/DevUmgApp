@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Títulos -->
+    <string name="usuario_titulo">Gestión de Usuarios</string>
+    <string name="usuario_lista_titulo">Lista de Usuarios</string>
+    <string name="usuario_form_titulo">Formulario de Usuario</string>
+
+    <!-- Botones -->
+    <string name="usuario_btn_guardar">Guardar Usuario</string>
+    <string name="usuario_btn_cancelar">Cancelar</string>
+
+    <!-- Mensajes -->
+    <string name="usuario_mensaje_exito">Usuario guardado correctamente</string>
+    <string name="usuario_mensaje_error">Error al guardar usuario</string>
+    <string name="usuario_volver">Volver</string>
+
+    <!-- Hints -->
+    <string name="usuario_nombre_hint">Nombre del usuario</string>
+    <string name="usuario_correo_hint">Correo electrónico</string>
+    <string name="usuario_username_hint">Usuario</string>
+    <string name="usuario_password_hint">Contraseña</string>
+
+    <!-- Campos usados en layouts -->
+    <string name="usuario_username">Usuario</string>
+    <string name="usuario_email">Correo electrónico</string>
+    <string name="usuario_password">Contraseña</string>
+
+    <!-- Botones generales -->
+    <string name="guardar">Guardar</string>
+    <string name="cancelar">Cancelar</string>
+</resources>
