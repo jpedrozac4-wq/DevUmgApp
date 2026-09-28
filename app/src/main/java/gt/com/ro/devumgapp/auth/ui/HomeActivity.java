@@ -45,6 +45,8 @@ import gt.com.ro.devumgapp.curso.ui.CursoListActivity;
 import gt.com.ro.devumgapp.docente.ui.DocenteListActivity;
 import gt.com.ro.devumgapp.inscripcion.ui.InscripcionListActivity;
 import gt.com.ro.devumgapp.nota.ui.NotaListActivity;
+import gt.com.ro.devumgapp.permiso.ui.PermisoListActivity;
+import gt.com.ro.devumgapp.rol.ui.RolListActivity;
 import gt.com.ro.devumgapp.usuario.ui.UsuarioListActivity;
 
 public class HomeActivity extends AppCompatActivity {
@@ -389,6 +391,12 @@ public class HomeActivity extends AppCompatActivity {
         if (itemId == R.id.nav_usuarios) {
             return new Intent(this, UsuarioListActivity.class);
         }
+        if (itemId == R.id.nav_roles) {
+            return new Intent(this, RolListActivity.class);
+        }
+        if (itemId == R.id.nav_permisos) {
+            return new Intent(this, PermisoListActivity.class);
+        }
         return null;
     }
 
@@ -490,6 +498,18 @@ public class HomeActivity extends AppCompatActivity {
                 R.string.module_usuarios_description,
                 R.drawable.ic_users,
                 R.color.dashboard_users));
+        modules.add(new DashboardModule(
+                R.id.nav_roles,
+                R.string.nav_roles,
+                R.string.module_roles_description,
+                R.drawable.ic_badge,
+                R.color.dashboard_rol));
+        modules.add(new DashboardModule(
+                R.id.nav_permisos,
+                R.string.nav_permisos,
+                R.string.module_permisos_description,
+                R.drawable.ic_lock,
+                R.color.dashboard_permiso));
         return modules;
     }
 

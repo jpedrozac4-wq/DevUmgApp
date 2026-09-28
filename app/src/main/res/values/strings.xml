@@ -36,6 +36,8 @@
     <string name="nav_colegiaturas">Colegiaturas</string>
     <string name="nav_notas">Notas</string>
     <string name="nav_usuarios">Usuarios</string>
+    <string name="nav_roles">Roles</string>
+    <string name="nav_permisos">Permisos</string>
     <string name="nav_logout">Cerrar sesi&#243;n</string>
     <string name="module_under_construction">M&#243;dulo de %1$s en construcci&#243;n</string>
     <string name="nav_open_drawer">Abrir men&#250;</string>
@@ -77,6 +79,8 @@
     <string name="module_notas_description">Registro de calificaciones</string>
     <string name="module_colegiaturas_description">Control de colegiaturas</string>
     <string name="module_usuarios_description">Administraci&#243;n de usuarios</string>
+    <string name="module_roles_description">Gesti&#243;n de roles y sus permisos</string>
+    <string name="module_permisos_description">Cat&#225;logo de permisos</string>
     <string name="bottom_profile">Perfil</string>
 
 
