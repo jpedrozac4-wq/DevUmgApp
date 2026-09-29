@@ -42,6 +42,7 @@ import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.network.CursoApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
@@ -214,7 +215,7 @@ public class InscripcionListActivity extends AppCompatActivity implements Inscri
 
     private void setupToolbar() {
         toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

@@ -28,6 +28,9 @@ import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.network.ApiResponses;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +47,8 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
     private MaterialAutoCompleteTextView actEstudiante, actEstado;
     private TextInputEditText edtCiclo, edtConcepto;
     private MaterialButtonToggleGroup toggleActivo;
+    private View filtersHeader, filterControls;
+    private boolean filtersExpanded;
 
     private ColegiaturaAdapter adapter;
     private ColegiaturaApiService service;
@@ -78,17 +83,19 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
         edtCiclo = findViewById(R.id.edtColegiaturaCiclo);
         edtConcepto = findViewById(R.id.edtColegiaturaConcepto);
         toggleActivo = findViewById(R.id.toggleColegiaturaActivo);
+        filtersHeader = findViewById(R.id.colegiaturaFiltersHeader);
+        filterControls = findViewById(R.id.colegiaturaFilterControls);
 
         findViewById(R.id.toolbarColegiaturas).setOnClickListener(v -> { });
         findViewById(R.id.toolbarColegiaturas).setOnTouchListener((v, event) -> false);
-        ((com.google.android.material.appbar.MaterialToolbar) findViewById(R.id.toolbarColegiaturas))
-                .setNavigationOnClickListener(v -> finish());
+        ModuleNavigation.attach(this, findViewById(R.id.toolbarColegiaturas));
     }
 
     private void configurarVista() {
         adapter = new ColegiaturaAdapter(this);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
+        filtersHeader.setOnClickListener(v -> setFiltersExpanded(!filtersExpanded));
 
         ArrayAdapter<String> estadoAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_dropdown_item_1line,
@@ -140,6 +147,19 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
                 cargarColegiaturas();
             }
         });
+    }
+
+    private void setFiltersExpanded(boolean expanded) {
+        filtersExpanded = expanded;
+        if (expanded) {
+            filterControls.setVisibility(View.VISIBLE);
+            filterControls.setAlpha(0f);
+            filterControls.setTranslationY(-8f);
+            filterControls.animate().alpha(1f).translationY(0f).setDuration(180).start();
+            return;
+        }
+        filterControls.animate().alpha(0f).translationY(-8f).setDuration(140)
+                .withEndAction(() -> filterControls.setVisibility(View.GONE)).start();
     }
 
     private void cargarEstudiantes() {
@@ -295,12 +315,8 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
 
     @Override
     public void onChangeState(ColegiaturaResponse item) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.colegiatura_confirmar_inactivacion_titulo)
-                .setMessage(R.string.colegiatura_confirmar_inactivacion_mensaje)
-                .setNegativeButton(R.string.colegiatura_cancelar, null)
-                .setPositiveButton(R.string.colegiatura_accion_inactivar, (dialog, which) -> inactivarColegiatura(item.id))
-                .show();
+        SgauDialog.confirmState(this, false,
+                "la colegiatura \"" + item.concepto + "\"", () -> inactivarColegiatura(item.id));
     }
 
     private void inactivarColegiatura(long id) {
@@ -311,19 +327,19 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
                     public void onResponse(Call<ColegiaturaResponse> call, Response<ColegiaturaResponse> response) {
                         setLoading(false);
                         if (response.isSuccessful() && response.body() != null) {
-                            Toast.makeText(ColegiaturaListActivity.this,
-                                    R.string.colegiatura_inactivada_exito, Toast.LENGTH_SHORT).show();
+                            UiNotifier.success(ColegiaturaListActivity.this,
+                                    R.string.colegiatura_inactivada_exito);
                             cargarColegiaturas();
                         } else {
-                            Toast.makeText(ColegiaturaListActivity.this, leerError(response), Toast.LENGTH_LONG).show();
+                            UiNotifier.error(ColegiaturaListActivity.this, leerError(response));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ColegiaturaResponse> call, Throwable t) {
                         setLoading(false);
-                        Toast.makeText(ColegiaturaListActivity.this,
-                                R.string.colegiatura_error_network, Toast.LENGTH_LONG).show();
+                        UiNotifier.error(ColegiaturaListActivity.this,
+                                getString(R.string.colegiatura_error_network));
                     }
                 });
     }

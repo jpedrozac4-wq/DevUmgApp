@@ -59,6 +59,8 @@ import gt.com.ro.devumgapp.rol.ui.RolListActivity;
 import gt.com.ro.devumgapp.usuario.ui.UsuarioListActivity;
 
 public class HomeActivity extends AppCompatActivity {
+    public static final String EXTRA_OPEN_DRAWER = "open_drawer";
+    public static final String EXTRA_CURRENT_DESTINATION = "current_destination";
 
     private DrawerLayout drawerLayout;
     private NavigationView navView;
@@ -85,12 +87,19 @@ public class HomeActivity extends AppCompatActivity {
     private boolean syncingBottomNavigation;
     private boolean profileRefreshNeeded;
     private Call<LoginResponse> profileCall;
+    private boolean drawerOnlyMode;
+    private boolean drawerDestinationSelected;
 
     @Override
     protected void onResume() {
         super.onResume();
         if (modulesGrid != null) {
             applyMenuPermissions();
+            if (drawerOnlyMode) {
+                navView.setCheckedItem(getIntent().getIntExtra(
+                        EXTRA_CURRENT_DESTINATION, R.id.nav_inicio));
+                return;
+            }
             renderContextualDashboard();
             renderModules();
             navView.setCheckedItem(R.id.nav_inicio);
@@ -108,10 +117,20 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        drawerOnlyMode = getIntent().getBooleanExtra(EXTRA_OPEN_DRAWER, false);
         sessionManager = SessionManager.getInstance();
 
         if (!sessionManager.isLoggedIn()) {
             navigateToLogin();
+            return;
+        }
+
+        // The drawer launched from a module is only a lightweight overlay. It
+        // must not wait for a profile refresh or briefly render the dashboard.
+        if (drawerOnlyMode) {
+            getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            initializeHomeUi();
+            refreshDrawerEmailIfMissing();
             return;
         }
 
@@ -135,6 +154,8 @@ public class HomeActivity extends AppCompatActivity {
         bindViews();
         setupToolbar();
         setupDrawer();
+        setupDrawerOnlyMode();
+        openDrawerIfRequested();
         applySystemInsets();
         setupBottomNavigation();
         setupBackHandling();
@@ -142,6 +163,41 @@ public class HomeActivity extends AppCompatActivity {
         renderContextualDashboard();
         renderModules();
         animateDashboardIntro();
+    }
+
+    @Override protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        openDrawerIfRequested();
+    }
+
+    private void openDrawerIfRequested() {
+        if (drawerLayout != null && getIntent().getBooleanExtra(EXTRA_OPEN_DRAWER, false)) {
+            getIntent().removeExtra(EXTRA_OPEN_DRAWER);
+            drawerLayout.post(() -> drawerLayout.openDrawer(GravityCompat.START));
+        }
+    }
+
+    /**
+     * Module screens launch Home only as a transparent drawer host. Keeping the
+     * module Activity underneath prevents opening or dismissing the menu from
+     * unexpectedly returning the user to the dashboard.
+     */
+    private void setupDrawerOnlyMode() {
+        if (!drawerOnlyMode) return;
+
+        getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        drawerLayout.setBackgroundColor(Color.TRANSPARENT);
+        View dashboardContent = drawerLayout.getChildAt(0);
+        dashboardContent.setVisibility(View.INVISIBLE);
+        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override public void onDrawerClosed(View drawerView) {
+                if (!drawerDestinationSelected && !isFinishing()) {
+                    finish();
+                    overridePendingTransition(0, 0);
+                }
+            }
+        });
     }
 
     private void refreshProfileThenInitialize() {
@@ -218,12 +274,15 @@ public class HomeActivity extends AppCompatActivity {
         if (navigationIcon != null) {
             navigationIcon.setTint(ContextCompat.getColor(this, R.color.dashboard_text_primary));
         }
+        txtToolbarAvatar.setOnClickListener(view -> showProfile());
     }
 
     private void setupDrawer() {
         renderDrawerHeader();
         applyMenuPermissions();
-        navView.setCheckedItem(R.id.nav_inicio);
+        navView.setCheckedItem(drawerOnlyMode
+                ? getIntent().getIntExtra(EXTRA_CURRENT_DESTINATION, R.id.nav_inicio)
+                : R.id.nav_inicio);
         navView.setNavigationItemSelectedListener(item -> {
             handleNavigationItem(item);
             return true;
@@ -267,9 +326,35 @@ public class HomeActivity extends AppCompatActivity {
                 : username);
 
         String email = sessionManager.getEmail().trim();
-        tvNavRoles.setText(email.isEmpty()
-                ? getString(R.string.profile_not_available)
-                : email);
+        if (!email.isEmpty()) {
+            tvNavRoles.setText(email);
+        } else {
+            Set<String> roles = sessionManager.getRoles();
+            tvNavRoles.setText(roles.isEmpty() ? username : String.join(" · ", roles));
+        }
+    }
+
+    private void refreshDrawerEmailIfMissing() {
+        if (!sessionManager.getEmail().trim().isEmpty() || profileCall != null) return;
+
+        profileCall = RetrofitClient.getClient().create(AuthApiService.class).me();
+        profileCall.enqueue(new Callback<LoginResponse>() {
+            @Override public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                profileCall = null;
+                if (isFinishing()) return;
+                if (response.isSuccessful() && response.body() != null) {
+                    sessionManager.refreshProfile(response.body());
+                    renderDrawerHeader();
+                } else if (response.code() == 401) {
+                    SessionManager.handleUnauthorized(HomeActivity.this);
+                }
+            }
+
+            @Override public void onFailure(Call<LoginResponse> call, Throwable error) {
+                profileCall = null;
+                // The drawer remains usable with the locally stored identity.
+            }
+        });
     }
 
     private void renderUserSummary() {
@@ -468,6 +553,7 @@ public class HomeActivity extends AppCompatActivity {
     private void handleNavigationItem(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.nav_logout) {
+            drawerDestinationSelected = true;
             drawerLayout.closeDrawer(GravityCompat.START);
             showLogoutConfirmation();
             return;
@@ -475,12 +561,24 @@ public class HomeActivity extends AppCompatActivity {
 
         navView.setCheckedItem(itemId);
         syncBottomSelection(itemId);
+        if (drawerOnlyMode) drawerDestinationSelected = true;
         drawerLayout.closeDrawer(GravityCompat.START);
         setDashboardTitle(itemId == R.id.nav_inicio
                 ? R.string.dashboard_title
                 : moduleTitleFor(itemId));
 
         if (itemId == R.id.nav_inicio) {
+            if (drawerOnlyMode) {
+                drawerDestinationSelected = true;
+                Intent intent = new Intent(this, HomeActivity.class);
+                // This Activity instance is only the transparent drawer host.
+                // CLEAR_TOP would resolve back to this same instance, so make
+                // the real dashboard the new task root instead.
+                intent.putExtra("profileVerified", true);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(0, 0);
+            }
             return;
         }
 
@@ -535,7 +633,12 @@ public class HomeActivity extends AppCompatActivity {
         if (intent == null) {
             return false;
         }
+        if (drawerOnlyMode) drawerDestinationSelected = true;
         startActivity(intent);
+        if (drawerOnlyMode) {
+            finish();
+            overridePendingTransition(0, 0);
+        }
         return true;
     }
 
@@ -639,7 +742,18 @@ public class HomeActivity extends AppCompatActivity {
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.dashboard_logout_title)
                 .setMessage(R.string.dashboard_logout_message)
-                .setNegativeButton(R.string.dashboard_logout_cancel, null)
+                .setNegativeButton(R.string.dashboard_logout_cancel, (dialog, which) -> {
+                    if (drawerOnlyMode) {
+                        finish();
+                        overridePendingTransition(0, 0);
+                    }
+                })
+                .setOnCancelListener(dialog -> {
+                    if (drawerOnlyMode) {
+                        finish();
+                        overridePendingTransition(0, 0);
+                    }
+                })
                 .setPositiveButton(R.string.dashboard_logout_confirm, (dialog, which) -> logout())
                 .show();
     }

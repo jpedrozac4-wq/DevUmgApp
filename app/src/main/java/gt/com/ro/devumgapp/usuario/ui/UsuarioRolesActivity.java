@@ -27,6 +27,7 @@ import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.rol.dto.RolResumenResponse;
 import gt.com.ro.devumgapp.rol.dto.RolResponse;
 import gt.com.ro.devumgapp.rol.network.RolApiService;
@@ -313,6 +314,14 @@ public class UsuarioRolesActivity extends AppCompatActivity {
         if (loading || !rolesReady) {
             return;
         }
+        SgauDialog.confirm(this, R.drawable.ic_save,
+                getString(R.string.dialog_title_assign),
+                "Se actualizarán los roles del usuario seleccionado.",
+                getString(R.string.dialog_assign), this::submitRoles);
+    }
+
+    private void submitRoles() {
+        if (loading || !rolesReady) return;
         setLoading(true);
         RolesRequest request = new RolesRequest(collectCheckedIds());
         assignCall = usuarioApiService.asignarRoles(usuarioId, request);

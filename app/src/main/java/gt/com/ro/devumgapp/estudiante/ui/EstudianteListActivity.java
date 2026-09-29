@@ -23,6 +23,8 @@ import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResponse;
 import gt.com.ro.devumgapp.estudiante.dto.EstadoRequest;
 import gt.com.ro.devumgapp.estudiante.network.EstudianteApiService;
@@ -81,7 +83,7 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
     }
 
     private void setupToolbar() {
-        ((MaterialToolbar) findViewById(R.id.toolbarEstudiantes)).setNavigationOnClickListener(v -> finish());
+        ModuleNavigation.attach(this, findViewById(R.id.toolbarEstudiantes));
     }
 
     private void setupRecycler() {
@@ -176,6 +178,12 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
     }
 
     @Override public void onToggleStatus(EstudianteResponse estudiante) {
+        SgauDialog.confirmState(this, !estudiante.activo,
+                "el estudiante \"" + estudiante.nombres + " " + estudiante.apellidos + "\"",
+                () -> changeStudentStatus(estudiante));
+    }
+
+    private void changeStudentStatus(EstudianteResponse estudiante) {
         adapter.setStatusChanging(estudiante.id, true);
         service.cambiarEstadoEstudiante(estudiante.id, new EstadoRequest(!estudiante.activo))
                 .enqueue(new Callback<EstudianteResponse>() {
@@ -183,7 +191,9 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
                         adapter.setStatusChanging(estudiante.id, false);
                         if (response.isSuccessful() && response.body() != null) {
                             adapter.replace(response.body());
-                            UiNotifier.success(EstudianteListActivity.this, R.string.estudiante_estado_actualizado);
+                            UiNotifier.success(EstudianteListActivity.this, estudiante.activo
+                                    ? R.string.estudiante_desactivado
+                                    : R.string.estudiante_activado);
                         } else {
                             UiNotifier.error(EstudianteListActivity.this,
                                     EstudianteErrorMapper.fromResponse(EstudianteListActivity.this, response));

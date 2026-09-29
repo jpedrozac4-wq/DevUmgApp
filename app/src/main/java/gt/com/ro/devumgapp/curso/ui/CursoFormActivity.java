@@ -27,6 +27,7 @@ import gt.com.ro.devumgapp.carrera.dto.CarreraResumenResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.curso.dto.CursoRequest;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.dto.DocenteRequest;
@@ -281,6 +282,12 @@ public class CursoFormActivity extends AppCompatActivity {
         if (loading || !validateForm()) {
             return;
         }
+        SgauDialog.confirmSave(this, isEditMode(),
+                "el curso \"" + getText(edtNombre).trim() + "\"", this::submitCurso);
+    }
+
+    private void submitCurso() {
+        if (loading) return;
         setLoading(true);
         CursoRequest request = new CursoRequest(
                 getText(edtCodigo).trim(),

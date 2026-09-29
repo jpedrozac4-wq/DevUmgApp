@@ -5,14 +5,18 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.graphics.Rect;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -34,6 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
+    public static final String EXTRA_PREFILL_USERNAME = "prefill_username";
 
     private TextInputLayout tilUsuario;
     private TextInputLayout tilPassword;
@@ -43,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     private LinearProgressIndicator progressBar;
     private MaterialCheckBox chkRecordar;
     private TextView txtLoginError;
+    private ScrollView loginScroll;
     private AuthApiService authApiService;
     private Call<LoginResponse> loginCall;
     private Call<LoginResponse> profileCall;
@@ -62,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
 
         authApiService = RetrofitClient.getClient().create(AuthApiService.class);
         bindViews();
+        setupKeyboardInsets();
         restoreRememberedUsername();
         setupFormActions();
         if (SessionManager.getInstance().isLoggedIn()) {
@@ -133,13 +140,51 @@ public class LoginActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         chkRecordar = findViewById(R.id.chkRecordar);
         txtLoginError = findViewById(R.id.txtLoginError);
+        loginScroll = findViewById(R.id.loginScroll);
+    }
+
+    private void setupKeyboardInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(loginScroll, (view, insets) -> {
+            int keyboardBottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+            int navigationBottom = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+            int actionGap = insets.isVisible(WindowInsetsCompat.Type.ime())
+                    ? dpToPx(20)
+                    : 0;
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(),
+                    Math.max(keyboardBottom, navigationBottom) + actionGap);
+            if (insets.isVisible(WindowInsetsCompat.Type.ime()) && edtPassword.hasFocus()) {
+                revealPasswordActions();
+            }
+            return insets;
+        });
+        ViewCompat.requestApplyInsets(loginScroll);
+    }
+
+    private void revealPasswordActions() {
+        loginScroll.postDelayed(() -> {
+            // Scroll through the login button, not only through the password
+            // field, so the primary action remains above the keyboard.
+            Rect actionBounds = new Rect();
+            btnLogin.getDrawingRect(actionBounds);
+            loginScroll.offsetDescendantRectToMyCoords(btnLogin, actionBounds);
+            int visibleBottom = loginScroll.getHeight() - loginScroll.getPaddingBottom();
+            int target = Math.max(0, actionBounds.bottom - visibleBottom + dpToPx(20));
+            loginScroll.smoothScrollTo(0, target);
+        }, 220);
+    }
+
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
     private void restoreRememberedUsername() {
-        String rememberedUsername = SessionManager.getInstance().getRememberedUsername();
+        String rememberedUsername = getIntent().getStringExtra(EXTRA_PREFILL_USERNAME);
+        if (rememberedUsername == null || rememberedUsername.isEmpty()) {
+            rememberedUsername = SessionManager.getInstance().getRememberedUsername();
+        }
         if (!rememberedUsername.isEmpty()) {
             edtUsuario.setText(rememberedUsername);
-            chkRecordar.setChecked(true);
+            chkRecordar.setChecked(!SessionManager.getInstance().getRememberedUsername().isEmpty());
             edtPassword.requestFocus();
         }
     }
@@ -155,6 +200,7 @@ public class LoginActivity extends AppCompatActivity {
             if (hasFocus) {
                 tilPassword.setError(null);
                 clearGeneralError();
+                revealPasswordActions();
             }
         });
         edtPassword.setOnEditorActionListener((view, actionId, event) -> {

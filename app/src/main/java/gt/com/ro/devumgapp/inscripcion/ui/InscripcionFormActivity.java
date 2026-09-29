@@ -41,6 +41,7 @@ import gt.com.ro.devumgapp.carrera.dto.CarreraResumenResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.network.CursoApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
@@ -377,6 +378,11 @@ public class InscripcionFormActivity extends AppCompatActivity {
         if (loading || !validateForm()) {
             return;
         }
+        SgauDialog.confirmSave(this, isEditMode(), "la inscripción seleccionada", this::submitInscripcion);
+    }
+
+    private void submitInscripcion() {
+        if (loading) return;
         setLoading(true);
         if (isEditMode()) {
             InscripcionUpdateRequest request = new InscripcionUpdateRequest(

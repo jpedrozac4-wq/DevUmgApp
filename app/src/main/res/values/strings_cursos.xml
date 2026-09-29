@@ -19,6 +19,10 @@
     <string name="curso_accion_quitar_docente">Quitar docente</string>
     <string name="curso_accion_procesando">Procesando</string>
     <string name="curso_accion_completada">Operaci&#243;n completada.</string>
+    <string name="curso_activado">Curso activado correctamente.</string>
+    <string name="curso_desactivado">Curso desactivado correctamente.</string>
+    <string name="curso_docente_asignado">Docente asignado correctamente.</string>
+    <string name="curso_docente_quitado">Docente retirado correctamente.</string>
     <string name="curso_accion_anterior">Anterior</string>
     <string name="curso_accion_siguiente">Siguiente</string>
     <string name="curso_estado_activo">Activo</string>

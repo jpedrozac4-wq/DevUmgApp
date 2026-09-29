@@ -34,6 +34,8 @@ import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -130,6 +132,12 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
         if (statusCalls.containsKey(carrera.id)) {
             return;
         }
+        SgauDialog.confirmState(this, !carrera.activo,
+                "la carrera \"" + carrera.nombre + "\"", () -> changeCarreraStatus(carrera));
+    }
+
+    private void changeCarreraStatus(CarreraResponse carrera) {
+        if (statusCalls.containsKey(carrera.id)) return;
         adapter.setStatusChanging(carrera.id, true);
         Call<CarreraResponse> call = apiService.cambiarEstado(carrera.id, new EstadoRequest(!carrera.activo));
         statusCalls.put(carrera.id, call);
@@ -144,7 +152,9 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
                     } else {
                         loadCarreras(currentPage);
                     }
-                    UiNotifier.success(CarreraListActivity.this, R.string.carrera_estado_actualizado);
+                    UiNotifier.success(CarreraListActivity.this, carrera.activo
+                            ? R.string.carrera_desactivada
+                            : R.string.carrera_activada);
                     return;
                 }
                 UiNotifier.error(
@@ -189,7 +199,7 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
 
     private void setupToolbar() {
         toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

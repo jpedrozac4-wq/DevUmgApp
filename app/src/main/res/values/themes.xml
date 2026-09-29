@@ -35,4 +35,17 @@
         <item name="android:layout_marginBottom">14dp</item>
         <item name="android:background">@color/dashboard_border</item>
     </style>
+    <style name="Animation.SGAU.Dialog" parent="android:style/Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/sgau_dialog_enter</item>
+        <item name="android:windowExitAnimation">@anim/sgau_dialog_exit</item>
+    </style>
+
+    <style name="Theme.NexusApp.Home" parent="Theme.NexusApp">
+        <item name="android:windowBackground">@drawable/bg_dashboard_screen</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:statusBarColor">@color/dashboard_surface</item>
+        <item name="android:navigationBarColor">@color/dashboard_surface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
 </resources>

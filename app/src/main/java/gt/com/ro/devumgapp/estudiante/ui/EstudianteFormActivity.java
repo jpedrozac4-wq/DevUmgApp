@@ -20,6 +20,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteRequest;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResponse;
 import gt.com.ro.devumgapp.estudiante.network.EstudianteApiService;
@@ -168,6 +169,14 @@ public class EstudianteFormActivity extends AppCompatActivity {
 
     private void saveEstudiante() {
         if (loading || !validateForm()) return;
+
+        SgauDialog.confirmSave(this, isEditMode(),
+                "el estudiante \"" + textOf(edtNombres) + " " + textOf(edtApellidos) + "\"",
+                this::submitEstudiante);
+    }
+
+    private void submitEstudiante() {
+        if (loading) return;
 
         EstudianteRequest request = new EstudianteRequest();
         request.codigoEstudiantil = textOf(edtCodigo);

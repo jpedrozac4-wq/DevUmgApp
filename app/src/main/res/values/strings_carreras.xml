@@ -31,6 +31,8 @@
     <string name="carrera_creada">Carrera creada correctamente.</string>
     <string name="carrera_actualizada">Carrera actualizada correctamente.</string>
     <string name="carrera_estado_actualizado">Estado actualizado correctamente.</string>
+    <string name="carrera_activada">Carrera activada correctamente.</string>
+    <string name="carrera_desactivada">Carrera desactivada correctamente.</string>
     <string name="carrera_error_bad_request">Datos inv&#225;lidos.</string>
     <string name="carrera_error_unauthorized">Sesi&#243;n no v&#225;lida o vencida.</string>
     <string name="carrera_error_forbidden">Usuario sin permisos para gestionar carreras.</string>

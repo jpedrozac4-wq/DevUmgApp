@@ -23,6 +23,7 @@ import gt.com.ro.devumgapp.carrera.dto.CarreraResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -177,6 +178,13 @@ public class CarreraFormActivity extends AppCompatActivity {
         if (loading || !validateForm()) {
             return;
         }
+
+        SgauDialog.confirmSave(this, isEditMode(),
+                "la carrera \"" + getText(edtNombre).trim() + "\"", this::submitCarrera);
+    }
+
+    private void submitCarrera() {
+        if (loading) return;
 
         setLoading(true);
         CarreraRequest request = new CarreraRequest(

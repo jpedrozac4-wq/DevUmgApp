@@ -24,6 +24,8 @@ import gt.com.ro.devumgapp.colegiatura.dto.PagoRequest;
 import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.network.ApiResponses;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,6 +86,16 @@ public class PagoColegiaturaActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.colegiatura_pago_datos_invalidos, Toast.LENGTH_LONG).show();
             return;
         }
+        SgauDialog.confirm(this, R.drawable.ic_payment,
+                getString(R.string.dialog_title_payment),
+                getString(R.string.dialog_message_payment, String.format(Locale.US, "%.2f", monto)),
+                getString(R.string.dialog_register), this::enviarPago);
+    }
+
+    private void enviarPago() {
+        if (progress.getVisibility() == View.VISIBLE) return;
+        Double monto = parseDouble();
+        String fecha = textOf(edtFecha);
         PagoRequest request = new PagoRequest(monto, fecha, textOf(edtObservaciones));
         setLoading(true);
         service.registrarPago(colegiaturaId, request).enqueue(new Callback<ColegiaturaResponse>() {
@@ -91,14 +103,14 @@ public class PagoColegiaturaActivity extends AppCompatActivity {
                 setLoading(false);
                 if (response.isSuccessful() && response.body() != null) {
                     ColegiaturaResponse c = response.body();
-                    Toast.makeText(PagoColegiaturaActivity.this,
-                            getString(R.string.colegiatura_pago_exito, c.estado, c.saldoPendiente), Toast.LENGTH_LONG).show();
+                    UiNotifier.success(PagoColegiaturaActivity.this,
+                            getString(R.string.colegiatura_pago_exito, c.estado, c.saldoPendiente));
                     finish();
-                } else Toast.makeText(PagoColegiaturaActivity.this, leerError(response), Toast.LENGTH_LONG).show();
+                } else UiNotifier.error(PagoColegiaturaActivity.this, leerError(response));
             }
             @Override public void onFailure(Call<ColegiaturaResponse> call, Throwable t) {
                 setLoading(false);
-                Toast.makeText(PagoColegiaturaActivity.this, R.string.colegiatura_error_network, Toast.LENGTH_LONG).show();
+                UiNotifier.error(PagoColegiaturaActivity.this, getString(R.string.colegiatura_error_network));
             }
         });
     }

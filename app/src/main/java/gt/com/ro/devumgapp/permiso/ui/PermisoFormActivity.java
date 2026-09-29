@@ -20,6 +20,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.permiso.dto.PermisoRequest;
 import gt.com.ro.devumgapp.permiso.dto.PermisoResponse;
 import gt.com.ro.devumgapp.permiso.network.PermisoApiService;
@@ -176,6 +177,13 @@ public class PermisoFormActivity extends AppCompatActivity {
         if (loading || !validateForm()) {
             return;
         }
+
+        SgauDialog.confirmSave(this, isEditMode(),
+                "el permiso \"" + getText(edtNombre).trim() + "\"", this::submitPermiso);
+    }
+
+    private void submitPermiso() {
+        if (loading) return;
 
         setLoading(true);
         PermisoRequest request = new PermisoRequest(

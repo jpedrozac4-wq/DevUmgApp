@@ -42,6 +42,8 @@
     <string name="nota_creada">Nota creada correctamente.</string>
     <string name="nota_actualizada">Nota actualizada correctamente.</string>
     <string name="nota_estado_actualizada">Estado de la nota actualizado correctamente.</string>
+    <string name="nota_activada">Nota activada correctamente.</string>
+    <string name="nota_desactivada">Nota desactivada correctamente.</string>
     <string name="nota_promedio_titulo">Promedio de notas</string>
     <string name="nota_promedio_subtitulo">Consulta el rendimiento acad&#233;mico de un estudiante</string>
     <string name="nota_promedio_datos_titulo">Consulta de promedio</string>

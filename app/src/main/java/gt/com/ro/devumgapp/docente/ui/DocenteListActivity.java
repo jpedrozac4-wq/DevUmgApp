@@ -31,6 +31,8 @@ import gt.com.ro.devumgapp.carrera.dto.EstadoRequest;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.docente.dto.DocenteResponse;
 import gt.com.ro.devumgapp.docente.network.DocenteApiService;
 import retrofit2.Call;
@@ -124,7 +126,11 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
 
     @Override
     public void onToggleStatus(DocenteResponse docente) {
-        enqueueItemCall(docente.id, docenteApiService.cambiarEstado(docente.id, new EstadoRequest(!docente.activo)));
+        SgauDialog.confirmState(this, !docente.activo,
+                "el docente \"" + docente.nombre + " " + docente.apellido + "\"",
+                () -> enqueueItemCall(docente.id,
+                        docenteApiService.cambiarEstado(docente.id, new EstadoRequest(!docente.activo)),
+                        docente.activo ? R.string.docente_desactivado : R.string.docente_activado));
     }
 
 
@@ -148,7 +154,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
         btnAgregar.setVisibility(Permissions.has("DOCENTES_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnDocentesAnterior);
         btnSiguiente = findViewById(R.id.btnDocentesSiguiente);
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
     }
 
     private void setupToolbar() {
@@ -244,7 +250,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
         });
     }
 
-    private void enqueueItemCall(long docenteId, Call<DocenteResponse> call) {
+    private void enqueueItemCall(long docenteId, Call<DocenteResponse> call, int successMessageRes) {
         if (itemCalls.containsKey(docenteId)) {
             return;
         }
@@ -261,7 +267,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
                     } else {
                         loadDocentes(currentPage);
                     }
-                    showSuccess(getString(R.string.docente_accion_completada));
+                    showSuccess(getString(successMessageRes));
                     return;
                 }
                 showListError(DocenteErrorMapper.fromResponse(DocenteListActivity.this, response));

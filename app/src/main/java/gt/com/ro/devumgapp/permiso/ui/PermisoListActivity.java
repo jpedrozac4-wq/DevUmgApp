@@ -32,6 +32,8 @@ import gt.com.ro.devumgapp.core.dto.EstadoRequest;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.permiso.dto.PermisoResponse;
 import gt.com.ro.devumgapp.permiso.network.PermisoApiService;
 import retrofit2.Call;
@@ -130,6 +132,12 @@ public class PermisoListActivity extends AppCompatActivity implements PermisoAda
         if (statusCalls.containsKey(permiso.id)) {
             return;
         }
+        SgauDialog.confirmState(this, !permiso.activo,
+                "el permiso \"" + permiso.nombre + "\"", () -> changePermisoStatus(permiso));
+    }
+
+    private void changePermisoStatus(PermisoResponse permiso) {
+        if (statusCalls.containsKey(permiso.id)) return;
         adapter.setStatusChanging(permiso.id, true);
         EstadoRequest estadoRequest = new EstadoRequest();
         estadoRequest.activo = !permiso.activo;
@@ -146,7 +154,9 @@ public class PermisoListActivity extends AppCompatActivity implements PermisoAda
                     } else {
                         loadPermisos(currentPage);
                     }
-                    UiNotifier.success(PermisoListActivity.this, R.string.permiso_estado_actualizado);
+                    UiNotifier.success(PermisoListActivity.this, permiso.activo
+                            ? R.string.permiso_desactivado
+                            : R.string.permiso_activado);
                     return;
                 }
                 UiNotifier.error(
@@ -191,7 +201,7 @@ public class PermisoListActivity extends AppCompatActivity implements PermisoAda
 
     private void setupToolbar() {
         toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

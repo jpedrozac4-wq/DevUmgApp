@@ -26,6 +26,8 @@
     <string name="estudiante_pagina_info">Página %1$d de %2$d</string>
     <string name="estudiante_item_identificacion">Identificación: %1$s</string>
     <string name="estudiante_estado_actualizado">Estado actualizado correctamente.</string>
+    <string name="estudiante_activado">Estudiante activado correctamente.</string>
+    <string name="estudiante_desactivado">Estudiante desactivado correctamente.</string>
     <string name="estudiante_form_pendiente">Formulario de estudiante: siguiente etapa.</string>
 
     <!-- Errores -->

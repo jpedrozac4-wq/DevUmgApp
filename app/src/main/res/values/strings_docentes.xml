@@ -14,6 +14,8 @@
     <string name="docente_accion_inactivar">Inactivar docente</string>
     <string name="docente_accion_procesando">Procesando</string>
     <string name="docente_accion_completada">Operaci&#243;n completada.</string>
+    <string name="docente_activado">Docente activado correctamente.</string>
+    <string name="docente_desactivado">Docente desactivado correctamente.</string>
     <string name="docente_accion_anterior">Anterior</string>
     <string name="docente_accion_siguiente">Siguiente</string>
     <string name="docente_estado_activo">Activo</string>

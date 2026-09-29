@@ -48,6 +48,8 @@
     <string name="permiso_creado">Permiso creado correctamente.</string>
     <string name="permiso_actualizado">Permiso actualizado correctamente.</string>
     <string name="permiso_estado_actualizado">Estado actualizado correctamente.</string>
+    <string name="permiso_activado">Permiso activado correctamente.</string>
+    <string name="permiso_desactivado">Permiso desactivado correctamente.</string>
     <string name="permiso_volver">Volver</string>
 
     <!-- Errores HTTP -->

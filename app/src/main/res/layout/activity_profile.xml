@@ -147,6 +147,9 @@
                     android:orientation="vertical"
                     android:padding="18dp">
 
+                    <TextView style="@style/ProfileLabel" android:text="@string/profile_user_id" />
+                    <TextView android:id="@+id/txtProfileUserId" style="@style/ProfileValue" tools:text="42" />
+                    <View style="@style/ProfileDivider" />
                     <TextView style="@style/ProfileLabel" android:text="@string/profile_username" />
                     <TextView android:id="@+id/txtProfileUsername" style="@style/ProfileValue" tools:text="admin" />
                     <View style="@style/ProfileDivider" />

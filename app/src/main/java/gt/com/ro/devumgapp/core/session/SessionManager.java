@@ -71,10 +71,8 @@ public class SessionManager {
         if (response.email != null) editor.putString(KEY_EMAIL, response.email);
         if (response.nombre != null) editor.putString(KEY_NOMBRE, response.nombre);
         if (response.apellido != null) editor.putString(KEY_APELLIDO, response.apellido);
-        editor.putStringSet(KEY_ROLES, new HashSet<>(
-                response.roles != null ? response.roles : new HashSet<>()));
-        editor.putStringSet(KEY_PERMISSIONS, new HashSet<>(
-                response.permisos != null ? response.permisos : new HashSet<>()));
+        if (response.roles != null) editor.putStringSet(KEY_ROLES, new HashSet<>(response.roles));
+        if (response.permisos != null) editor.putStringSet(KEY_PERMISSIONS, new HashSet<>(response.permisos));
         editor.putBoolean(KEY_IS_LOGGED_IN, true).apply();
     }
 
@@ -121,6 +119,12 @@ public class SessionManager {
     public String getEmail() {
         return prefs.getString(KEY_EMAIL, "");
     }
+
+    public long getUsuarioId() { return prefs.getLong(KEY_USUARIO_ID, 0); }
+
+    public String getNombre() { return prefs.getString(KEY_NOMBRE, ""); }
+
+    public String getApellido() { return prefs.getString(KEY_APELLIDO, ""); }
 
     /** Returns "nombre apellido" of the logged user. */
     public String getNombreCompleto() {

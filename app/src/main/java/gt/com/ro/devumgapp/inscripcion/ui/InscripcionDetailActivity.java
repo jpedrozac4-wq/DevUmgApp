@@ -25,6 +25,7 @@ import gt.com.ro.devumgapp.carrera.dto.CarreraResponse;
 import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.network.CursoApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
@@ -327,20 +328,17 @@ public class InscripcionDetailActivity extends AppCompatActivity {
                 }
                 tilMotivo.setError(null);
                 dialog.dismiss();
-                callAnular(motivo);
+                SgauDialog.confirm(this, R.drawable.ic_power,
+                        getString(R.string.inscripcion_anular_titulo),
+                        getString(R.string.inscripcion_anular_mensaje),
+                        getString(R.string.inscripcion_accion_anular), () -> callAnular(motivo));
             });
         });
         dialog.show();
     }
 
     private void showReactivarDialog() {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.inscripcion_reactivar_titulo)
-                .setMessage(R.string.inscripcion_reactivar_mensaje)
-                .setNegativeButton(R.string.inscripcion_accion_cancelar, null)
-                .setPositiveButton(R.string.inscripcion_accion_reactivar,
-                        (dialogInterface, which) -> callReactivar())
-                .show();
+        SgauDialog.confirmState(this, true, "la inscripción #" + inscripcionId, this::callReactivar);
     }
 
     private void callAnular(String motivo) {

@@ -2,6 +2,7 @@ package gt.com.ro.devumgapp.core.ui;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -19,7 +20,9 @@ public final class UiNotifier {
     }
 
     public static void success(Activity activity, String message) {
-        show(activity, message, R.color.dashboard_payment, Snackbar.LENGTH_LONG);
+        // Use the application context so the confirmation remains visible when a
+        // form closes immediately after a successful create/update request.
+        Toast.makeText(activity.getApplicationContext(), message, Toast.LENGTH_LONG).show();
     }
 
     public static void error(Activity activity, String message) {

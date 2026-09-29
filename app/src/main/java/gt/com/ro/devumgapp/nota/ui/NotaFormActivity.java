@@ -31,6 +31,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.network.CursoApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
@@ -301,6 +302,12 @@ public class NotaFormActivity extends AppCompatActivity {
         if (loading || !validateForm()) {
             return;
         }
+        SgauDialog.confirmSave(this, isEditMode(),
+                "la nota de \"" + getText(edtTipo).trim() + "\"", this::submitNota);
+    }
+
+    private void submitNota() {
+        if (loading) return;
         setLoading(true);
         String tipoEvaluacion = getText(edtTipo).trim().toUpperCase(Locale.US);
         double calificacion = Double.parseDouble(getText(edtCalificacion).trim());

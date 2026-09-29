@@ -21,6 +21,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.docente.dto.DocenteRequest;
 import gt.com.ro.devumgapp.docente.dto.DocenteResponse;
 import gt.com.ro.devumgapp.docente.network.DocenteApiService;
@@ -173,6 +174,13 @@ public class DocenteFormActivity extends AppCompatActivity {
         if (loading || !validateForm()) {
             return;
         }
+        SgauDialog.confirmSave(this, isEditMode(),
+                "el docente \"" + getText(edtNombre).trim() + " " + getText(edtApellido).trim() + "\"",
+                this::submitDocente);
+    }
+
+    private void submitDocente() {
+        if (loading) return;
         setLoading(true);
         DocenteRequest request = new DocenteRequest(
                 getText(edtCodigo).trim(),

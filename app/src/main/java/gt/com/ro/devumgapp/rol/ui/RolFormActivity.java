@@ -1,19 +1,21 @@
 package gt.com.ro.devumgapp.rol.ui;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -29,6 +31,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.permiso.dto.PermisoResumenResponse;
 import gt.com.ro.devumgapp.permiso.network.PermisoApiService;
 import gt.com.ro.devumgapp.rol.dto.PermisosRequest;
@@ -52,7 +55,11 @@ public class RolFormActivity extends AppCompatActivity {
     private TextInputEditText edtCodigo;
     private TextInputEditText edtNombre;
     private TextInputEditText edtDescripcion;
-    private LinearLayout layoutPermisos;
+    private TextInputLayout tilBuscarPermiso;
+    private TextInputEditText edtBuscarPermiso;
+    private RecyclerView recyclerPermisos;
+    private PermissionSelectionAdapter permissionAdapter;
+    private TextView txtPermisosSeleccionados;
     private TextView txtPermisosNota;
     private TextView txtPermisosVacio;
     private MaterialButton btnGuardar;
@@ -78,8 +85,7 @@ public class RolFormActivity extends AppCompatActivity {
 
     private List<PermisoResumenResponse> activePermissions = new ArrayList<>();
     private List<PermisoResumenResponse> assignedPermissions = new ArrayList<>();
-    private final Set<Long> assignedIds = new HashSet<>();
-    private final Map<Long, MaterialCheckBox> checkboxById = new LinkedHashMap<>();
+    private final PermissionSelectionState permissionSelection = new PermissionSelectionState();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,7 +132,10 @@ public class RolFormActivity extends AppCompatActivity {
         edtCodigo = findViewById(R.id.edtRolCodigo);
         edtNombre = findViewById(R.id.edtRolNombre);
         edtDescripcion = findViewById(R.id.edtRolDescripcion);
-        layoutPermisos = findViewById(R.id.layoutPermisosRol);
+        tilBuscarPermiso = findViewById(R.id.tilBuscarPermisoRol);
+        edtBuscarPermiso = findViewById(R.id.edtBuscarPermisoRol);
+        recyclerPermisos = findViewById(R.id.recyclerPermisosRol);
+        txtPermisosSeleccionados = findViewById(R.id.txtRolPermisosSeleccionados);
         txtPermisosNota = findViewById(R.id.txtRolPermisosNota);
         txtPermisosVacio = findViewById(R.id.txtRolPermisosVacio);
         btnGuardar = findViewById(R.id.btnGuardarRol);
@@ -135,8 +144,14 @@ public class RolFormActivity extends AppCompatActivity {
         txtHeroTitle = findViewById(R.id.txtRolFormHeroTitle);
         rolFormHero = findViewById(R.id.rolFormHero);
         rolFormPanel = findViewById(R.id.cardRolForm);
+        permissionAdapter = new PermissionSelectionAdapter(permissionSelection, this::updateSelectedCount);
+        recyclerPermisos.setLayoutManager(new LinearLayoutManager(this));
+        recyclerPermisos.setAdapter(permissionAdapter);
+        recyclerPermisos.setHasFixedSize(false);
         if (!Permissions.has("ROLES_ASIGNAR_PERMISOS")) {
-            layoutPermisos.setVisibility(View.GONE);
+            tilBuscarPermiso.setVisibility(View.GONE);
+            recyclerPermisos.setVisibility(View.GONE);
+            txtPermisosSeleccionados.setVisibility(View.GONE);
             txtPermisosNota.setVisibility(View.GONE);
             txtPermisosVacio.setVisibility(View.GONE);
             permissionsReady = true;
@@ -190,6 +205,14 @@ public class RolFormActivity extends AppCompatActivity {
                 return true;
             }
             return false;
+        });
+        edtBuscarPermiso.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence value, int start, int count, int after) { }
+            @Override public void onTextChanged(CharSequence value, int start, int before, int count) {
+                permissionAdapter.filter(value == null ? "" : value.toString());
+                updatePermissionEmptyState();
+            }
+            @Override public void afterTextChanged(Editable value) { }
         });
     }
 
@@ -283,12 +306,13 @@ public class RolFormActivity extends AppCompatActivity {
                     assignedPermissions = response.body() == null
                             ? new ArrayList<>()
                             : response.body();
-                    assignedIds.clear();
+                    Set<Long> loadedIds = new HashSet<>();
                     for (PermisoResumenResponse permission : assignedPermissions) {
                         if (permission != null) {
-                            assignedIds.add(permission.id);
+                            loadedIds.add(permission.id);
                         }
                     }
+                    permissionSelection.replace(loadedIds);
                     renderPermissionCheckboxes();
                     return;
                 }
@@ -310,31 +334,19 @@ public class RolFormActivity extends AppCompatActivity {
     }
 
     private void renderPermissionCheckboxes() {
-        layoutPermisos.removeAllViews();
-        checkboxById.clear();
-
         List<PermisoResumenResponse> merged = mergePermissions();
         boolean hasInactiveAssigned = false;
+        Set<Long> inactiveIds = new HashSet<>();
         for (PermisoResumenResponse permission : merged) {
             boolean inactive = !isActivePermission(permission.id);
-            if (inactive) {
-                hasInactiveAssigned = true;
-            }
-            MaterialCheckBox checkBox = new MaterialCheckBox(this);
-            checkBox.setId(View.generateViewId());
-            checkBox.setText(buildPermissionLabel(permission, inactive));
-            checkBox.setChecked(assignedIds.contains(permission.id));
-            checkBox.setLayoutParams(new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT));
-            layoutPermisos.addView(checkBox);
-            checkboxById.put(permission.id, checkBox);
+            if (inactive) { hasInactiveAssigned = true; inactiveIds.add(permission.id); }
         }
-
+        permissionAdapter.submit(merged, inactiveIds);
+        permissionsReady = true;
         txtPermisosNota.setVisibility(hasInactiveAssigned ? View.VISIBLE : View.GONE);
         txtPermisosVacio.setText(R.string.rol_permisos_vacio);
-        txtPermisosVacio.setVisibility(merged.isEmpty() ? View.VISIBLE : View.GONE);
-        permissionsReady = true;
+        updatePermissionEmptyState();
+        updateSelectedCount();
         setLoading(false);
     }
 
@@ -367,30 +379,9 @@ public class RolFormActivity extends AppCompatActivity {
         return false;
     }
 
-    private String buildPermissionLabel(PermisoResumenResponse permission, boolean inactive) {
-        String codigo = permission.codigo == null ? "" : permission.codigo;
-        String nombre = permission.nombre == null ? "" : permission.nombre;
-        String label;
-        if (codigo.isEmpty()) {
-            label = nombre;
-        } else if (nombre.isEmpty()) {
-            label = codigo;
-        } else {
-            label = getString(R.string.rol_permisos_item_formato, codigo, nombre);
-        }
-        if (inactive) {
-            label = getString(
-                    R.string.rol_permisos_item_inactivo_formato,
-                    label,
-                    getString(R.string.rol_estado_inactivo));
-        }
-        return label;
-    }
-
     private void showPermissionsLoadError(String message) {
         permissionsReady = false;
-        layoutPermisos.removeAllViews();
-        checkboxById.clear();
+        permissionAdapter.submit(new ArrayList<>(), new HashSet<>());
         txtPermisosNota.setVisibility(View.GONE);
         txtPermisosVacio.setText(message);
         txtPermisosVacio.setVisibility(View.VISIBLE);
@@ -401,12 +392,22 @@ public class RolFormActivity extends AppCompatActivity {
     private void saveRol() {
         if (permissionOnly) {
             if (!Permissions.has("ROLES_ASIGNAR_PERMISOS") || loading || !permissionsReady) return;
-            assignPermissions(false);
+            SgauDialog.confirm(this, R.drawable.ic_save,
+                    getString(R.string.dialog_title_assign),
+                    "Se actualizarán los permisos del rol seleccionado.",
+                    getString(R.string.dialog_assign), () -> assignPermissions(false));
             return;
         }
         if (loading || !permissionsReady || !validateForm()) {
             return;
         }
+
+        SgauDialog.confirmSave(this, rolId != NEW_ROL_ID,
+                "el rol \"" + getText(edtNombre).trim() + "\"", this::submitRol);
+    }
+
+    private void submitRol() {
+        if (loading) return;
 
         boolean createRequest = rolId == NEW_ROL_ID;
         setLoading(true);
@@ -520,13 +521,7 @@ public class RolFormActivity extends AppCompatActivity {
     }
 
     private Set<Long> collectCheckedIds() {
-        Set<Long> checkedIds = new HashSet<>();
-        for (Map.Entry<Long, MaterialCheckBox> entry : checkboxById.entrySet()) {
-            if (entry.getValue().isChecked()) {
-                checkedIds.add(entry.getKey());
-            }
-        }
-        return checkedIds;
+        return permissionSelection.snapshot();
     }
 
     private void fillForm(RolResponse rol) {
@@ -579,13 +574,25 @@ public class RolFormActivity extends AppCompatActivity {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnGuardar.setEnabled(!loading && permissionsReady);
         btnCancelar.setEnabled(!loading);
-        tilCodigo.setEnabled(!loading);
-        tilNombre.setEnabled(!loading);
-        tilDescripcion.setEnabled(!loading);
-        layoutPermisos.setEnabled(!loading);
-        for (MaterialCheckBox checkBox : checkboxById.values()) {
-            checkBox.setEnabled(!loading);
-        }
+        tilCodigo.setEnabled(!loading && !permissionOnly);
+        tilNombre.setEnabled(!loading && !permissionOnly);
+        tilDescripcion.setEnabled(!loading && !permissionOnly);
+        tilBuscarPermiso.setEnabled(!loading);
+        permissionAdapter.setItemsEnabled(!loading);
+    }
+
+    private void updateSelectedCount() {
+        int count = permissionSelection.size();
+        txtPermisosSeleccionados.setText(getResources().getQuantityString(
+                R.plurals.rol_permisos_seleccionados, count, count));
+    }
+
+    private void updatePermissionEmptyState() {
+        if (!permissionsReady) return;
+        boolean empty = permissionAdapter.visiblePermissionCount() == 0;
+        txtPermisosVacio.setText((edtBuscarPermiso.getText() != null && edtBuscarPermiso.getText().length() > 0)
+                ? R.string.rol_permisos_sin_resultados : R.string.rol_permisos_vacio);
+        txtPermisosVacio.setVisibility(empty ? View.VISIBLE : View.GONE);
     }
 
     private void showErrorAndFinish(String message) {

@@ -237,6 +237,37 @@
                         tools:visibility="visible"/>
 
                     <TextView
+                        android:id="@+id/txtRolPermisosSeleccionados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="sans-serif-black"
+                        android:textColor="@color/dashboard_rol"
+                        android:textSize="14sp"
+                        tools:text="4 permisos seleccionados" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilBuscarPermisoRol"
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="@string/rol_permisos_buscar_hint"
+                        app:boxStrokeColor="@color/dashboard_rol"
+                        app:endIconMode="clear_text"
+                        app:startIconDrawable="@drawable/ic_search"
+                        app:startIconTint="@color/dashboard_rol">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/edtBuscarPermisoRol"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:maxLines="1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
                         android:id="@+id/txtRolPermisosVacio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -247,12 +278,16 @@
                         android:visibility="gone"
                         tools:visibility="visible"/>
 
-                    <LinearLayout
-                        android:id="@+id/layoutPermisosRol"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerPermisosRol"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:orientation="vertical"/>
+                        android:layout_height="360dp"
+                        android:layout_marginTop="6dp"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="true"
+                        android:overScrollMode="ifContentScrolls"
+                        android:paddingBottom="8dp"
+                        tools:listitem="@layout/item_permission_select" />
 
                     <!-- Botón Guardar -->
                     <com.google.android.material.button.MaterialButton

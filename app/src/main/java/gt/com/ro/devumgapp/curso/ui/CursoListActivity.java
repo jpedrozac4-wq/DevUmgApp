@@ -39,6 +39,8 @@ import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.dto.DocenteRequest;
 import gt.com.ro.devumgapp.curso.dto.DocenteResumenResponse;
@@ -146,7 +148,10 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
 
     @Override
     public void onToggleStatus(CursoResponse curso) {
-        enqueueItemCall(curso.id, cursoApiService.cambiarEstado(curso.id, new EstadoRequest(!curso.activo)));
+        SgauDialog.confirmState(this, !curso.activo, "el curso \"" + curso.nombre + "\"",
+                () -> enqueueItemCall(curso.id,
+                        cursoApiService.cambiarEstado(curso.id, new EstadoRequest(!curso.activo)),
+                        curso.activo ? R.string.curso_desactivado : R.string.curso_activado));
     }
 
     @Override
@@ -162,17 +167,22 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         }
         new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.curso_asignar_docente)
-                .setItems(labels, (dialog, which) -> enqueueItemCall(
-                        curso.id,
-                        cursoApiService.asignarDocente(
-                                curso.id,
-                                new DocenteRequest(assignable.get(which).value.id))))
+                .setItems(labels, (dialog, which) -> SgauDialog.confirm(this, R.drawable.ic_teacher_add,
+                        getString(R.string.dialog_title_assign),
+                        "Se asignará " + labels[which] + " al curso \"" + curso.nombre + "\".",
+                        getString(R.string.dialog_assign), () -> enqueueItemCall(
+                                curso.id, cursoApiService.asignarDocente(
+                                        curso.id, new DocenteRequest(assignable.get(which).value.id)),
+                                R.string.curso_docente_asignado)))
                 .show();
     }
 
     @Override
     public void onRemoveTeacher(CursoResponse curso) {
-        enqueueItemCall(curso.id, cursoApiService.quitarDocente(curso.id));
+        SgauDialog.confirm(this, R.drawable.ic_teacher_remove,
+                "Quitar docente", "Se quitará el docente asignado al curso \"" + curso.nombre + "\".",
+                "Quitar", () -> enqueueItemCall(curso.id, cursoApiService.quitarDocente(curso.id),
+                        R.string.curso_docente_quitado));
     }
 
     private void bindViews() {
@@ -198,7 +208,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         btnAgregar.setVisibility(Permissions.has("CURSOS_CREAR") ? View.VISIBLE : View.GONE);
         btnAnterior = findViewById(R.id.btnCursosAnterior);
         btnSiguiente = findViewById(R.id.btnCursosSiguiente);
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
     }
 
     private void setupToolbar() {
@@ -371,7 +381,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
         });
     }
 
-    private void enqueueItemCall(long cursoId, Call<CursoResponse> call) {
+    private void enqueueItemCall(long cursoId, Call<CursoResponse> call, int successMessageRes) {
         if (itemCalls.containsKey(cursoId)) {
             return;
         }
@@ -388,7 +398,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
                     } else {
                         loadCursos(currentPage);
                     }
-                    showSuccess(getString(R.string.curso_accion_completada));
+                    showSuccess(getString(successMessageRes));
                     return;
                 }
                 showListError(CursoErrorMapper.fromResponse(CursoListActivity.this, response));

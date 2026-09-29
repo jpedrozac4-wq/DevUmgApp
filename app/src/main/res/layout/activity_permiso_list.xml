@@ -87,7 +87,7 @@
                         android:contentDescription="@null"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_lock"
-                        app:tint="@color/white" />
+                        app:tint="@color/dashboard_permiso" />
                 </FrameLayout>
             </LinearLayout>
 

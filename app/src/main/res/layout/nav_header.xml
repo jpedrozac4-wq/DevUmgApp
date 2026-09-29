@@ -7,6 +7,7 @@
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:paddingStart="20dp"
+    android:paddingTop="36dp"
     android:paddingEnd="20dp"
     android:paddingBottom="16dp">
 
@@ -17,12 +18,17 @@
         android:orientation="vertical">
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_width="80dp"
-            android:layout_height="62dp"
-            app:cardBackgroundColor="@color/white_soft"
-            app:cardCornerRadius="14dp"
-            app:cardElevation="0dp"
-            app:strokeColor="@color/logo_border"
+            android:id="@+id/cardSidebarLogo"
+            android:layout_width="124dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:elevation="12dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="12dp"
+            app:cardUseCompatPadding="true"
+            app:strokeColor="@color/dashboard_border"
             app:strokeWidth="1dp">
 
             <ImageView

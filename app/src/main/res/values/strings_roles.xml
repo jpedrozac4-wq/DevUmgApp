@@ -18,6 +18,13 @@
     <string name="rol_permisos_vacio">No hay permisos disponibles para asignar.</string>
     <string name="rol_permisos_item_formato">%1$s · %2$s</string>
     <string name="rol_permisos_item_inactivo_formato">%1$s (%2$s)</string>
+    <string name="rol_permisos_buscar_hint">Buscar por nombre, módulo o código</string>
+    <plurals name="rol_permisos_seleccionados">
+        <item quantity="one">%d permiso seleccionado</item>
+        <item quantity="other">%d permisos seleccionados</item>
+    </plurals>
+    <string name="rol_permisos_sin_resultados">No hay permisos que coincidan con la búsqueda.</string>
+    <string name="rol_permiso_codigo_inactivo">%1$s · Inactivo</string>
 
     <!-- Botones -->
     <string name="rol_btn_guardar">Guardar Rol</string>
@@ -57,6 +64,8 @@
     <string name="rol_creado">Rol creado correctamente.</string>
     <string name="rol_actualizado">Rol actualizado correctamente.</string>
     <string name="rol_estado_actualizado">Estado actualizado correctamente.</string>
+    <string name="rol_activado">Rol activado correctamente.</string>
+    <string name="rol_desactivado">Rol desactivado correctamente.</string>
     <string name="rol_creado_permisos_error">El rol se creó, pero no se pudieron asignar los permisos: %1$s</string>
     <string name="rol_actualizado_permisos_error">El rol se actualizó, pero no se pudieron asignar los permisos: %1$s</string>
     <string name="rol_volver">Volver</string>

@@ -33,6 +33,8 @@ import gt.com.ro.devumgapp.core.dto.EstadoRequest;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.rol.dto.RolResponse;
 import gt.com.ro.devumgapp.rol.network.RolApiService;
 import retrofit2.Call;
@@ -140,6 +142,12 @@ public class RolListActivity extends AppCompatActivity implements RolAdapter.Lis
         if (statusCalls.containsKey(rol.id)) {
             return;
         }
+        SgauDialog.confirmState(this, !rol.activo,
+                "el rol \"" + rol.nombre + "\"", () -> changeRolStatus(rol));
+    }
+
+    private void changeRolStatus(RolResponse rol) {
+        if (statusCalls.containsKey(rol.id)) return;
         adapter.setStatusChanging(rol.id, true);
         EstadoRequest estadoRequest = new EstadoRequest();
         estadoRequest.activo = !rol.activo;
@@ -156,7 +164,9 @@ public class RolListActivity extends AppCompatActivity implements RolAdapter.Lis
                     } else {
                         loadRoles(currentPage);
                     }
-                    UiNotifier.success(RolListActivity.this, R.string.rol_estado_actualizado);
+                    UiNotifier.success(RolListActivity.this, rol.activo
+                            ? R.string.rol_desactivado
+                            : R.string.rol_activado);
                     return;
                 }
                 UiNotifier.error(
@@ -201,7 +211,7 @@ public class RolListActivity extends AppCompatActivity implements RolAdapter.Lis
 
     private void setupToolbar() {
         toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

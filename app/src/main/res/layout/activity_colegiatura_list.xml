@@ -9,16 +9,17 @@
                     <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:fontFamily="sans-serif-medium" android:lineSpacingExtra="2dp" android:text="@string/colegiatura_subtitulo" android:textColor="@color/dashboard_on_primary_secondary" android:textSize="14sp"/>
                 </LinearLayout>
                 <FrameLayout android:layout_width="54dp" android:layout_height="54dp" android:background="@drawable/bg_dashboard_avatar_light" android:padding="10dp">
-                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:importantForAccessibility="no" android:src="@drawable/ic_payment" app:tint="@color/white"/>
+                    <ImageView android:layout_width="match_parent" android:layout_height="match_parent" android:importantForAccessibility="no" android:src="@drawable/ic_payment" app:tint="@color/dashboard_payment"/>
                 </FrameLayout>
             </LinearLayout>
             <com.google.android.material.card.MaterialCardView android:id="@+id/colegiaturaFiltersCard" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" app:cardBackgroundColor="@color/dashboard_surface" app:cardCornerRadius="@dimen/dashboard_card_radius" app:cardElevation="4dp" app:strokeColor="@color/dashboard_border" app:strokeWidth="1dp">
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="@dimen/dashboard_card_padding">
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                    <LinearLayout android:id="@+id/colegiaturaFiltersHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
                         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:fontFamily="sans-serif-black" android:text="@string/colegiatura_filtros_titulo" android:textColor="@color/dashboard_text_primary" android:textSize="17sp" android:textStyle="bold"/>
                         <com.google.android.material.button.MaterialButton android:id="@+id/btnAgregarColegiatura" android:layout_width="44dp" android:layout_height="44dp" android:contentDescription="@string/colegiatura_accion_agregar" app:backgroundTint="@color/dashboard_payment" app:cornerRadius="8dp" app:icon="@drawable/ic_add" app:iconGravity="textStart" app:iconPadding="0dp" app:iconTint="@color/white"/>
                     </LinearLayout>
                     <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/progressColegiatura" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:indeterminate="true" android:visibility="gone" app:indicatorColor="@color/dashboard_payment"/>
+                    <LinearLayout android:id="@+id/colegiaturaFilterControls" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:visibility="gone" tools:visibility="visible">
                     <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="@string/colegiatura_estudiante_hint" app:boxCornerRadiusBottomEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusTopStart="8dp" app:boxStrokeColor="@color/dashboard_payment" app:hintTextColor="@color/dashboard_payment">
                         <com.google.android.material.textfield.MaterialAutoCompleteTextView android:id="@+id/actColegiaturaEstudiante" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" android:maxLines="1" android:popupBackground="@color/dashboard_surface" android:textColor="@color/dashboard_text_primary" android:textSize="15sp"/>
                     </com.google.android.material.textfield.TextInputLayout>
@@ -39,6 +40,7 @@
                         <com.google.android.material.button.MaterialButton android:id="@+id/btnActivoSi" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:text="Activas" android:textAllCaps="false" app:checkedIcon="@null"/>
                         <com.google.android.material.button.MaterialButton android:id="@+id/btnActivoNo" android:layout_width="0dp" android:layout_height="40dp" android:layout_weight="1" android:text="Inactivas" android:textAllCaps="false" app:checkedIcon="@null"/>
                     </com.google.android.material.button.MaterialButtonToggleGroup>
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

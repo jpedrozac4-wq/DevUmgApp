@@ -8,6 +8,15 @@
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
+    <style name="Theme.NexusApp.Home" parent="Theme.NexusApp">
+        <item name="android:windowBackground">@drawable/bg_dashboard_screen</item>
+        <item name="android:windowDisablePreview">true</item>
+        <item name="android:statusBarColor">@color/dashboard_surface</item>
+        <item name="android:navigationBarColor">@color/dashboard_surface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+    </style>
+
     <style name="TextAppearance.SGAU.BottomNavigation" parent="TextAppearance.Material3.LabelMedium">
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textSize">11sp</item>

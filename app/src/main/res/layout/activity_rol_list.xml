@@ -87,7 +87,7 @@
                         android:contentDescription="@null"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_badge"
-                        app:tint="@color/white" />
+                        app:tint="@color/dashboard_rol" />
                 </FrameLayout>
             </LinearLayout>
 

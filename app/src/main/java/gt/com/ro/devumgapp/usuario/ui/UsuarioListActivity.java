@@ -30,6 +30,8 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.usuario.dto.UsuarioResponse;
 import gt.com.ro.devumgapp.usuario.network.UsuarioApiService;
 import retrofit2.Call;
@@ -47,6 +49,9 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
     private TextView txtErrorState;
     private View usuarioHero;
     private View usuarioFilters;
+    private View usuarioFiltersHeader;
+    private View usuarioFilterControls;
+    private boolean filtersExpanded;
     private MaterialButton btnBuscar;
     private MaterialButton btnAgregar;
 
@@ -121,16 +126,10 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
 
     @Override
     public void onDelete(UsuarioResponse usuario) {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.usuario_eliminar_titulo)
-                .setMessage(getString(
-                        R.string.usuario_eliminar_mensaje,
-                        UsuarioAdapter.displayName(usuario)))
-                .setNegativeButton(R.string.usuario_eliminar_cancelar, null)
-                .setPositiveButton(
-                        R.string.usuario_eliminar_confirmar,
-                        (dialog, which) -> deleteUsuario(usuario.id))
-                .show();
+        SgauDialog.confirm(this, R.drawable.ic_power,
+                getString(R.string.usuario_eliminar_titulo),
+                getString(R.string.usuario_eliminar_mensaje, UsuarioAdapter.displayName(usuario)),
+                getString(R.string.usuario_eliminar_confirmar), () -> deleteUsuario(usuario.id));
     }
 
     @Override
@@ -150,6 +149,8 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
         txtErrorState = findViewById(R.id.txtUsuariosError);
         usuarioHero = findViewById(R.id.usuarioListHero);
         usuarioFilters = findViewById(R.id.usuarioFilters);
+        usuarioFiltersHeader = findViewById(R.id.usuarioFiltersHeader);
+        usuarioFilterControls = findViewById(R.id.usuarioFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarUsuario);
         btnAgregar = findViewById(R.id.btnAgregarUsuario);
         btnAgregar.setVisibility(Permissions.has("USUARIOS_CREAR") ? View.VISIBLE : View.GONE);
@@ -157,7 +158,7 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
 
     private void setupToolbar() {
         toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -192,6 +193,7 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
     }
 
     private void setupActions() {
+        usuarioFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> applyFilter());
         tilBuscar.setEndIconOnClickListener(view -> applyFilter());
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {
@@ -203,6 +205,19 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
         });
         btnAgregar.setOnClickListener(view ->
                 formLauncher.launch(new Intent(this, UsuarioFormActivity.class)));
+    }
+
+    private void setFiltersExpanded(boolean expanded) {
+        filtersExpanded = expanded;
+        if (expanded) {
+            usuarioFilterControls.setVisibility(View.VISIBLE);
+            usuarioFilterControls.setAlpha(0f);
+            usuarioFilterControls.setTranslationY(-8f);
+            usuarioFilterControls.animate().alpha(1f).translationY(0f).setDuration(180).start();
+            return;
+        }
+        usuarioFilterControls.animate().alpha(0f).translationY(-8f).setDuration(140)
+                .withEndAction(() -> usuarioFilterControls.setVisibility(View.GONE)).start();
     }
 
     private void loadUsuarios() {

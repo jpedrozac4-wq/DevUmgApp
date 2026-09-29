@@ -39,6 +39,8 @@ import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.network.CursoApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
@@ -182,6 +184,12 @@ public class NotaListActivity extends AppCompatActivity implements NotaAdapter.L
         if (statusCalls.containsKey(nota.id)) {
             return;
         }
+        SgauDialog.confirmState(this, !nota.activo,
+                "la nota \"" + nota.tipoEvaluacion + "\"", () -> changeNotaStatus(nota));
+    }
+
+    private void changeNotaStatus(NotaResponse nota) {
+        if (statusCalls.containsKey(nota.id)) return;
         adapter.setStatusChanging(nota.id, true);
         Call<NotaResponse> call = apiService.cambiarEstado(
                 nota.id, new EstadoRequest(!nota.activo));
@@ -193,7 +201,9 @@ public class NotaListActivity extends AppCompatActivity implements NotaAdapter.L
                 adapter.setStatusChanging(nota.id, false);
                 if (response.isSuccessful() && response.body() != null) {
                     adapter.replace(response.body());
-                    UiNotifier.success(NotaListActivity.this, R.string.nota_estado_actualizada);
+                    UiNotifier.success(NotaListActivity.this, nota.activo
+                            ? R.string.nota_desactivada
+                            : R.string.nota_activada);
                     return;
                 }
                 UiNotifier.error(
@@ -242,7 +252,7 @@ public class NotaListActivity extends AppCompatActivity implements NotaAdapter.L
 
     private void setupToolbar() {
         toolbar.setTitle("");
-        toolbar.setNavigationOnClickListener(view -> finish());
+        ModuleNavigation.attach(this, toolbar);
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

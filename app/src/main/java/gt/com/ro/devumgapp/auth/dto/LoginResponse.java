@@ -16,7 +16,7 @@ public class LoginResponse {
     @SerializedName("expiresIn")
     public long expiresIn;
 
-    @SerializedName("usuarioId")
+    @SerializedName(value = "usuarioId", alternate = {"id"})
     public long usuarioId;
 
     @SerializedName("username")

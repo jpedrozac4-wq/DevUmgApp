@@ -87,7 +87,7 @@
                         android:contentDescription="@null"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_career"
-                        app:tint="@color/white" />
+                        app:tint="@color/dashboard_career" />
                 </FrameLayout>
             </LinearLayout>
 

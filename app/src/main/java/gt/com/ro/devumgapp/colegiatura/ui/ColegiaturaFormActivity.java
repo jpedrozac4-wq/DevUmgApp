@@ -28,6 +28,8 @@ import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.network.ApiResponses;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -164,6 +166,18 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
             return;
         }
 
+        SgauDialog.confirmSave(this, colegiaturaId > 0,
+                "la colegiatura \"" + concepto + "\"", this::enviarColegiatura);
+    }
+
+    private void enviarColegiatura() {
+        if (progress.getVisibility() == View.VISIBLE) return;
+        Integer ciclo = parseInt(edtCiclo);
+        Double monto = parseDouble(edtMontoTotal);
+        String concepto = textOf(edtConcepto);
+        String fechaEmision = textOf(edtFechaEmision);
+        String fechaVencimiento = textOf(edtFechaVencimiento);
+
         ColegiaturaRequest request = new ColegiaturaRequest(
                 estudianteId, ciclo, concepto, monto, fechaEmision, fechaVencimiento);
 
@@ -177,18 +191,18 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
             public void onResponse(Call<ColegiaturaResponse> call, Response<ColegiaturaResponse> response) {
                 setLoading(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    Toast.makeText(ColegiaturaFormActivity.this,
-                            R.string.colegiatura_form_guardado, Toast.LENGTH_SHORT).show();
+                    UiNotifier.success(ColegiaturaFormActivity.this,
+                            R.string.colegiatura_form_guardado);
                     finish();
                 } else {
-                    Toast.makeText(ColegiaturaFormActivity.this, leerError(response), Toast.LENGTH_LONG).show();
+                    UiNotifier.error(ColegiaturaFormActivity.this, leerError(response));
                 }
             }
 
             @Override
             public void onFailure(Call<ColegiaturaResponse> call, Throwable t) {
                 setLoading(false);
-                Toast.makeText(ColegiaturaFormActivity.this, R.string.colegiatura_error_network, Toast.LENGTH_LONG).show();
+                UiNotifier.error(ColegiaturaFormActivity.this, getString(R.string.colegiatura_error_network));
             }
         });
     }

@@ -20,6 +20,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
+import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.usuario.dto.UsuarioRequest;
 import gt.com.ro.devumgapp.usuario.dto.UsuarioResponse;
 import gt.com.ro.devumgapp.usuario.network.UsuarioApiService;
@@ -211,6 +212,13 @@ public class UsuarioFormActivity extends AppCompatActivity {
         if (loading || !validateForm()) {
             return;
         }
+
+        SgauDialog.confirmSave(this, usuarioId != NEW_USUARIO_ID,
+                "el usuario \"" + getText(edtUsername).trim() + "\"", this::submitUsuario);
+    }
+
+    private void submitUsuario() {
+        if (loading) return;
 
         boolean createRequest = usuarioId == NEW_USUARIO_ID;
         String password = getText(edtPassword);
