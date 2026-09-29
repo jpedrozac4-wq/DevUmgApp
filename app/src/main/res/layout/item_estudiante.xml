@@ -96,6 +96,15 @@
             android:textSize="13sp"
             tools:text="maria.lopez@umg.edu.gt" />
 
+        <TextView
+            android:id="@+id/txtEstudianteVinculo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/dashboard_text_secondary"
+            android:textSize="13sp"
+            tools:text="Cuenta vinculada" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

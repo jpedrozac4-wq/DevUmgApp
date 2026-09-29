@@ -14,6 +14,7 @@ import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.auth.dto.ApiError;
 import gt.com.ro.devumgapp.core.network.ApiCallLogger;
 import gt.com.ro.devumgapp.core.network.ApiResponses;
+import gt.com.ro.devumgapp.core.network.IdentityConflictMessage;
 import retrofit2.Response;
 
 final class UsuarioErrorMapper {
@@ -27,6 +28,7 @@ final class UsuarioErrorMapper {
         ApiCallLogger.logResponse(TAG, response);
         String authMessage = ApiResponses.authorizationMessage(context, response);
         if (authMessage != null) return authMessage;
+        if (response.code() == 409) return IdentityConflictMessage.fromResponse(response);
         String backendMessage = parseBackendMessage(ApiCallLogger.readAndLogErrorBody(TAG, response));
         if (backendMessage != null && !backendMessage.trim().isEmpty()) {
             return backendMessage;
@@ -43,9 +45,6 @@ final class UsuarioErrorMapper {
         }
         if (response.code() == 404) {
             return context.getString(R.string.usuario_error_not_found);
-        }
-        if (response.code() == 409) {
-            return context.getString(R.string.usuario_error_conflict);
         }
         if (response.code() == 500) {
             return context.getString(R.string.usuario_error_internal_server);

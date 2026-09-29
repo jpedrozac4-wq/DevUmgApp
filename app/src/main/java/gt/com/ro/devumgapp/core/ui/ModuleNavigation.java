@@ -35,6 +35,7 @@ public final class ModuleNavigation {
             case "UsuarioListActivity": return R.id.nav_usuarios;
             case "RolListActivity": return R.id.nav_roles;
             case "PermisoListActivity": return R.id.nav_permisos;
+            case "AuditoriaActivity": return R.id.nav_auditoria;
             default: return R.id.nav_inicio;
         }
     }

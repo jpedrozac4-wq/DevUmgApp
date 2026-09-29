@@ -1,21 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@drawable/bg_dashboard_screen">
-    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/toolbarAuditoria" android:layout_width="match_parent"
-        android:layout_height="@dimen/dashboard_header_height" android:background="@color/dashboard_surface" app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="Auditoría" app:titleTextColor="@color/dashboard_text_primary" />
-    <com.google.android.material.progressindicator.LinearProgressIndicator android:id="@+id/progressAuditoria" android:layout_width="match_parent"
-        android:layout_height="wrap_content" android:indeterminate="true" android:visibility="gone" app:indicatorColor="@color/dashboard_primary" />
-    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-        <LinearLayout android:id="@+id/auditContent" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:padding="@dimen/dashboard_screen_padding">
-            <LinearLayout android:id="@+id/auditFilters" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
-            <LinearLayout android:id="@+id/auditItems" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" />
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard_screen">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarAuditoria"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dashboard_header_height"
+        android:background="@color/dashboard_surface"
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationContentDescription="@string/nav_open_drawer"
+        app:navigationIcon="@drawable/ic_menu"
+        app:title="@string/nav_auditoria"
+        app:titleTextColor="@color/dashboard_text_primary" />
+
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressAuditoria"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/dashboard_primary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarAuditoria" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingStart="@dimen/dashboard_screen_padding"
+        android:paddingTop="16dp"
+        android:paddingEnd="@dimen/dashboard_screen_padding"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/auditPager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressAuditoria">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/auditHero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_permiso_header"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-black"
+                    android:text="Historial de actividad"
+                    android:textColor="@color/dashboard_on_primary"
+                    android:textSize="23sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:lineSpacingExtra="2dp"
+                    android:text="Consulta quién realizó cada operación dentro del sistema."
+                    android:textColor="@color/dashboard_on_primary_secondary"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/txtAuditSummary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Cargando actividad…"
+                    android:textColor="@color/dashboard_on_primary"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@color/dashboard_surface"
+                app:cardCornerRadius="@dimen/dashboard_card_radius"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/dashboard_border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/auditFiltersHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:gravity="center_vertical"
+                        android:minHeight="44dp"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif-black"
+                                android:text="Filtros"
+                                android:textColor="@color/dashboard_text_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Toca para buscar actividad específica"
+                                android:textColor="@color/dashboard_text_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imgAuditFiltersChevron"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:contentDescription="Mostrar filtros"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/dashboard_text_secondary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/auditFilterControls"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <LinearLayout
+                            android:id="@+id/auditFilters"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:orientation="vertical" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-black"
+                android:text="Actividad reciente"
+                android:textColor="@color/dashboard_text_primary"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/auditItems"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical"
+                tools:ignore="UselessLeaf" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center" android:padding="10dp">
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnAuditPrevious" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Anterior" />
-        <TextView android:id="@+id/txtAuditPage" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="center" />
-        <com.google.android.material.button.MaterialButton android:id="@+id/btnAuditNext" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Siguiente" />
+
+    <LinearLayout
+        android:id="@+id/auditPager"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/dashboard_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAuditPrevious"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anterior" />
+
+        <TextView
+            android:id="@+id/txtAuditPage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/dashboard_text_secondary"
+            android:textStyle="bold"
+            tools:text="Página 1 de 3" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAuditNext"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Siguiente" />
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

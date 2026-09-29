@@ -6,8 +6,8 @@
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilProfileUsername" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/profile_username">
         <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtProfileUsername" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
-    <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilProfileEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/profile_email" android:enabled="false" app:helperText="@string/profile_email_locked">
-        <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtProfileEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" android:enabled="false" android:focusable="false" />
+    <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilProfileEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/profile_email">
+        <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtProfileEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilProfileNombre" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/profile_first_name">
         <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtProfileNombre" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPersonName" />

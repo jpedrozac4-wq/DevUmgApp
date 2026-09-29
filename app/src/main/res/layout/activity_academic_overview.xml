@@ -1,17 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:orientation="vertical" android:background="@drawable/bg_dashboard_screen">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard_screen">
+
     <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarAcademic" android:layout_width="match_parent"
-        android:layout_height="@dimen/dashboard_header_height" android:background="@color/dashboard_surface"
-        app:navigationIcon="@drawable/ic_arrow_back" app:titleTextColor="@color/dashboard_text_primary" />
+        android:id="@+id/toolbarAcademic"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/dashboard_header_height"
+        android:background="@color/dashboard_surface"
+        android:elevation="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_arrow_back"
+        app:titleTextColor="@color/dashboard_text_primary" />
+
     <com.google.android.material.progressindicator.LinearProgressIndicator
-        android:id="@+id/progressAcademic" android:layout_width="match_parent" android:layout_height="wrap_content"
-        android:indeterminate="true" android:visibility="gone" app:indicatorColor="@color/dashboard_primary" />
-    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-        <LinearLayout android:id="@+id/academicContent" android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="vertical" android:padding="@dimen/dashboard_screen_padding" />
+        android:id="@+id/progressAcademic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="@color/dashboard_course"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarAcademic"
+        tools:visibility="visible" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressAcademic">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/dashboard_screen_padding"
+            android:paddingTop="14dp"
+            android:paddingEnd="@dimen/dashboard_screen_padding"
+            android:paddingBottom="24dp">
+
+            <LinearLayout
+                android:id="@+id/academicHero"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_curso_header"
+                android:gravity="center_vertical"
+                android:minHeight="128dp"
+                android:orientation="horizontal"
+                android:padding="@dimen/dashboard_card_padding">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtAcademicHeroTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-black"
+                        android:textColor="@color/dashboard_on_primary"
+                        android:textSize="25sp"
+                        android:textStyle="bold"
+                        tools:text="Mis cursos" />
+
+                    <TextView
+                        android:id="@+id/txtAcademicHeroSubtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:lineSpacingExtra="2dp"
+                        android:textColor="@color/dashboard_on_primary_secondary"
+                        android:textSize="14sp"
+                        tools:text="Consulta tu información académica" />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:background="@drawable/bg_dashboard_avatar_light"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/imgAcademicHero"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@null"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_course"
+                        app:tint="@color/dashboard_course" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/academicContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

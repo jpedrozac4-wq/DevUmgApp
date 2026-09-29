@@ -117,6 +117,7 @@ class DocenteAdapter extends RecyclerView.Adapter<DocenteAdapter.DocenteViewHold
         private final TextView txtContacto;
         private final TextView txtEspecialidad;
         private final TextView txtEstado;
+        private final TextView txtVinculo;
         private final MaterialButton btnEditar;
         private final MaterialButton btnEstado;
 
@@ -127,6 +128,7 @@ class DocenteAdapter extends RecyclerView.Adapter<DocenteAdapter.DocenteViewHold
             txtContacto = itemView.findViewById(R.id.txtDocenteContacto);
             txtEspecialidad = itemView.findViewById(R.id.txtDocenteEspecialidad);
             txtEstado = itemView.findViewById(R.id.txtDocenteEstado);
+            txtVinculo = itemView.findViewById(R.id.txtDocenteVinculo);
             btnEditar = itemView.findViewById(R.id.btnEditarDocente);
             btnEstado = itemView.findViewById(R.id.btnCambiarEstadoDocente);
         }
@@ -151,6 +153,15 @@ class DocenteAdapter extends RecyclerView.Adapter<DocenteAdapter.DocenteViewHold
             txtEstado.setBackgroundResource(docente.activo
                     ? R.drawable.bg_docente_status_active
                     : R.drawable.bg_docente_status_inactive);
+            boolean accountIdentity = "USUARIO".equalsIgnoreCase(docente.identidadFuente);
+            boolean linked = accountIdentity || (docente.usuarioId != null && docente.accesoApp);
+            txtVinculo.setText(accountIdentity
+                    ? "Identidad desde cuenta Usuario"
+                    : "PERFIL_HISTORICO".equalsIgnoreCase(docente.identidadFuente)
+                    ? "Perfil histórico · sin cuenta"
+                    : linked ? "Cuenta Usuario vinculada" : "Sin cuenta vinculada · No puede iniciar sesión");
+            txtVinculo.setTextColor(androidx.core.content.ContextCompat.getColor(itemView.getContext(),
+                    linked ? R.color.dashboard_text_secondary : R.color.dashboard_error));
             btnEstado.setContentDescription(itemView.getContext().getString(busy
                     ? R.string.docente_accion_procesando
                     : docente.activo ? R.string.docente_accion_inactivar : R.string.docente_accion_activar));

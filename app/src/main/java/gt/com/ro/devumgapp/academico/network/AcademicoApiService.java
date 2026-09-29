@@ -1,25 +1,41 @@
 package gt.com.ro.devumgapp.academico.network;
 
-import com.google.gson.JsonElement;
+import java.util.List;
 
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Carrera;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Curso;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.DocenteCurso;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.DocentePerfil;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.EstudiantePerfil;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Inscripcion;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Nota;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.PlanCarrera;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Promedio;
+import gt.com.ro.devumgapp.core.dto.PageResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /** Consultas acotadas a la identidad académica contenida en el JWT. */
 public interface AcademicoApiService {
-    @GET("api/academico/docente/me") Call<JsonElement> docenteMe();
-    @GET("api/academico/docente/me/cursos") Call<JsonElement> cursosDocente();
+    @GET("api/academico/docente/me") Call<DocentePerfil> docenteMe();
+    @GET("api/academico/docente/me/cursos") Call<List<Curso>> cursosDocente(@Query("cicloAnio") Integer cicloAnio);
     @GET("api/academico/docente/me/cursos/{cursoId}/estudiantes")
-    Call<JsonElement> estudiantesCurso(@Path("cursoId") long cursoId);
+    Call<PageResponse<Inscripcion>> estudiantesCurso(@Path("cursoId") long cursoId, @Query("cicloAnio") Integer cicloAnio,
+                                                      @Query("page") int page, @Query("size") int size);
     @GET("api/academico/docente/me/cursos/{cursoId}/notas")
-    Call<JsonElement> notasCurso(@Path("cursoId") long cursoId);
+    Call<PageResponse<Nota>> notasCurso(@Path("cursoId") long cursoId, @Query("cicloAnio") Integer cicloAnio,
+                                        @Query("page") int page, @Query("size") int size);
 
-    @GET("api/academico/estudiante/me") Call<JsonElement> estudianteMe();
-    @GET("api/academico/estudiante/me/inscripciones") Call<JsonElement> inscripcionesEstudiante();
-    @GET("api/academico/estudiante/me/cursos") Call<JsonElement> cursosEstudiante();
-    @GET("api/academico/estudiante/me/notas") Call<JsonElement> notasEstudiante();
-    @GET("api/academico/estudiante/me/promedio") Call<JsonElement> promedioEstudiante();
-    @GET("api/academico/estudiante/me/colegiaturas") Call<JsonElement> colegiaturasEstudiante();
-    @GET("api/academico/estudiante/me/estado-cuenta") Call<JsonElement> estadoCuentaEstudiante();
+    @GET("api/academico/estudiante/me") Call<EstudiantePerfil> estudianteMe();
+    @GET("api/academico/estudiante/me/carrera") Call<Carrera> carreraEstudiante();
+    @GET("api/academico/estudiante/me/plan-carrera") Call<PlanCarrera> planCarreraEstudiante();
+    @GET("api/academico/estudiante/me/cursos-inscritos") Call<List<Curso>> cursosInscritosEstudiante();
+    @GET("api/academico/estudiante/me/docentes") Call<List<DocenteCurso>> docentesEstudiante();
+    @GET("api/academico/estudiante/me/inscripciones")
+    Call<PageResponse<Inscripcion>> inscripcionesEstudiante(@Query("page") int page, @Query("size") int size);
+    @GET("api/academico/estudiante/me/notas")
+    Call<PageResponse<Nota>> notasEstudiante(@Query("page") int page, @Query("size") int size);
+    @GET("api/academico/estudiante/me/promedio") Call<Promedio> promedioEstudiante();
 }

@@ -125,6 +125,7 @@ final class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vie
         final TextView identificacion;
         final TextView correo;
         final TextView estado;
+        final TextView vinculo;
 
         final MaterialButton editar;
         final MaterialButton estadoBtn;
@@ -158,6 +159,7 @@ final class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vie
             estado = itemView.findViewById(
                     R.id.txtEstudianteEstado
             );
+            vinculo = itemView.findViewById(R.id.txtEstudianteVinculo);
 
             editar = itemView.findViewById(
                     R.id.btnEditarEstudiante
@@ -203,6 +205,15 @@ final class EstudianteAdapter extends RecyclerView.Adapter<EstudianteAdapter.Vie
                             ? R.drawable.bg_estudiante_status_active
                             : R.drawable.bg_estudiante_status_inactive
             );
+            boolean accountIdentity = "USUARIO".equalsIgnoreCase(e.identidadFuente);
+            boolean linked = accountIdentity || (e.usuarioId != null && e.accesoApp);
+            vinculo.setText(accountIdentity
+                    ? "Identidad desde cuenta Usuario"
+                    : "PERFIL_HISTORICO".equalsIgnoreCase(e.identidadFuente)
+                    ? "Perfil histórico · sin cuenta"
+                    : linked ? "Cuenta Usuario vinculada" : "Sin cuenta vinculada · No puede iniciar sesión");
+            vinculo.setTextColor(androidx.core.content.ContextCompat.getColor(itemView.getContext(),
+                    linked ? R.color.dashboard_text_secondary : R.color.dashboard_error));
 
             estadoBtn.setContentDescription(
                     itemView.getContext().getString(

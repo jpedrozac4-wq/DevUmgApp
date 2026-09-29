@@ -7,6 +7,7 @@ import java.lang.reflect.Method;
 import gt.com.ro.devumgapp.auth.dto.LoginResponse;
 import gt.com.ro.devumgapp.auth.dto.PasswordChangeRequest;
 import gt.com.ro.devumgapp.auth.dto.ProfileUpdateRequest;
+import gt.com.ro.devumgapp.auth.dto.ProfileUpdateResponse;
 import gt.com.ro.devumgapp.auth.network.AuthApiService;
 import retrofit2.http.PUT;
 
@@ -16,6 +17,13 @@ public class ProfileContractTest {
     @Test public void meAcceptsCurrentAndHistoricalId() {
         assertEquals(7, gson.fromJson("{\"usuarioId\":7}", LoginResponse.class).usuarioId);
         assertEquals(8, gson.fromJson("{\"id\":8}", LoginResponse.class).usuarioId);
+    }
+
+    @Test public void identityUpdateResponseMapsReloginRequirement() {
+        ProfileUpdateResponse response = gson.fromJson("{\"requiereNuevoLogin\":true,\"nombre\":\"Ana\"}",
+                ProfileUpdateResponse.class);
+        assertTrue(response.requiereNuevoLogin);
+        assertEquals("Ana", response.nombre);
     }
 
     @Test public void updateRequestContainsOnlyEditableFields() {

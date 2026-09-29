@@ -12,6 +12,7 @@
     <string name="remember_me">Recordar sesión</string>
     <string name="login">INICIAR SESIÓN</string>
     <string name="login_loading">Validando...</string>
+    <string name="session_checking">Validando sesión</string>
     <string name="forgot_password">¿Olvidaste tu contraseña?</string>
 
     <!-- Errores de login -->

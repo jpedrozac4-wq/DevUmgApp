@@ -19,6 +19,12 @@ public class LoginResponse {
     @SerializedName(value = "usuarioId", alternate = {"id"})
     public long usuarioId;
 
+    @SerializedName("docenteId")
+    public Long docenteId;
+
+    @SerializedName("estudianteId")
+    public Long estudianteId;
+
     @SerializedName("username")
     public String username;
 

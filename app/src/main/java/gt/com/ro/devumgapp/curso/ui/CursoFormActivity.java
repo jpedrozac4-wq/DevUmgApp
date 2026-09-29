@@ -511,8 +511,10 @@ public class CursoFormActivity extends AppCompatActivity {
     }
 
     private String formatDocente(DocenteResumenResponse docente) {
-        return nullToEmpty(docente.codigoDocente) + " - "
+        String label = nullToEmpty(docente.codigoDocente) + " - "
                 + nullToEmpty(docente.nombre) + " " + nullToEmpty(docente.apellido);
+        String source = docente.getIdentitySourceLabel();
+        return source.isEmpty() ? label : label + " · " + source;
     }
 
     private Integer parseIntOrNull(String value) {

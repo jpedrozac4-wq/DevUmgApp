@@ -5,6 +5,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
@@ -63,7 +64,13 @@ public class DocenteFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String permission = getIntent().hasExtra(EXTRA_DOCENTE_ID) ? "DOCENTES_EDITAR" : "DOCENTES_CREAR";
+        docenteId = getIntent().getLongExtra(EXTRA_DOCENTE_ID, NEW_DOCENTE_ID);
+        if (docenteId <= 0) {
+            Toast.makeText(this, "Los docentes se crean desde Usuarios para vincular su cuenta y perfil.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        String permission = "DOCENTES_EDITAR";
         if (!Permissions.requireAll(this, Permissions.DOCENTES_LEER, permission)) return;
         setContentView(R.layout.activity_docente_form);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
@@ -73,13 +80,15 @@ public class DocenteFormActivity extends AppCompatActivity {
         insetsController.setAppearanceLightStatusBars(true);
         insetsController.setAppearanceLightNavigationBars(true);
 
-        docenteId = getIntent().getLongExtra(EXTRA_DOCENTE_ID, NEW_DOCENTE_ID);
         docenteApiService = RetrofitClient.getClient().create(DocenteApiService.class);
         bindViews();
         setupToolbar();
         setupActions();
         animateIntro();
         if (isEditMode()) {
+            tilNombre.setHelperText("La identidad pertenece a Usuario. Cámbiala desde Mi perfil.");
+            tilApellido.setHelperText("La identidad pertenece a Usuario. Cámbiala desde Mi perfil.");
+            tilEmail.setHelperText("La identidad pertenece a Usuario. Cámbiala desde Mi perfil.");
             loadDocente();
         }
     }
@@ -144,7 +153,8 @@ public class DocenteFormActivity extends AppCompatActivity {
                 loadDocenteCall = null;
                 setLoading(false);
                 if (response.isSuccessful() && response.body() != null) {
-                    fillForm(response.body());
+                    DocenteResponse docente = response.body();
+                    fillForm(docente);
                     return;
                 }
                 showErrorAndFinish(DocenteErrorMapper.fromResponse(DocenteFormActivity.this, response));
@@ -168,6 +178,13 @@ public class DocenteFormActivity extends AppCompatActivity {
         edtEmail.setText(docente.email);
         edtTelefono.setText(docente.telefono);
         edtEspecialidad.setText(docente.especialidad);
+        String source = docente.identidadFuente;
+        String identityHint = "USUARIO".equalsIgnoreCase(source)
+                ? "Identidad desde Usuario · cambia nombre, apellido y correo en Mi perfil"
+                : "Perfil histórico sin cuenta · identidad conservada por el perfil";
+        tilNombre.setHelperText(identityHint);
+        tilApellido.setHelperText(identityHint);
+        tilEmail.setHelperText(identityHint);
     }
 
     private void saveDocente() {
@@ -182,13 +199,17 @@ public class DocenteFormActivity extends AppCompatActivity {
     private void submitDocente() {
         if (loading) return;
         setLoading(true);
-        DocenteRequest request = new DocenteRequest(
-                getText(edtCodigo).trim(),
-                getText(edtNombre).trim(),
-                getText(edtApellido).trim(),
-                getText(edtEmail).trim(),
-                getText(edtTelefono).trim(),
-                getText(edtEspecialidad).trim());
+        DocenteRequest request;
+        if (isEditMode()) {
+            request = new DocenteRequest();
+            request.codigoDocente = getText(edtCodigo).trim();
+            request.telefono = getText(edtTelefono).trim();
+            request.especialidad = getText(edtEspecialidad).trim();
+        } else {
+            request = new DocenteRequest(
+                    getText(edtCodigo).trim(), getText(edtNombre).trim(), getText(edtApellido).trim(),
+                    getText(edtEmail).trim(), getText(edtTelefono).trim(), getText(edtEspecialidad).trim());
+        }
         saveDocenteCall = isEditMode()
                 ? docenteApiService.actualizarDocente(docenteId, request)
                 : docenteApiService.crearDocente(request);
@@ -228,26 +249,22 @@ public class DocenteFormActivity extends AppCompatActivity {
             tilCodigo.setError(null);
         }
 
-        if (getText(edtNombre).trim().isEmpty()) {
-            tilNombre.setError(getString(R.string.docente_error_nombre_requerido));
-            valid = false;
-        } else {
-            tilNombre.setError(null);
-        }
+        if (!isEditMode()) {
+            if (getText(edtNombre).trim().isEmpty()) {
+                tilNombre.setError(getString(R.string.docente_error_nombre_requerido));
+                valid = false;
+            } else tilNombre.setError(null);
 
-        if (getText(edtApellido).trim().isEmpty()) {
-            tilApellido.setError(getString(R.string.docente_error_apellido_requerido));
-            valid = false;
-        } else {
-            tilApellido.setError(null);
-        }
+            if (getText(edtApellido).trim().isEmpty()) {
+                tilApellido.setError(getString(R.string.docente_error_apellido_requerido));
+                valid = false;
+            } else tilApellido.setError(null);
 
-        String email = getText(edtEmail).trim();
-        if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.setError(getString(R.string.docente_error_email_formato));
-            valid = false;
-        } else {
-            tilEmail.setError(null);
+            String email = getText(edtEmail).trim();
+            if (email.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                tilEmail.setError(getString(R.string.docente_error_email_formato));
+                valid = false;
+            } else tilEmail.setError(null);
         }
 
         String telefono = getText(edtTelefono).trim();
@@ -273,9 +290,9 @@ public class DocenteFormActivity extends AppCompatActivity {
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnGuardar.setEnabled(!loading);
         tilCodigo.setEnabled(!loading);
-        tilNombre.setEnabled(!loading);
-        tilApellido.setEnabled(!loading);
-        tilEmail.setEnabled(!loading);
+        tilNombre.setEnabled(!loading && !isEditMode());
+        tilApellido.setEnabled(!loading && !isEditMode());
+        tilEmail.setEnabled(!loading && !isEditMode());
         tilTelefono.setEnabled(!loading);
         tilEspecialidad.setEnabled(!loading);
     }

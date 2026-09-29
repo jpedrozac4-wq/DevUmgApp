@@ -20,4 +20,8 @@ public class EstudianteRequest {
     public String telefono;
     @SerializedName("direccion")
     public String direccion;
+    @SerializedName("accesoApp") public Boolean accesoApp;
+    @SerializedName("usuarioId") public Long usuarioId;
+    @SerializedName("username") public String username;
+    @SerializedName("password") public String password;
 }

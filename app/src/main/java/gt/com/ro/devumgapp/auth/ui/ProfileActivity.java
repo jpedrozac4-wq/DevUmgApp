@@ -93,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
         AlertDialog dialog = new MaterialAlertDialogBuilder(this).setTitle(R.string.profile_edit_title).setView(view)
                 .setNegativeButton(R.string.profile_cancel, null).setPositiveButton(R.string.profile_save, null).create();
         dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(button -> {
-            String u = text(user).trim(), e = sessionManager.getEmail().trim();
+            String u = text(user).trim(), e = text(mail).trim();
             String n = text(first).trim(), a = text(last).trim();
             if (!ProfileValidator.isProfileValid(u, e, n, a)) {
                 Toast.makeText(this, R.string.profile_invalid_fields, Toast.LENGTH_LONG).show(); return;

@@ -22,6 +22,8 @@ public class SessionManager {
     private static final String KEY_AUTH_TOKEN = "auth_token";
     private static final String KEY_IS_LOGGED_IN = "is_logged_in";
     private static final String KEY_USUARIO_ID = "usuario_id";
+    private static final String KEY_DOCENTE_ID = "docente_id";
+    private static final String KEY_ESTUDIANTE_ID = "estudiante_id";
     private static final String KEY_USERNAME = "username";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_NOMBRE = "nombre";
@@ -51,6 +53,10 @@ public class SessionManager {
         editor.putString(KEY_AUTH_TOKEN, response.accessToken);
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
         editor.putLong(KEY_USUARIO_ID, response.usuarioId);
+        if (response.docenteId != null) editor.putLong(KEY_DOCENTE_ID, response.docenteId);
+        else editor.remove(KEY_DOCENTE_ID);
+        if (response.estudianteId != null) editor.putLong(KEY_ESTUDIANTE_ID, response.estudianteId);
+        else editor.remove(KEY_ESTUDIANTE_ID);
         editor.putString(KEY_USERNAME, response.username);
         if (response.email != null) editor.putString(KEY_EMAIL, response.email);
         editor.putString(KEY_NOMBRE, response.nombre);
@@ -67,6 +73,8 @@ public class SessionManager {
         if (response == null) return;
         SharedPreferences.Editor editor = prefs.edit();
         if (response.usuarioId > 0) editor.putLong(KEY_USUARIO_ID, response.usuarioId);
+        if (response.docenteId != null) editor.putLong(KEY_DOCENTE_ID, response.docenteId);
+        if (response.estudianteId != null) editor.putLong(KEY_ESTUDIANTE_ID, response.estudianteId);
         if (response.username != null) editor.putString(KEY_USERNAME, response.username);
         if (response.email != null) editor.putString(KEY_EMAIL, response.email);
         if (response.nombre != null) editor.putString(KEY_NOMBRE, response.nombre);
@@ -82,6 +90,8 @@ public class SessionManager {
                 .remove(KEY_AUTH_TOKEN)
                 .remove(KEY_IS_LOGGED_IN)
                 .remove(KEY_USUARIO_ID)
+                .remove(KEY_DOCENTE_ID)
+                .remove(KEY_ESTUDIANTE_ID)
                 .remove(KEY_USERNAME)
                 .remove(KEY_EMAIL)
                 .remove(KEY_NOMBRE)
@@ -121,6 +131,10 @@ public class SessionManager {
     }
 
     public long getUsuarioId() { return prefs.getLong(KEY_USUARIO_ID, 0); }
+
+    public long getDocenteId() { return prefs.getLong(KEY_DOCENTE_ID, 0); }
+
+    public long getEstudianteId() { return prefs.getLong(KEY_ESTUDIANTE_ID, 0); }
 
     public String getNombre() { return prefs.getString(KEY_NOMBRE, ""); }
 

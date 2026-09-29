@@ -22,6 +22,13 @@ public class DocenteRequest {
     @SerializedName("especialidad")
     public String especialidad;
 
+    @SerializedName("accesoApp") public Boolean accesoApp;
+    @SerializedName("usuarioId") public Long usuarioId;
+    @SerializedName("username") public String username;
+    @SerializedName("password") public String password;
+
+    public DocenteRequest() { }
+
     public DocenteRequest(
             String codigoDocente,
             String nombre,
@@ -35,5 +42,12 @@ public class DocenteRequest {
         this.email = email;
         this.telefono = telefono;
         this.especialidad = especialidad;
+    }
+
+    public DocenteRequest withAppAccess(String username, String password) {
+        this.accesoApp = true;
+        this.username = username;
+        this.password = password;
+        return this;
     }
 }

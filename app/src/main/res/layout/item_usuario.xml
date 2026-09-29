@@ -82,6 +82,17 @@
             android:textSize="13sp"
             tools:text="ADMIN · GESTOR" />
 
+        <TextView
+            android:id="@+id/txtVinculoUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:textColor="@color/dashboard_error"
+            android:textSize="13sp"
+            android:visibility="gone"
+            tools:text="Perfil docente pendiente: cuenta sin acceso al módulo académico."
+            tools:visibility="visible" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

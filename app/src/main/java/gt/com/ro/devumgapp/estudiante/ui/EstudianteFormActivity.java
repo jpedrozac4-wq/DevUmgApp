@@ -63,12 +63,17 @@ public class EstudianteFormActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String permission = getIntent().hasExtra("estudianteId") ? "ESTUDIANTES_EDITAR" : "ESTUDIANTES_CREAR";
+        estudianteId = getIntent().getLongExtra("estudianteId", NEW_ESTUDIANTE_ID);
+        if (estudianteId <= 0) {
+            android.widget.Toast.makeText(this, "Los estudiantes se crean desde Usuarios para vincular su cuenta y perfil.", android.widget.Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        String permission = "ESTUDIANTES_EDITAR";
         if (!Permissions.requireAll(this, Permissions.ESTUDIANTES_LEER, permission)) return;
         setContentView(R.layout.activity_estudiante_form);
 
         service = RetrofitClient.getClient().create(EstudianteApiService.class);
-        estudianteId = getIntent().getLongExtra("estudianteId", NEW_ESTUDIANTE_ID);
 
         bindViews();
         setupToolbar();
@@ -77,6 +82,9 @@ public class EstudianteFormActivity extends AppCompatActivity {
 
         if (isEditMode()) {
             heroTitle.setText(R.string.estudiante_form_titulo_editar);
+            tilNombres.setHelperText("La identidad pertenece a Usuario. Cámbiala desde Mi perfil.");
+            tilApellidos.setHelperText("La identidad pertenece a Usuario. Cámbiala desde Mi perfil.");
+            tilCorreo.setHelperText("La identidad pertenece a Usuario. Cámbiala desde Mi perfil.");
             loadEstudiante();
         } else {
             heroTitle.setText(R.string.estudiante_form_titulo_crear);
@@ -145,7 +153,8 @@ public class EstudianteFormActivity extends AppCompatActivity {
             public void onResponse(Call<EstudianteResponse> call, Response<EstudianteResponse> response) {
                 loadCall = null;
                 if (response.isSuccessful() && response.body() != null) {
-                    fillForm(response.body());
+                    EstudianteResponse estudiante = response.body();
+                    fillForm(estudiante);
                     setLoading(false);
                     return;
                 }
@@ -181,12 +190,14 @@ public class EstudianteFormActivity extends AppCompatActivity {
         EstudianteRequest request = new EstudianteRequest();
         request.codigoEstudiantil = textOf(edtCodigo);
         request.numeroIdentificacion = textOf(edtIdentificacion);
-        request.nombres = textOf(edtNombres);
-        request.apellidos = textOf(edtApellidos);
         request.fechaNacimiento = textOf(edtFechaNacimiento);
-        request.correo = textOf(edtCorreo);
         request.telefono = textOf(edtTelefono);
         request.direccion = textOf(edtDireccion);
+        if (!isEditMode()) {
+            request.nombres = textOf(edtNombres);
+            request.apellidos = textOf(edtApellidos);
+            request.correo = textOf(edtCorreo);
+        }
 
         setLoading(true);
         saveCall = isEditMode()
@@ -236,6 +247,12 @@ public class EstudianteFormActivity extends AppCompatActivity {
         edtCorreo.setText(nonNull(e.correo));
         edtTelefono.setText(nonNull(e.telefono));
         edtDireccion.setText(nonNull(e.direccion));
+        String identityHint = "USUARIO".equalsIgnoreCase(e.identidadFuente)
+                ? "Identidad desde Usuario · cambia nombre, apellido y correo en Mi perfil"
+                : "Perfil histórico sin cuenta · identidad conservada por el perfil";
+        tilNombres.setHelperText(identityHint);
+        tilApellidos.setHelperText(identityHint);
+        tilCorreo.setHelperText(identityHint);
     }
 
     private boolean validateForm() {
@@ -244,22 +261,24 @@ public class EstudianteFormActivity extends AppCompatActivity {
                 R.string.estudiante_error_codigo_requerido) && valid;
         valid = validateRequired(tilIdentificacion, edtIdentificacion,
                 R.string.estudiante_error_identificacion_requerida) && valid;
-        valid = validateRequired(tilNombres, edtNombres,
-                R.string.estudiante_error_nombres_requeridos) && valid;
-        valid = validateRequired(tilApellidos, edtApellidos,
-                R.string.estudiante_error_apellidos_requeridos) && valid;
+        if (!isEditMode()) {
+            valid = validateRequired(tilNombres, edtNombres,
+                    R.string.estudiante_error_nombres_requeridos) && valid;
+            valid = validateRequired(tilApellidos, edtApellidos,
+                    R.string.estudiante_error_apellidos_requeridos) && valid;
+        }
         valid = validateRequired(tilFechaNacimiento, edtFechaNacimiento,
                 R.string.estudiante_error_fecha_requerida) && valid;
 
-        String correo = textOf(edtCorreo);
-        if (correo.isEmpty()) {
-            tilCorreo.setError(getString(R.string.estudiante_error_correo_requerido));
-            valid = false;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            tilCorreo.setError(getString(R.string.estudiante_error_correo_formato));
-            valid = false;
-        } else {
-            tilCorreo.setError(null);
+        if (!isEditMode()) {
+            String correo = textOf(edtCorreo);
+            if (correo.isEmpty()) {
+                tilCorreo.setError(getString(R.string.estudiante_error_correo_requerido));
+                valid = false;
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+                tilCorreo.setError(getString(R.string.estudiante_error_correo_formato));
+                valid = false;
+            } else tilCorreo.setError(null);
         }
 
         return valid;
@@ -282,10 +301,10 @@ public class EstudianteFormActivity extends AppCompatActivity {
         btnGuardar.setEnabled(!loading);
         tilCodigo.setEnabled(!loading);
         tilIdentificacion.setEnabled(!loading);
-        tilNombres.setEnabled(!loading);
-        tilApellidos.setEnabled(!loading);
+        tilNombres.setEnabled(!loading && !isEditMode());
+        tilApellidos.setEnabled(!loading && !isEditMode());
         tilFechaNacimiento.setEnabled(!loading);
-        tilCorreo.setEnabled(!loading);
+        tilCorreo.setEnabled(!loading && !isEditMode());
         tilTelefono.setEnabled(!loading);
         tilDireccion.setEnabled(!loading);
     }

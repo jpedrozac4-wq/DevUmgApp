@@ -129,10 +129,10 @@
                             android:id="@+id/btnAgregarDocente"
                             android:layout_width="44dp"
                             android:layout_height="44dp"
-                            android:contentDescription="@string/docente_accion_agregar"
+                            android:contentDescription="@string/docente_accion_buscar"
                             app:backgroundTint="@color/dashboard_teacher"
                             app:cornerRadius="8dp"
-                            app:icon="@drawable/ic_add"
+                            app:icon="@drawable/ic_search"
                             app:iconGravity="textStart"
                             app:iconPadding="0dp"
                             app:iconTint="@color/white" />

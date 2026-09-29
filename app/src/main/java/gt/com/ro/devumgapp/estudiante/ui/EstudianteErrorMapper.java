@@ -8,6 +8,7 @@ import android.content.Context;
 
 import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.network.ApiResponses;
+import gt.com.ro.devumgapp.core.network.IdentityConflictMessage;
 import retrofit2.Response;
 
 final class EstudianteErrorMapper {
@@ -16,6 +17,7 @@ final class EstudianteErrorMapper {
     static String fromResponse(Context context, Response<?> response) {
         String authMessage = ApiResponses.authorizationMessage(context, response);
         if (authMessage != null) return authMessage;
+        if (response.code() == 409) return IdentityConflictMessage.fromResponse(response);
         try {
             if (response.errorBody() != null) {
                 String text = response.errorBody().string();
@@ -27,7 +29,6 @@ final class EstudianteErrorMapper {
         if (response.code() == 401) return context.getString(R.string.estudiante_error_unauthorized);
         if (response.code() == 403) return context.getString(R.string.estudiante_error_forbidden);
         if (response.code() == 404) return context.getString(R.string.estudiante_error_not_found);
-        if (response.code() == 409) return context.getString(R.string.estudiante_error_conflict);
         if (response.code() == 500) return context.getString(R.string.estudiante_error_internal_server);
         return context.getString(R.string.estudiante_error_server);
     }

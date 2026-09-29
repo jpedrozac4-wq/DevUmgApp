@@ -34,6 +34,10 @@ public class EstudianteResponse {
     @SerializedName("activo")
     public boolean activo;
 
+    @SerializedName("usuarioId") public Long usuarioId;
+    @SerializedName("accesoApp") public boolean accesoApp;
+    @SerializedName("identidadFuente") public String identidadFuente;
+
     @SerializedName("fechaCreacion")
     public String fechaCreacion;
 

@@ -27,4 +27,14 @@ public class DocenteResumenResponse {
 
     @SerializedName("activo")
     public boolean activo;
+
+    @SerializedName("identidadFuente") public String identidadFuente;
+    @SerializedName("usuarioId") public Long usuarioId;
+    @SerializedName("accesoApp") public boolean accesoApp;
+
+    public String getIdentitySourceLabel() {
+        if ("USUARIO".equalsIgnoreCase(identidadFuente)) return "Usuario";
+        if ("PERFIL_HISTORICO".equalsIgnoreCase(identidadFuente)) return "Perfil histórico";
+        return "";
+    }
 }

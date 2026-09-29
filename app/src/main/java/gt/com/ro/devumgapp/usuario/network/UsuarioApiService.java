@@ -7,6 +7,10 @@ import retrofit2.Call;
 import retrofit2.http.*;
 
 public interface UsuarioApiService {
+    @POST("/api/usuarios/alta-conjunta")
+    Call<gt.com.ro.devumgapp.usuario.dto.UsuarioAltaConjuntaResponse> altaConjunta(
+            @Body gt.com.ro.devumgapp.usuario.dto.UsuarioAltaConjuntaRequest request);
+
     @POST("/api/usuarios")
     Call<UsuarioResponse> crear(@Body UsuarioRequest request);
 

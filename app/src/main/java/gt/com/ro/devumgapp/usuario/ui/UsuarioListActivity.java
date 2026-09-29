@@ -25,6 +25,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
@@ -34,6 +38,10 @@ import gt.com.ro.devumgapp.core.ui.SgauDialog;
 import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.usuario.dto.UsuarioResponse;
 import gt.com.ro.devumgapp.usuario.network.UsuarioApiService;
+import gt.com.ro.devumgapp.docente.dto.DocenteResponse;
+import gt.com.ro.devumgapp.docente.network.DocenteApiService;
+import gt.com.ro.devumgapp.estudiante.dto.EstudianteResponse;
+import gt.com.ro.devumgapp.estudiante.network.EstudianteApiService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,6 +64,8 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
     private MaterialButton btnAgregar;
 
     private UsuarioApiService apiService;
+    private DocenteApiService docenteApi;
+    private EstudianteApiService estudianteApi;
     private UsuarioAdapter adapter;
     private Call<List<UsuarioResponse>> listCall;
     private Call<Void> deleteCall;
@@ -65,6 +75,8 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
     private final List<UsuarioResponse> allUsuarios = new ArrayList<>();
     private boolean loading;
     private boolean firstResume = true;
+    private final Map<Long, String> linkWarnings = new HashMap<>();
+    private int profileChecksPending;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +91,8 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
         insetsController.setAppearanceLightNavigationBars(true);
 
         apiService = RetrofitClient.getClient().create(UsuarioApiService.class);
+        docenteApi = RetrofitClient.getClient().create(DocenteApiService.class);
+        estudianteApi = RetrofitClient.getClient().create(EstudianteApiService.class);
         formLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -242,6 +256,7 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
                     renderUsuarios(response.body() == null
                             ? new ArrayList<>()
                             : response.body());
+                    verifyAcademicLinks();
                     return;
                 }
                 showError(UsuarioErrorMapper.fromResponse(UsuarioListActivity.this, response));
@@ -262,7 +277,72 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
     private void renderUsuarios(List<UsuarioResponse> usuarios) {
         allUsuarios.clear();
         allUsuarios.addAll(usuarios);
+        linkWarnings.clear();
+        adapter.setLinkWarnings(linkWarnings);
         applyFilter();
+    }
+
+    private void verifyAcademicLinks() {
+        Set<Long> teacherLinkedUsers = new HashSet<>();
+        Set<Long> studentLinkedUsers = new HashSet<>();
+        profileChecksPending = 2;
+        docenteApi.listarDocentes(null, null, 0, 500).enqueue(new retrofit2.Callback<gt.com.ro.devumgapp.core.dto.PageResponse<DocenteResponse>>() {
+            @Override public void onResponse(Call<gt.com.ro.devumgapp.core.dto.PageResponse<DocenteResponse>> call,
+                                             Response<gt.com.ro.devumgapp.core.dto.PageResponse<DocenteResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().content != null) {
+                    for (DocenteResponse profile : response.body().content) {
+                        if (profile.usuarioId != null && profile.usuarioId > 0 && profile.accesoApp) teacherLinkedUsers.add(profile.usuarioId);
+                    }
+                }
+                finishProfileCheck(teacherLinkedUsers, studentLinkedUsers, true);
+            }
+            @Override public void onFailure(Call<gt.com.ro.devumgapp.core.dto.PageResponse<DocenteResponse>> call, Throwable error) {
+                finishProfileCheck(teacherLinkedUsers, studentLinkedUsers, true);
+            }
+        });
+        estudianteApi.listarEstudiantes(null, null, 0, 500).enqueue(new retrofit2.Callback<gt.com.ro.devumgapp.core.dto.PageResponse<EstudianteResponse>>() {
+            @Override public void onResponse(Call<gt.com.ro.devumgapp.core.dto.PageResponse<EstudianteResponse>> call,
+                                             Response<gt.com.ro.devumgapp.core.dto.PageResponse<EstudianteResponse>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().content != null) {
+                    for (EstudianteResponse profile : response.body().content) {
+                        if (profile.usuarioId != null && profile.usuarioId > 0 && profile.accesoApp) studentLinkedUsers.add(profile.usuarioId);
+                    }
+                }
+                finishProfileCheck(teacherLinkedUsers, studentLinkedUsers, false);
+            }
+            @Override public void onFailure(Call<gt.com.ro.devumgapp.core.dto.PageResponse<EstudianteResponse>> call, Throwable error) {
+                finishProfileCheck(teacherLinkedUsers, studentLinkedUsers, false);
+            }
+        });
+    }
+
+    private synchronized void finishProfileCheck(Set<Long> teacherLinked, Set<Long> studentLinked, boolean teacherCheck) {
+        if (teacherCheck) {
+            for (UsuarioResponse user : allUsuarios) if (hasRole(user, "DOCENTE") && !teacherLinked.contains(user.id)) {
+                linkWarnings.put(user.id, "Perfil docente pendiente o vínculo sin confirmar. Requiere revisión administrativa.");
+            }
+        } else {
+            for (UsuarioResponse user : allUsuarios) if (hasRole(user, "ESTUDIANTE") && !studentLinked.contains(user.id)) {
+                String prior = linkWarnings.get(user.id);
+                linkWarnings.put(user.id, prior == null
+                        ? "Perfil estudiante pendiente o vínculo sin confirmar. Requiere revisión administrativa."
+                        : prior + " Perfil estudiante pendiente o vínculo sin confirmar.");
+            }
+        }
+        if (--profileChecksPending == 0) {
+            adapter.setLinkWarnings(linkWarnings);
+            applyFilter();
+        }
+    }
+
+    private boolean hasRole(UsuarioResponse user, String expected) {
+        if (user.roles == null) return false;
+        for (gt.com.ro.devumgapp.rol.dto.RolResumenResponse role : user.roles) {
+            if (role == null) continue;
+            if (expected.equalsIgnoreCase(role.codigo) || expected.equalsIgnoreCase(role.nombre)
+                    || (role.codigo != null && role.codigo.equalsIgnoreCase("ROLE_" + expected))) return true;
+        }
+        return false;
     }
 
     /**

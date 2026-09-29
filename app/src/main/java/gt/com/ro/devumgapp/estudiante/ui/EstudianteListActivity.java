@@ -40,7 +40,7 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
     private RecyclerView recycler;
     private LinearProgressIndicator progress;
     private TextView empty, error, pageInfo;
-    private MaterialButton btnBuscar, btnAnterior, btnSiguiente, btnAgregar;
+    private MaterialButton btnBuscar, btnAnterior, btnSiguiente, btnAbrirBusqueda;
     private EstudianteAdapter adapter;
     private EstudianteApiService service;
     private Call<PageResponse<EstudianteResponse>> listCall;
@@ -78,8 +78,8 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
         btnBuscar = findViewById(R.id.btnBuscarEstudiante);
         btnAnterior = findViewById(R.id.btnEstudiantesAnterior);
         btnSiguiente = findViewById(R.id.btnEstudiantesSiguiente);
-        btnAgregar = findViewById(R.id.btnAgregarEstudiante);
-        btnAgregar.setVisibility(Permissions.has("ESTUDIANTES_CREAR") ? View.VISIBLE : View.GONE);
+        btnAbrirBusqueda = findViewById(R.id.btnAgregarEstudiante);
+        btnAbrirBusqueda.setVisibility(View.VISIBLE);
     }
 
     private void setupToolbar() {
@@ -108,9 +108,11 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
         btnBuscar.setOnClickListener(v -> { pagina = 0; loadEstudiantes(pagina); });
         btnAnterior.setOnClickListener(v -> { if (pagina > 0) loadEstudiantes(--pagina); });
         btnSiguiente.setOnClickListener(v -> { if (pagina + 1 < totalPages) loadEstudiantes(++pagina); });
-        btnAgregar.setOnClickListener(v -> {
-            Intent intent = new Intent(this, EstudianteFormActivity.class);
-            startActivity(intent);
+        btnAbrirBusqueda.setOnClickListener(v -> {
+            edtBuscar.requestFocus();
+            edtBuscar.post(() -> ((android.view.inputmethod.InputMethodManager)
+                    getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(edtBuscar,
+                    android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT));
         });
     }
 
@@ -160,7 +162,7 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
     private void setLoading(boolean loading) {
         progress.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnBuscar.setEnabled(!loading);
-        btnAgregar.setEnabled(!loading);
+        btnAbrirBusqueda.setEnabled(!loading);
         btnAnterior.setEnabled(!loading && pagina > 0);
         btnSiguiente.setEnabled(!loading && pagina + 1 < totalPages);
     }

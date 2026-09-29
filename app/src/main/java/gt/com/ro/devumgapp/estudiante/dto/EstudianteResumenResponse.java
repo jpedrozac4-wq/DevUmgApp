@@ -19,14 +19,23 @@ public class EstudianteResumenResponse {
     @SerializedName("activo")
     public boolean activo;
 
+    @SerializedName("identidadFuente") public String identidadFuente;
+    @SerializedName("usuarioId") public Long usuarioId;
+    @SerializedName("accesoApp") public boolean accesoApp;
+
     public String getDisplayName() {
         String codigo = codigoEstudiantil == null ? "" : codigoEstudiantil;
         String nombre = ((nombres == null ? "" : nombres) + " " +
                 (apellidos == null ? "" : apellidos)).trim();
 
-        if (codigo.isEmpty()) return nombre;
-        if (nombre.isEmpty()) return codigo;
+        String display = codigo.isEmpty() ? nombre : nombre.isEmpty() ? codigo : codigo + " - " + nombre;
+        String source = getIdentitySourceLabel();
+        return source.isEmpty() ? display : display + " · " + source;
+    }
 
-        return codigo + " - " + nombre;
+    public String getIdentitySourceLabel() {
+        if ("USUARIO".equalsIgnoreCase(identidadFuente)) return "Usuario";
+        if ("PERFIL_HISTORICO".equalsIgnoreCase(identidadFuente)) return "Perfil histórico";
+        return "";
     }
 }

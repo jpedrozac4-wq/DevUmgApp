@@ -20,6 +20,7 @@ import gt.com.ro.devumgapp.estudiante.dto.EstadoGeneralResponse;
 import gt.com.ro.devumgapp.estudiante.dto.HistorialAcademicoResponse;
 import gt.com.ro.devumgapp.estudiante.dto.NotaDetalleResponse;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
+import gt.com.ro.devumgapp.estudiante.dto.EstudianteResponse;
 import gt.com.ro.devumgapp.estudiante.network.EstudianteApiService;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +31,8 @@ public class EstudianteDetailActivity extends AppCompatActivity {
     private LinearProgressIndicator progress;
     private TextView resumen, historialResumen, cursos, estadoGeneral;
     private long estudianteId;
+    private Call<EstudianteResponse> profileCall;
+    private TextView vinculo;
     private int pending = 0;
 
     @Override
@@ -52,14 +55,52 @@ public class EstudianteDetailActivity extends AppCompatActivity {
         historialResumen = findViewById(R.id.txtEstudianteHistorialResumen);
         cursos = findViewById(R.id.txtEstudianteCursos);
         estadoGeneral = findViewById(R.id.txtEstudianteEstadoGeneral);
+        vinculo = findViewById(R.id.txtEstudianteDetalleVinculo);
     }
 
     private void cargarTodo() {
-        pending = 3;
+        pending = 4;
         progress.setVisibility(View.VISIBLE);
-        cargarResumen();
         cargarHistorial();
         cargarEstadoGeneral();
+        cargarVinculo();
+    }
+
+    private void cargarVinculo() {
+        profileCall = service.obtenerEstudianteDetalle(estudianteId);
+        profileCall.enqueue(new Callback<EstudianteResponse>() {
+            @Override public void onResponse(Call<EstudianteResponse> call, Response<EstudianteResponse> response) {
+                EstudianteResponse profile = response.body();
+                if (response.isSuccessful() && profile != null) {
+                    String canonicalName = join(profile.nombres, profile.apellidos);
+                    resumen.setText(getString(R.string.estudiante_detalle_resumen,
+                            safe(profile.codigoEstudiantil), canonicalName,
+                            profile.activo ? getString(R.string.estudiante_estado_activo)
+                                    : getString(R.string.estudiante_estado_inactivo)));
+                } else {
+                    resumen.setText(getString(R.string.estudiante_detalle_no_disponible));
+                }
+                boolean accountIdentity = response.isSuccessful() && profile != null
+                        && "USUARIO".equalsIgnoreCase(profile.identidadFuente);
+                boolean linked = accountIdentity || (response.isSuccessful() && profile != null
+                        && profile.usuarioId != null && profile.usuarioId > 0 && profile.accesoApp);
+                vinculo.setText(accountIdentity ? "Identidad desde cuenta Usuario"
+                        : response.isSuccessful() && profile != null && "PERFIL_HISTORICO".equalsIgnoreCase(profile.identidadFuente)
+                        ? "Perfil histórico · sin cuenta"
+                        : linked ? "Cuenta Usuario vinculada y con acceso"
+                        : "Sin vínculo confirmado con Usuario · revisar antes de habilitar acceso");
+                vinculo.setTextColor(androidx.core.content.ContextCompat.getColor(EstudianteDetailActivity.this,
+                        linked ? R.color.dashboard_text_secondary : R.color.dashboard_error));
+                done();
+                done();
+            }
+            @Override public void onFailure(Call<EstudianteResponse> call, Throwable error) {
+                vinculo.setText("No se pudo verificar el vínculo con Usuario.");
+                resumen.setText(getString(R.string.estudiante_detalle_no_disponible));
+                done();
+                done();
+            }
+        });
     }
 
     private void cargarResumen() {
@@ -148,6 +189,11 @@ public class EstudianteDetailActivity extends AppCompatActivity {
     private void done() {
         pending--;
         if (pending <= 0) progress.setVisibility(View.GONE);
+    }
+
+    @Override protected void onDestroy() {
+        if (profileCall != null) profileCall.cancel();
+        super.onDestroy();
     }
 
     private String join(String a, String b) { return (safe(a) + " " + safe(b)).trim(); }

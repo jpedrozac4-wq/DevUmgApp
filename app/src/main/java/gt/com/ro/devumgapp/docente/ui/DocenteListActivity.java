@@ -56,7 +56,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
     private View docenteFiltersHeader;
     private View docenteFilterControls;
     private MaterialButton btnBuscar;
-    private MaterialButton btnAgregar;
+    private MaterialButton btnAbrirBusqueda;
     private MaterialButton btnAnterior;
     private MaterialButton btnSiguiente;
 
@@ -150,8 +150,8 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
         docenteFiltersHeader = findViewById(R.id.docenteFiltersHeader);
         docenteFilterControls = findViewById(R.id.docenteFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarDocente);
-        btnAgregar = findViewById(R.id.btnAgregarDocente);
-        btnAgregar.setVisibility(Permissions.has("DOCENTES_CREAR") ? View.VISIBLE : View.GONE);
+        btnAbrirBusqueda = findViewById(R.id.btnAgregarDocente);
+        btnAbrirBusqueda.setVisibility(View.VISIBLE);
         btnAnterior = findViewById(R.id.btnDocentesAnterior);
         btnSiguiente = findViewById(R.id.btnDocentesSiguiente);
         ModuleNavigation.attach(this, toolbar);
@@ -197,7 +197,13 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
             }
             return false;
         });
-        btnAgregar.setOnClickListener(view -> formLauncher.launch(new Intent(this, DocenteFormActivity.class)));
+        btnAbrirBusqueda.setOnClickListener(view -> {
+            setFiltersExpanded(true);
+            edtBuscar.requestFocus();
+            edtBuscar.post(() -> ((android.view.inputmethod.InputMethodManager)
+                    getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(edtBuscar,
+                    android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT));
+        });
         btnAnterior.setOnClickListener(view -> {
             if (currentPage > 0) {
                 loadDocentes(currentPage - 1);
@@ -310,7 +316,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
         this.loading = loading;
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
         btnBuscar.setEnabled(!loading);
-        btnAgregar.setEnabled(!loading);
+        btnAbrirBusqueda.setEnabled(!loading);
         btnAnterior.setEnabled(!loading && currentPage > 0);
         btnSiguiente.setEnabled(!loading && currentPage + 1 < totalPages);
         toggleEstado.setEnabled(!loading);

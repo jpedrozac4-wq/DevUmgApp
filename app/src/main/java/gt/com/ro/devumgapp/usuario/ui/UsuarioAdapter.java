@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
@@ -35,6 +37,7 @@ class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHold
     private final Listener listener;
     private final List<UsuarioResponse> usuarios = new ArrayList<>();
     private final Set<Long> animatedIds = new HashSet<>();
+    private final Map<Long, String> linkWarnings = new HashMap<>();
 
     UsuarioAdapter(List<UsuarioResponse> items, Listener listener) {
         this.listener = listener;
@@ -61,6 +64,12 @@ class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHold
         if (items != null) {
             usuarios.addAll(items);
         }
+        notifyDataSetChanged();
+    }
+
+    void setLinkWarnings(Map<Long, String> warnings) {
+        linkWarnings.clear();
+        if (warnings != null) linkWarnings.putAll(warnings);
         notifyDataSetChanged();
     }
 
@@ -100,6 +109,7 @@ class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHold
         private final TextView txtNombre;
         private final TextView txtEmail;
         private final TextView txtRoles;
+        private final TextView txtLinkWarning;
         private final MaterialButton btnRoles;
         private final MaterialButton btnEliminar;
 
@@ -108,6 +118,7 @@ class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHold
             txtNombre = itemView.findViewById(R.id.txtNombreUsuario);
             txtEmail = itemView.findViewById(R.id.txtEmailUsuario);
             txtRoles = itemView.findViewById(R.id.txtRolesUsuario);
+            txtLinkWarning = itemView.findViewById(R.id.txtVinculoUsuario);
             btnRoles = itemView.findViewById(R.id.btnRolesUsuario);
             btnEliminar = itemView.findViewById(R.id.btnEliminarUsuario);
         }
@@ -116,6 +127,9 @@ class UsuarioAdapter extends RecyclerView.Adapter<UsuarioAdapter.UsuarioViewHold
             txtNombre.setText(displayName(usuario));
             txtEmail.setText(nonNull(usuario.email));
             txtRoles.setText(buildRolesText(usuario.roles));
+            String warning = linkWarnings.get(usuario.id);
+            txtLinkWarning.setText(warning == null ? "" : warning);
+            txtLinkWarning.setVisibility(warning == null ? View.GONE : View.VISIBLE);
             btnEliminar.setText(R.string.usuario_accion_eliminar);
             btnEliminar.setContentDescription(
                     itemView.getContext().getString(R.string.usuario_accion_eliminar));

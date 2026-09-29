@@ -21,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.net.SocketTimeoutException;
@@ -46,9 +47,12 @@ public class LoginActivity extends AppCompatActivity {
     private TextInputEditText edtPassword;
     private MaterialButton btnLogin;
     private LinearProgressIndicator progressBar;
+    private CircularProgressIndicator progressSession;
     private MaterialCheckBox chkRecordar;
     private TextView txtLoginError;
     private ScrollView loginScroll;
+    private View imgTopDecoration;
+    private View imgLogo;
     private AuthApiService authApiService;
     private Call<LoginResponse> loginCall;
     private Call<LoginResponse> profileCall;
@@ -68,10 +72,12 @@ public class LoginActivity extends AppCompatActivity {
 
         authApiService = RetrofitClient.getClient().create(AuthApiService.class);
         bindViews();
+        boolean hasSavedSession = SessionManager.getInstance().isLoggedIn();
+        setSessionChecking(hasSavedSession);
         setupKeyboardInsets();
         restoreRememberedUsername();
         setupFormActions();
-        if (SessionManager.getInstance().isLoggedIn()) {
+        if (hasSavedSession) {
             refreshSavedProfile();
         } else {
             checkForUpdates(null);
@@ -117,15 +123,18 @@ public class LoginActivity extends AppCompatActivity {
                     checkForUpdates(LoginActivity.this::navigateToHome);
                 } else if (response.code() == 401) {
                     SessionManager.getInstance().logout();
+                    setSessionChecking(false);
                     showGeneralError(getString(R.string.error_invalid_credentials));
                     checkForUpdates(null);
                 } else {
+                    setSessionChecking(false);
                     showGeneralError("No se pudo actualizar la sesión. Intenta iniciar sesión de nuevo.");
                 }
             }
             @Override public void onFailure(Call<LoginResponse> call, Throwable error) {
                 if (call.isCanceled() || isFinishing()) return;
                 setLoading(false);
+                setSessionChecking(false);
                 showGeneralError(resolveFailureMessage(error));
             }
         });
@@ -138,9 +147,12 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
         progressBar = findViewById(R.id.progressBar);
+        progressSession = findViewById(R.id.progressSession);
         chkRecordar = findViewById(R.id.chkRecordar);
         txtLoginError = findViewById(R.id.txtLoginError);
         loginScroll = findViewById(R.id.loginScroll);
+        imgTopDecoration = findViewById(R.id.imgTopDecoration);
+        imgLogo = findViewById(R.id.imgLogo);
     }
 
     private void setupKeyboardInsets() {
@@ -302,6 +314,14 @@ public class LoginActivity extends AppCompatActivity {
         edtUsuario.setEnabled(!loading);
         edtPassword.setEnabled(!loading);
         chkRecordar.setEnabled(!loading);
+    }
+
+    private void setSessionChecking(boolean checking) {
+        int formVisibility = checking ? View.INVISIBLE : View.VISIBLE;
+        loginScroll.setVisibility(formVisibility);
+        imgTopDecoration.setVisibility(formVisibility);
+        imgLogo.setVisibility(formVisibility);
+        progressSession.setVisibility(checking ? View.VISIBLE : View.GONE);
     }
 
     private String resolveErrorMessage(Response<LoginResponse> response) {

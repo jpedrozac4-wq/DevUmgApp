@@ -258,6 +258,87 @@
                             android:textColor="@color/dashboard_text_primary"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <TextView android:id="@+id/txtUsuarioPerfilTitulo" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:layout_marginTop="22dp" android:fontFamily="sans-serif-black" android:text="Rol"
+                        android:textColor="@color/dashboard_text_primary" android:textSize="17sp" android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtUsuarioRolesAyuda"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Selecciona un rol activo. Los perfiles académicos aparecen según el rol elegido."
+                        android:textColor="@color/dashboard_text_secondary"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:id="@+id/layoutUsuarioRoles"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="vertical" />
+
+                    <TextView
+                        android:id="@+id/txtUsuarioRolesEstado"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:textColor="@color/dashboard_text_secondary"
+                        android:textSize="13sp"
+                        android:visibility="gone" />
+
+                    <LinearLayout android:id="@+id/panelUsuarioDocente" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="vertical" android:visibility="gone">
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioCodigoDocente"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Código docente">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioCodigoDocente"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioTelefonoDocente" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Teléfono">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioTelefonoDocente"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone" android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioEspecialidadDocente" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Especialidad">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioEspecialidadDocente"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
+                    <LinearLayout android:id="@+id/panelUsuarioEstudiante" android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="vertical" android:visibility="gone">
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioCodigoEstudiante"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Código estudiantil">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioCodigoEstudiante"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioIdentificacionEstudiante"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Número de identificación">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioIdentificacionEstudiante"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioFechaEstudiante"
+                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Fecha de nacimiento (AAAA-MM-DD)">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioFechaEstudiante"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioTelefonoEstudiante" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Teléfono">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioTelefonoEstudiante"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone" android:singleLine="true" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilUsuarioDireccionEstudiante" style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Dirección">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtUsuarioDireccionEstudiante"
+                                android:layout_width="match_parent" android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+
                     <!-- Botón Guardar -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnGuardarUsuario"
