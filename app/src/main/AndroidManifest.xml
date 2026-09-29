@@ -145,6 +145,11 @@
             android:name=".permiso.ui.PermisoFormActivity"
             android:exported="false" />
 
+        <activity android:name=".academico.ui.DocenteAcademicActivity" android:exported="false" />
+        <activity android:name=".academico.ui.DocenteCourseActivity" android:exported="false" />
+        <activity android:name=".academico.ui.EstudianteAcademicActivity" android:exported="false" />
+        <activity android:name=".auditoria.ui.AuditoriaActivity" android:exported="false" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="gt.com.ro.devumgapp.fileprovider"

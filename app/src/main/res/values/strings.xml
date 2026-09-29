@@ -3,28 +3,28 @@
 
     <!-- Login -->
     <string name="app_title">SGAU</string>
-    <string name="app_subtitle">Sistema de Gesti&#243;n Acad&#233;mica Universitaria</string>
-    <string name="login_title">Iniciar sesi&#243;n</string>
-    <string name="login_welcome">Accede al Sistema de Gesti&#243;n Acad&#233;mica Universitaria</string>
+    <string name="app_subtitle">Sistema de Gestión Académica Universitaria</string>
+    <string name="login_title">Iniciar sesión</string>
+    <string name="login_welcome">Accede al Sistema de Gestión Académica Universitaria</string>
 
     <string name="username_hint">Usuario</string>
-    <string name="password_hint">Contrase&#241;a</string>
-    <string name="remember_me">Recordar sesi&#243;n</string>
-    <string name="login">INICIAR SESI&#211;N</string>
+    <string name="password_hint">Contraseña</string>
+    <string name="remember_me">Recordar sesión</string>
+    <string name="login">INICIAR SESIÓN</string>
     <string name="login_loading">Validando...</string>
-    <string name="forgot_password">&#191;Olvidaste tu contrase&#241;a?</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
 
     <!-- Errores de login -->
     <string name="error_empty_fields">Completa los campos obligatorios.</string>
     <string name="error_username_required">Ingresa tu usuario.</string>
-    <string name="error_password_required">Ingresa tu contrase&#241;a.</string>
-    <string name="error_invalid_credentials">El usuario o la contrase&#241;a son incorrectos.</string>
-    <string name="error_invalid_data">Revisa los datos ingresados e int&#233;ntalo nuevamente.</string>
-    <string name="error_endpoint_not_found">No fue posible encontrar el servicio de autenticaci&#243;n.</string>
-    <string name="error_server">No fue posible conectar con el servidor. Int&#233;ntalo nuevamente.</string>
-    <string name="error_timeout">El servidor tard&#243; demasiado en responder. Int&#233;ntalo nuevamente.</string>
-    <string name="error_no_internet">Verifica tu conexi&#243;n a Internet.</string>
-    <string name="error_network">No fue posible conectar con el servidor. Int&#233;ntalo nuevamente.</string>
+    <string name="error_password_required">Ingresa tu contraseña.</string>
+    <string name="error_invalid_credentials">El usuario o la contraseña son incorrectos.</string>
+    <string name="error_invalid_data">Revisa los datos ingresados e inténtalo nuevamente.</string>
+    <string name="error_endpoint_not_found">No fue posible encontrar el servicio de autenticación.</string>
+    <string name="error_server">No fue posible conectar con el servidor. Inténtalo nuevamente.</string>
+    <string name="error_timeout">El servidor tardó demasiado en responder. Inténtalo nuevamente.</string>
+    <string name="error_no_internet">Verifica tu conexión a Internet.</string>
+    <string name="error_network">No fue posible conectar con el servidor. Inténtalo nuevamente.</string>
 
     <!-- Menu lateral -->
     <string name="nav_inicio">Inicio</string>
@@ -38,107 +38,109 @@
     <string name="nav_usuarios">Usuarios</string>
     <string name="nav_roles">Roles</string>
     <string name="nav_permisos">Permisos</string>
-    <string name="nav_logout">Cerrar sesi&#243;n</string>
-    <string name="module_under_construction">M&#243;dulo de %1$s en construcci&#243;n</string>
-    <string name="nav_open_drawer">Abrir men&#250;</string>
-    <string name="nav_close_drawer">Cerrar men&#250;</string>
+    <string name="nav_auditoria">Auditoría</string>
+    <string name="module_auditoria_description">Consulta la trazabilidad de las operaciones del sistema</string>
+    <string name="nav_logout">Cerrar sesión</string>
+    <string name="module_under_construction">Módulo de %1$s en construcción</string>
+    <string name="nav_open_drawer">Abrir menú</string>
+    <string name="nav_close_drawer">Cerrar menú</string>
 
     <!-- Accesibilidad -->
     <string name="logo_description">Identificador visual de SGAU</string>
-    <string name="show_password">Mostrar contrase&#241;a</string>
-    <string name="hide_password">Ocultar contrase&#241;a</string>
+    <string name="show_password">Mostrar contraseña</string>
+    <string name="hide_password">Ocultar contraseña</string>
 
     <!-- Footer -->
-    <string name="copyright">&#169; 2026 SGAU. Todos los derechos reservados.</string>
+    <string name="copyright">© 2026 SGAU. Todos los derechos reservados.</string>
 
     <!-- Dashboard -->
     <string name="dashboard_title">Dashboard</string>
-    <string name="dashboard_subtitle">Sistema de Gesti&#243;n Acad&#233;mica</string>
-    <string name="dashboard_greeting_named">&#161;Hola, %1$s!</string>
-    <string name="dashboard_greeting_default">&#161;Hola!</string>
-    <string name="dashboard_greeting_morning">Buenos d&#237;as</string>
+    <string name="dashboard_subtitle">Sistema de Gestión Académica</string>
+    <string name="dashboard_greeting_named">¡Hola, %1$s!</string>
+    <string name="dashboard_greeting_default">¡Hola!</string>
+    <string name="dashboard_greeting_morning">Buenos días</string>
     <string name="dashboard_greeting_afternoon">Buenas tardes</string>
     <string name="dashboard_greeting_evening">Buenas noches</string>
     <string name="dashboard_welcome">Bienvenida nuevamente</string>
     <string name="dashboard_user_label">Usuario: %1$s</string>
     <string name="dashboard_role_label">Rol: %1$s</string>
-    <string name="dashboard_modules_title">M&#243;dulos acad&#233;micos</string>
+    <string name="dashboard_modules_title">Módulos académicos</string>
     <string name="dashboard_access_title">Accesos disponibles</string>
-    <string name="dashboard_student_summary_title">Resumen acad&#233;mico</string>
-    <string name="dashboard_student_summary_unavailable">A&#250;n no es posible cargar tus cursos ni calcular tu promedio: el perfil autenticado no incluye el identificador de estudiante.</string>
+    <string name="dashboard_student_summary_title">Resumen académico</string>
+    <string name="dashboard_student_summary_unavailable">Aún no es posible cargar tus cursos ni calcular tu promedio: el perfil autenticado no incluye el identificador de estudiante.</string>
     <string name="dashboard_teacher_summary_title">Cursos asignados</string>
-    <string name="dashboard_teacher_summary_unavailable">A&#250;n no es posible identificar tus cursos asignados: el perfil autenticado no incluye el identificador de docente.</string>
-    <string name="dashboard_admin_summary_title">Panel de gesti&#243;n</string>
-    <string name="dashboard_admin_summary">Tienes acceso a %1$d m&#243;dulos de SGAU. Usa los accesos disponibles para administrarlos.</string>
-    <string name="dashboard_admin_access_summary">Acceso a %1$d m&#243;dulos de SGAU</string>
-    <string name="dashboard_daily_title">Pr&#243;xima clase y actividades de hoy</string>
-    <string name="dashboard_schedule_unavailable">La API no proporciona d&#237;as, horas ni salones para los cursos. Esta secci&#243;n se activar&#225; cuando exista informaci&#243;n de horario.</string>
+    <string name="dashboard_teacher_summary_unavailable">Aún no es posible identificar tus cursos asignados: el perfil autenticado no incluye el identificador de docente.</string>
+    <string name="dashboard_admin_summary_title">Panel de gestión</string>
+    <string name="dashboard_admin_summary">Tienes acceso a %1$d módulos de SGAU. Usa los accesos disponibles para administrarlos.</string>
+    <string name="dashboard_admin_access_summary">Acceso a %1$d módulos de SGAU</string>
+    <string name="dashboard_daily_title">Próxima clase y actividades de hoy</string>
+    <string name="dashboard_schedule_unavailable">La API no proporciona días, horas ni salones para los cursos. Esta sección se activará cuando exista información de horario.</string>
     <string name="dashboard_action_courses">Ver cursos</string>
     <string name="dashboard_action_grades">Ver notas</string>
     <string name="dashboard_profile_description">Perfil de usuario</string>
     <string name="dashboard_avatar_description">Inicial del usuario</string>
     <string name="dashboard_open_profile">Abrir mi perfil</string>
     <string name="dashboard_module_available">Abrir %1$s</string>
-    <string name="dashboard_module_coming_soon">M&#243;dulo pr&#243;ximamente disponible</string>
-    <string name="dashboard_logout_title">&#191;Deseas cerrar sesi&#243;n?</string>
-    <string name="dashboard_logout_message">Tendr&#225;s que ingresar nuevamente tus credenciales.</string>
+    <string name="dashboard_module_coming_soon">Módulo próximamente disponible</string>
+    <string name="dashboard_logout_title">¿Deseas cerrar sesión?</string>
+    <string name="dashboard_logout_message">Tendrás que ingresar nuevamente tus credenciales.</string>
     <string name="dashboard_logout_cancel">Cancelar</string>
-    <string name="dashboard_logout_confirm">Cerrar sesi&#243;n</string>
+    <string name="dashboard_logout_confirm">Cerrar sesión</string>
     <string name="dashboard_user_fallback">Usuario SGAU</string>
     <string name="dashboard_roles_fallback">Rol no disponible</string>
 
-    <string name="module_carreras_description">Gesti&#243;n de carreras</string>
-    <string name="module_cursos_description">Administraci&#243;n de cursos</string>
-    <string name="module_estudiantes_description">Informaci&#243;n estudiantil</string>
-    <string name="module_docentes_description">Gesti&#243;n de docentes</string>
+    <string name="module_carreras_description">Gestión de carreras</string>
+    <string name="module_cursos_description">Administración de cursos</string>
+    <string name="module_estudiantes_description">Información estudiantil</string>
+    <string name="module_docentes_description">Gestión de docentes</string>
     <string name="module_inscripciones_description">Control de inscripciones</string>
     <string name="module_notas_description">Registro de calificaciones</string>
     <string name="module_colegiaturas_description">Control de colegiaturas</string>
-    <string name="module_usuarios_description">Administraci&#243;n de usuarios</string>
-    <string name="module_roles_description">Gesti&#243;n de roles y sus permisos</string>
-    <string name="module_permisos_description">Cat&#225;logo de permisos</string>
+    <string name="module_usuarios_description">Administración de usuarios</string>
+    <string name="module_roles_description">Gestión de roles y sus permisos</string>
+    <string name="module_permisos_description">Catálogo de permisos</string>
     <string name="bottom_profile">Perfil</string>
 
     <!-- Perfil autenticado -->
     <string name="profile_title">Mi perfil</string>
     <string name="profile_back">Volver al dashboard</string>
     <string name="profile_account_subtitle">Cuenta SGAU</string>
-    <string name="profile_information">Informaci&#243;n personal</string>
+    <string name="profile_information">Información personal</string>
     <string name="profile_username">Usuario</string>
-    <string name="profile_email">Correo electr&#243;nico</string>
+    <string name="profile_email">Correo electrónico</string>
     <string name="profile_email_locked">El correo no puede modificarse desde el perfil.</string>
     <string name="profile_roles">Roles</string>
     <string name="profile_security">Cuenta y seguridad</string>
     <string name="profile_edit_action">Editar perfil</string>
-    <string name="profile_password_action">Cambiar contrase&#241;a</string>
-    <string name="profile_actions_note">Cambiar el usuario requiere volver a iniciar sesi&#243;n.</string>
-    <string name="profile_edit_unavailable">El servidor todav&#237;a no ofrece una ruta segura para realizar este cambio.</string>
+    <string name="profile_password_action">Cambiar contraseña</string>
+    <string name="profile_actions_note">Cambiar el usuario requiere volver a iniciar sesión.</string>
+    <string name="profile_edit_unavailable">El servidor todavía no ofrece una ruta segura para realizar este cambio.</string>
     <string name="profile_not_available">No disponible</string>
     <string name="profile_load_error">No se pudo actualizar el perfil. Se muestran los datos guardados.</string>
-    <string name="profile_network_error">Sin conexi&#243;n con el servidor. Se muestran los datos guardados.</string>
+    <string name="profile_network_error">Sin conexión con el servidor. Se muestran los datos guardados.</string>
     <string name="profile_retry">Reintentar</string>
     <string name="profile_user_id">ID de usuario</string>
     <string name="profile_permissions">Permisos</string>
     <string name="profile_first_name">Nombre</string>
     <string name="profile_last_name">Apellido</string>
     <string name="profile_edit_title">Editar perfil</string>
-    <string name="profile_change_password_title">Cambiar contrase&#241;a</string>
-    <string name="profile_current_password">Contrase&#241;a actual</string>
-    <string name="profile_new_password">Nueva contrase&#241;a</string>
+    <string name="profile_change_password_title">Cambiar contraseña</string>
+    <string name="profile_current_password">Contraseña actual</string>
+    <string name="profile_new_password">Nueva contraseña</string>
     <string name="profile_save">Guardar</string>
     <string name="profile_cancel">Cancelar</string>
-    <string name="profile_invalid_fields">Completa todos los campos e ingresa un correo v&#225;lido.</string>
-    <string name="profile_current_password_required">Ingresa la contrase&#241;a actual.</string>
-    <string name="profile_password_length">La nueva contrase&#241;a debe tener entre 8 y 72 caracteres.</string>
-    <string name="profile_password_same">La nueva contrase&#241;a debe ser distinta de la actual.</string>
+    <string name="profile_invalid_fields">Completa todos los campos e ingresa un correo válido.</string>
+    <string name="profile_current_password_required">Ingresa la contraseña actual.</string>
+    <string name="profile_password_length">La nueva contraseña debe tener entre 8 y 72 caracteres.</string>
+    <string name="profile_password_same">La nueva contraseña debe ser distinta de la actual.</string>
     <string name="profile_updated">Perfil actualizado.</string>
-    <string name="profile_password_updated">Contrase&#241;a actualizada correctamente.</string>
-    <string name="profile_error_bad_request">Los datos enviados no son v&#225;lidos.</string>
-    <string name="profile_error_unauthorized">La sesi&#243;n venci&#243;. Inicia sesi&#243;n de nuevo.</string>
-    <string name="profile_error_current_password">La contrase&#241;a actual es incorrecta.</string>
-    <string name="profile_error_conflict">El usuario o correo ya est&#225; en uso.</string>
+    <string name="profile_password_updated">Contraseña actualizada correctamente.</string>
+    <string name="profile_error_bad_request">Los datos enviados no son válidos.</string>
+    <string name="profile_error_unauthorized">La sesión venció. Inicia sesión de nuevo.</string>
+    <string name="profile_error_current_password">La contraseña actual es incorrecta.</string>
+    <string name="profile_error_conflict">El usuario o correo ya está en uso.</string>
     <string name="profile_error_rate_limit">Demasiados intentos. Espera un momento antes de intentar de nuevo.</string>
-    <string name="profile_error_server">No se pudo completar la operaci&#243;n.</string>
+    <string name="profile_error_server">No se pudo completar la operación.</string>
 
 
     <string name="dialog_cancel">Cancelar</string>
@@ -152,16 +154,16 @@
     <string name="dialog_register">Registrar</string>
     <string name="dialog_operation_create">crear</string>
     <string name="dialog_operation_update">actualizar</string>
-    <string name="dialog_title_create">Confirmar creaci&#243;n</string>
+    <string name="dialog_title_create">Confirmar creación</string>
     <string name="dialog_title_update">Confirmar cambios</string>
     <string name="dialog_title_activate">Activar registro</string>
     <string name="dialog_title_deactivate">Desactivar registro</string>
-    <string name="dialog_message_save">Se va a %1$s %2$s. &#191;Deseas continuar?</string>
-    <string name="dialog_message_activate">Se activar&#225; %1$s. &#191;Deseas continuar?</string>
-    <string name="dialog_message_deactivate">Se desactivar&#225; %1$s. &#191;Deseas continuar?</string>
+    <string name="dialog_message_save">Se va a %1$s %2$s. ¿Deseas continuar?</string>
+    <string name="dialog_message_activate">Se activará %1$s. ¿Deseas continuar?</string>
+    <string name="dialog_message_deactivate">Se desactivará %1$s. ¿Deseas continuar?</string>
     <string name="dialog_title_delete">Eliminar registro</string>
-    <string name="dialog_message_delete">Se eliminar&#225; %1$s. Esta acci&#243;n puede ser irreversible.</string>
-    <string name="dialog_title_assign">Confirmar asignaci&#243;n</string>
+    <string name="dialog_message_delete">Se eliminará %1$s. Esta acción puede ser irreversible.</string>
+    <string name="dialog_title_assign">Confirmar asignación</string>
     <string name="dialog_title_payment">Registrar pago</string>
-    <string name="dialog_message_payment">Se registrar&#225; el pago de %1$s. Verifica el monto antes de continuar.</string>
+    <string name="dialog_message_payment">Se registrará el pago de %1$s. Verifica el monto antes de continuar.</string>
 </resources>

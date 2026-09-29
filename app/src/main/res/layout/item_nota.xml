@@ -52,7 +52,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/dashboard_text_primary"
                     android:textSize="17sp"
-                    tools:text="Juan P&#233;rez" />
+                    tools:text="Juan Pérez" />
 
                 <TextView
                     android:id="@+id/txtNotaCurso"
@@ -61,7 +61,7 @@
                     android:layout_marginTop="2dp"
                     android:textColor="@color/dashboard_grade"
                     android:textSize="14sp"
-                    tools:text="Curso: Programaci&#243;n I" />
+                    tools:text="Curso: Programación I" />
 
                 <TextView
                     android:id="@+id/txtNotaCicloTipo"
@@ -70,7 +70,7 @@
                     android:layout_marginTop="4dp"
                     android:textColor="@color/dashboard_text_secondary"
                     android:textSize="13sp"
-                    tools:text="Ciclo 2026 &#183; Parcial I" />
+                    tools:text="Ciclo 2026 · Parcial I" />
             </LinearLayout>
 
             <TextView
@@ -97,7 +97,7 @@
             android:textColor="@color/dashboard_grade"
             android:textSize="22sp"
             android:textStyle="bold"
-            tools:text="Calificaci&#243;n: 85.50" />
+            tools:text="Calificación: 85.50" />
 
         <TextView
             android:id="@+id/txtNotaFecha"

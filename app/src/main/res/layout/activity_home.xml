@@ -140,7 +140,8 @@
                         android:maxLines="2"
                         android:textColor="@color/dashboard_on_primary_secondary"
                         android:textSize="13sp"
-                        tools:text="andrea@universidad.edu.gt&#10;andrea.lopez" />
+                        tools:text="andrea@universidad.edu.gt
+andrea.lopez" />
 
                     <TextView
                         android:id="@+id/txtAdminAccessSummary"

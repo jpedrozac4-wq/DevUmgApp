@@ -14,6 +14,9 @@ public class ApiError {
     @SerializedName("message")
     public String message;
 
+    @SerializedName("code")
+    public String code;
+
     @SerializedName("path")
     public String path;
 

@@ -57,6 +57,9 @@ import gt.com.ro.devumgapp.nota.ui.NotaListActivity;
 import gt.com.ro.devumgapp.permiso.ui.PermisoListActivity;
 import gt.com.ro.devumgapp.rol.ui.RolListActivity;
 import gt.com.ro.devumgapp.usuario.ui.UsuarioListActivity;
+import gt.com.ro.devumgapp.academico.ui.DocenteAcademicActivity;
+import gt.com.ro.devumgapp.academico.ui.EstudianteAcademicActivity;
+import gt.com.ro.devumgapp.auditoria.ui.AuditoriaActivity;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String EXTRA_OPEN_DRAWER = "open_drawer";
@@ -393,8 +396,8 @@ public class HomeActivity extends AppCompatActivity {
 
         btnContextCourses.setOnClickListener(view -> openModule(R.id.nav_cursos));
         btnContextGrades.setOnClickListener(view -> openModule(R.id.nav_notas));
-        btnContextCourses.setVisibility(Permissions.has(Permissions.CURSOS_LEER) ? View.VISIBLE : View.GONE);
-        btnContextGrades.setVisibility(Permissions.has(Permissions.NOTAS_LEER) ? View.VISIBLE : View.GONE);
+        btnContextCourses.setVisibility(Permissions.canOpenDestination(R.id.nav_cursos) ? View.VISIBLE : View.GONE);
+        btnContextGrades.setVisibility(Permissions.canOpenDestination(R.id.nav_notas) ? View.VISIBLE : View.GONE);
         contextActions.setVisibility(
                 btnContextCourses.getVisibility() == View.VISIBLE
                         || btnContextGrades.getVisibility() == View.VISIBLE
@@ -444,7 +447,7 @@ public class HomeActivity extends AppCompatActivity {
         modulesGrid.removeAllViews();
         List<DashboardModule> modules = new ArrayList<>();
         for (DashboardModule module : createModules()) {
-            if (Permissions.has(module.permission)) modules.add(module);
+            if (Permissions.canOpenDestination(module.menuItemId)) modules.add(module);
         }
         if (modules.isEmpty()) {
             ((TextView) txtModulesTitle).setText("No tienes módulos habilitados para esta cuenta.");
@@ -687,6 +690,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private Intent moduleIntentFor(int itemId) {
+        if (!Permissions.hasRole("ADMIN") && Permissions.hasRole("DOCENTE")
+                && (itemId == R.id.nav_cursos || itemId == R.id.nav_notas)) {
+            return new Intent(this, DocenteAcademicActivity.class);
+        }
+        if (!Permissions.hasRole("ADMIN") && Permissions.hasRole("ESTUDIANTE")
+                && (itemId == R.id.nav_cursos || itemId == R.id.nav_inscripciones
+                || itemId == R.id.nav_notas || itemId == R.id.nav_colegiaturas)) {
+            return new Intent(this, EstudianteAcademicActivity.class);
+        }
         if (itemId == R.id.nav_carreras) {
             return new Intent(this, CarreraListActivity.class);
         }
@@ -716,6 +728,9 @@ public class HomeActivity extends AppCompatActivity {
         }
         if (itemId == R.id.nav_permisos) {
             return new Intent(this, PermisoListActivity.class);
+        }
+        if (itemId == R.id.nav_auditoria) {
+            return new Intent(this, AuditoriaActivity.class);
         }
         return null;
     }
@@ -841,6 +856,12 @@ public class HomeActivity extends AppCompatActivity {
                 R.string.module_permisos_description,
                 R.drawable.ic_lock,
                 R.color.dashboard_permiso, Permissions.PERMISOS_LEER));
+        modules.add(new DashboardModule(
+                R.id.nav_auditoria,
+                R.string.nav_auditoria,
+                R.string.module_auditoria_description,
+                R.drawable.ic_description,
+                R.color.dashboard_permiso, Permissions.AUDITORIA_LEER));
         return modules;
     }
 

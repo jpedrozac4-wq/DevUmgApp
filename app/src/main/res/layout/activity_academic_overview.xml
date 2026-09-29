@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="@drawable/bg_dashboard_screen">
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarAcademic" android:layout_width="match_parent"
+        android:layout_height="@dimen/dashboard_header_height" android:background="@color/dashboard_surface"
+        app:navigationIcon="@drawable/ic_arrow_back" app:titleTextColor="@color/dashboard_text_primary" />
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progressAcademic" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:indeterminate="true" android:visibility="gone" app:indicatorColor="@color/dashboard_primary" />
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <LinearLayout android:id="@+id/academicContent" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:orientation="vertical" android:padding="@dimen/dashboard_screen_padding" />
+    </androidx.core.widget.NestedScrollView>
+</LinearLayout>

@@ -46,6 +46,10 @@
             android:id="@+id/nav_permisos"
             android:icon="@drawable/ic_lock"
             android:title="@string/nav_permisos" />
+        <item
+            android:id="@+id/nav_auditoria"
+            android:icon="@drawable/ic_description"
+            android:title="@string/nav_auditoria" />
     </group>
 
     <group>

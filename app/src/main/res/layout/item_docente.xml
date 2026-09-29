@@ -66,7 +66,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/dashboard_text_primary"
                     android:textSize="18sp"
-                    tools:text="Ana Garc&#237;a" />
+                    tools:text="Ana García" />
             </LinearLayout>
 
             <TextView
@@ -91,7 +91,7 @@
             android:layout_marginTop="8dp"
             android:textColor="@color/dashboard_text_secondary"
             android:textSize="14sp"
-            tools:text="ana.garcia@sgau.edu.gt &#183; 5555-1234" />
+            tools:text="ana.garcia@sgau.edu.gt · 5555-1234" />
 
         <TextView
             android:id="@+id/txtDocenteEspecialidad"

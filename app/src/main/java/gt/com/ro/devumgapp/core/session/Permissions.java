@@ -19,6 +19,7 @@ public final class Permissions {
     public static final String USUARIOS_LEER = "USUARIOS_LEER";
     public static final String ROLES_LEER = "ROLES_LEER";
     public static final String PERMISOS_LEER = "PERMISOS_LEER";
+    public static final String AUDITORIA_LEER = "AUDITORIA_LEER";
 
     private Permissions() { }
 
@@ -39,12 +40,31 @@ public final class Permissions {
         if (destinationId == R.id.nav_usuarios) return USUARIOS_LEER;
         if (destinationId == R.id.nav_roles) return ROLES_LEER;
         if (destinationId == R.id.nav_permisos) return PERMISOS_LEER;
+        if (destinationId == R.id.nav_auditoria) return AUDITORIA_LEER;
         return null; // Inicio and Perfil are authenticated destinations, not modules.
     }
 
     public static boolean canOpenDestination(int destinationId) {
+        if (destinationId == R.id.nav_auditoria) {
+            return hasRole("ADMIN") && has(AUDITORIA_LEER);
+        }
+        if (!hasRole("ADMIN") && hasRole("DOCENTE")) {
+            return destinationId == R.id.nav_cursos || destinationId == R.id.nav_notas;
+        }
+        if (!hasRole("ADMIN") && hasRole("ESTUDIANTE")) {
+            return destinationId == R.id.nav_cursos || destinationId == R.id.nav_inscripciones
+                    || destinationId == R.id.nav_notas || destinationId == R.id.nav_colegiaturas;
+        }
         String permission = readingPermissionFor(destinationId);
         return permission == null || has(permission);
+    }
+
+    public static boolean hasRole(String expected) {
+        for (String role : SessionManager.getInstance().getRoles()) {
+            if (role != null && (role.equalsIgnoreCase(expected)
+                    || role.equalsIgnoreCase("ROLE_" + expected))) return true;
+        }
+        return false;
     }
 
     public static boolean require(Activity activity, String permission) {

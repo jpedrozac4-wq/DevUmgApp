@@ -66,7 +66,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/dashboard_text_primary"
                     android:textSize="18sp"
-                    tools:text="Programaci&#243;n I" />
+                    tools:text="Programación I" />
             </LinearLayout>
 
             <TextView
@@ -91,7 +91,7 @@
             android:layout_marginTop="8dp"
             android:textColor="@color/dashboard_text_secondary"
             android:textSize="14sp"
-            tools:text="Curso base para fundamentos de programaci&#243;n." />
+            tools:text="Curso base para fundamentos de programación." />
 
         <TextView
             android:id="@+id/txtCursoMeta"
@@ -100,7 +100,7 @@
             android:layout_marginTop="8dp"
             android:textColor="@color/dashboard_text_primary"
             android:textSize="13sp"
-            tools:text="5 cr&#233;ditos &#183; 6 h/sem &#183; ciclo 2026 &#183; carrera #1" />
+            tools:text="5 créditos · 6 h/sem · ciclo 2026 · carrera #1" />
 
         <TextView
             android:id="@+id/txtCursoDocente"

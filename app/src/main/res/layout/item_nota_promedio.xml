@@ -31,7 +31,7 @@
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/dashboard_text_primary"
                 android:textSize="15sp"
-                tools:text="ING-101 - Programaci&#243;n I" />
+                tools:text="ING-101 - Programación I" />
 
             <TextView
                 android:id="@+id/txtItemNotaPromedioTipo"
@@ -40,7 +40,7 @@
                 android:layout_marginTop="2dp"
                 android:textColor="@color/dashboard_text_secondary"
                 android:textSize="13sp"
-                tools:text="PRIMER PARCIAL &#183; Ciclo 2026" />
+                tools:text="PRIMER PARCIAL · Ciclo 2026" />
         </LinearLayout>
 
         <TextView
