@@ -51,6 +51,12 @@ public class UpdateManager {
         void onNoUpdate();
 
         void onError(Exception e);
+
+        /**
+         * The user chose to install the update later. The caller may continue with
+         * whatever it was doing before the dialog appeared.
+         */
+        void onPostponed();
     }
 
     public UpdateManager(Context context) {
@@ -62,7 +68,8 @@ public class UpdateManager {
 
     /**
      * Queries Firestore and, when a newer version is available, shows the update dialog.
-     * The callback is only invoked when there is nothing to install or on error.
+     * The callback is only invoked when there is nothing to install, on error, or when the
+     * user postpones the update.
      */
     public void checkForUpdates(UpdateCheckCallback callback) {
         db.collection(COLLECTION).document(DOCUMENT)
@@ -92,9 +99,12 @@ public class UpdateManager {
             return;
         }
 
+        // Optional: a critical update cannot be postponed. Absent means false.
+        Boolean forceUpdate = document.getBoolean("forceUpdate");
+
         int currentVersionCode = getCurrentVersionCode();
         if (firebaseVersionCode > currentVersionCode) {
-            showUpdateDialog(versionName, apkUrl);
+            showUpdateDialog(versionName, apkUrl, Boolean.TRUE.equals(forceUpdate), callback);
         } else {
             callback.onNoUpdate();
         }
@@ -113,7 +123,8 @@ public class UpdateManager {
         }
     }
 
-    private void showUpdateDialog(String newVersionName, String apkUrl) {
+    private void showUpdateDialog(String newVersionName, String apkUrl, boolean forced,
+                                  UpdateCheckCallback callback) {
         String currentVersionName = "";
         try {
             currentVersionName = context.getPackageManager()
@@ -124,12 +135,24 @@ public class UpdateManager {
 
         String message = context.getString(R.string.actualizacion_mensaje, currentVersionName, newVersionName);
 
-        new AlertDialog.Builder(context)
+        AlertDialog.Builder builder = new AlertDialog.Builder(context)
                 .setTitle(R.string.actualizacion_titulo)
                 .setMessage(message)
-                .setPositiveButton(R.string.actualizacion_boton, (dialog, which) -> downloadAndInstallApk(apkUrl))
-                .setCancelable(false)
-                .show();
+                .setPositiveButton(R.string.actualizacion_boton,
+                        (dialog, which) -> downloadAndInstallApk(apkUrl));
+
+        if (forced) {
+            // A critical update must be installed: the only way out is updating.
+            builder.setCancelable(false);
+        } else {
+            builder.setCancelable(true);
+            builder.setNegativeButton(R.string.actualizacion_mas_tarde,
+                    (dialog, which) -> callback.onPostponed());
+            // Back button and outside taps mean "later" too, so the caller is never stuck.
+            builder.setOnCancelListener(dialog -> callback.onPostponed());
+        }
+
+        builder.show();
     }
 
     private void downloadAndInstallApk(String apkUrl) {

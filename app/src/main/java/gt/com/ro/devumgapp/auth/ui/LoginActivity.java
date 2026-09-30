@@ -99,6 +99,13 @@ public class LoginActivity extends AppCompatActivity {
                     onFinished.run();
                 }
             }
+
+            @Override
+            public void onPostponed() {
+                if (onFinished != null) {
+                    onFinished.run();
+                }
+            }
         });
     }
 
