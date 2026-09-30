@@ -37,7 +37,13 @@ public final class AcademicDtos {
         public String descripcion;
         public int duracionAnios;
         public boolean activo;
+        public java.math.BigDecimal mensualidad; public Integer cantidadCuotas; public Integer diaVencimiento; public Integer cicloActual;
     }
+    public static class CarreraDisponible { public long id; public String codigo,nombre,descripcion; public int duracionAnios; public java.math.BigDecimal mensualidad; public int cantidadCuotas,diaVencimiento; }
+    public static class Ciclo { public long id; public String nombre; public int anio; public String fechaInicio,fechaFin; public boolean activo; public String toString(){return nombre+" · "+anio;} }
+    public static class Grado { public long id; public String codigo,nombre; public String toString(){return nombre;} }
+    public static class Seccion { public long id,gradoId; public String codigo,nombre; public String toString(){return nombre+" ("+codigo+")";} }
+    public static class SolicitudInscripcion { public long carreraId,cicloId,gradoId,seccionId; }
 
     public static class Curso {
         public long id;
@@ -51,6 +57,8 @@ public final class AcademicDtos {
         public long carreraId;
         public String carreraCodigo;
         public String carreraNombre;
+        public Long cicloId;
+        public String cicloNombre;
     }
 
     public static class CursoPlan {
@@ -61,6 +69,8 @@ public final class AcademicDtos {
         public int creditos;
         public int horasSemanales;
         public int cicloAnio;
+        public Long cicloId;
+        public String cicloNombre;
         public boolean inscrito;
         public Long docenteId;
         public String docenteNombre;
@@ -123,7 +133,7 @@ public final class AcademicDtos {
     }
 
     public static class Colegiatura {
-        public long id; public int cicloAnio; public String concepto;
+        public long id; public int cicloAnio; public String cicloNombre; public String concepto;
         public double montoTotal; public double montoPagado; public double saldoPendiente;
         public String fechaEmision; public String fechaVencimiento; public String estado; public boolean activo;
     }
@@ -134,8 +144,14 @@ public final class AcademicDtos {
     public static class Pago {
         public long id; public long colegiaturaId; public double monto; public String fechaPago;
         public String referencia; public String metodoPago; public String comprobanteUrl;
-        public String estado; public String motivoRechazo; public String fechaCreacion; public String fechaRevision;
+        public String estado; public String motivoRechazo; public String fechaCreacion; public String fechaRevision; public Long revisadoPorUsuarioId;
     }
+    public static class PagoRevision {
+        public long id, estudianteId, colegiaturaId; public String estudianteNombre, estudianteCodigo, carreraNombre, concepto;
+        public double monto; public String fechaPago, referencia, metodoPago, comprobanteUrl, estado, motivoRechazo, fechaCreacion, fechaRevision;
+        public Long revisadoPorUsuarioId;
+    }
+    public static class DecisionPago { public String estado, motivo; public DecisionPago(String estado,String motivo){this.estado=estado;this.motivo=motivo;} }
 
     public static class Promedio {
         public long estudianteId;

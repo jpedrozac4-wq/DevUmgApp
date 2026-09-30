@@ -14,6 +14,9 @@ public final class Permissions {
     public static final String ESTUDIANTES_LEER = "ESTUDIANTES_LEER";
     public static final String DOCENTES_LEER = "DOCENTES_LEER";
     public static final String INSCRIPCIONES_LEER = "INSCRIPCIONES_LEER";
+    public static final String INSCRIPCIONES_CREAR = "INSCRIPCIONES_CREAR";
+    public static final String COLEGIATURAS_REGISTRAR_PAGO = "COLEGIATURAS_REGISTRAR_PAGO";
+    public static final String COLEGIATURAS_CAMBIAR_ESTADO = "COLEGIATURAS_CAMBIAR_ESTADO";
     public static final String NOTAS_LEER = "NOTAS_LEER";
     public static final String COLEGIATURAS_LEER = "COLEGIATURAS_LEER";
     public static final String USUARIOS_LEER = "USUARIOS_LEER";

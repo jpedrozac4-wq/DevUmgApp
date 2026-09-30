@@ -18,6 +18,9 @@ public class CarreraResponse {
 
     @SerializedName("duracionAnios")
     public int duracionAnios;
+    @SerializedName("mensualidad") public java.math.BigDecimal mensualidad;
+    @SerializedName("cantidadCuotas") public Integer cantidadCuotas;
+    @SerializedName("diaVencimiento") public Integer diaVencimiento;
 
     @SerializedName("activo")
     public boolean activo;

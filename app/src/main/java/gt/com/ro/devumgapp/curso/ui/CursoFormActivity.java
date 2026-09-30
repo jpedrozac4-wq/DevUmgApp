@@ -28,6 +28,9 @@ import gt.com.ro.devumgapp.carrera.network.CarreraApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.ui.UiNotifier;
 import gt.com.ro.devumgapp.core.ui.SgauDialog;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Ciclo;
+import gt.com.ro.devumgapp.academico.network.AcademicoApiService;
+import gt.com.ro.devumgapp.curso.dto.CicloRequest;
 import gt.com.ro.devumgapp.curso.dto.CursoRequest;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.dto.DocenteRequest;
@@ -58,25 +61,33 @@ public class CursoFormActivity extends AppCompatActivity {
     private TextInputEditText edtHoras;
     private TextInputEditText edtCiclo;
     private Spinner spinnerCarrera;
+    private Spinner spinnerPeriodo;
     private Spinner spinnerDocente;
     private MaterialButton btnGuardar;
     private LinearProgressIndicator progressBar;
 
     private CursoApiService cursoApiService;
     private CarreraApiService carreraApiService;
+    private AcademicoApiService academicoApiService;
     private Call<CursoResponse> loadCursoCall;
     private Call<CursoResponse> saveCursoCall;
     private Call<CursoResponse> docenteMutationCall;
+    private Call<CursoResponse> cicloMutationCall;
     private Call<List<CarreraResumenResponse>> carrerasCall;
     private Call<List<DocenteResumenResponse>> docentesCall;
+    private Call<List<Ciclo>> ciclosCall;
     private final List<NamedItem<CarreraResumenResponse>> carreraItems = new ArrayList<>();
     private final List<NamedItem<DocenteResumenResponse>> docenteItems = new ArrayList<>();
+    private final List<NamedItem<Ciclo>> cicloItems = new ArrayList<>();
     private CursoResponse pendingCurso;
     private long cursoId = NEW_CURSO_ID;
     private boolean loading;
     private boolean carrerasLoaded;
     private boolean docentesLoaded;
+    private boolean ciclosLoaded;
     private boolean carrerasAvailable;
+    private boolean ciclosAvailable;
+    private boolean createdDuringFlow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +105,7 @@ public class CursoFormActivity extends AppCompatActivity {
         cursoId = getIntent().getLongExtra(EXTRA_CURSO_ID, NEW_CURSO_ID);
         cursoApiService = RetrofitClient.getClient().create(CursoApiService.class);
         carreraApiService = RetrofitClient.getClient().create(CarreraApiService.class);
+        academicoApiService = RetrofitClient.getClient().create(AcademicoApiService.class);
         bindViews();
         setupToolbar();
         setupActions();
@@ -133,6 +145,7 @@ public class CursoFormActivity extends AppCompatActivity {
         edtHoras = findViewById(R.id.edtCursoHoras);
         edtCiclo = findViewById(R.id.edtCursoCiclo);
         spinnerCarrera = findViewById(R.id.spinnerCursoCarrera);
+        spinnerPeriodo = findViewById(R.id.spinnerCursoPeriodo);
         spinnerDocente = findViewById(R.id.spinnerCursoDocente);
         btnGuardar = findViewById(R.id.btnGuardarCurso);
         progressBar = findViewById(R.id.progressCursoForm);
@@ -160,8 +173,10 @@ public class CursoFormActivity extends AppCompatActivity {
 
     private void initializeSpinners() {
         carreraItems.add(new NamedItem<>(getString(R.string.curso_selecciona_carrera), null));
+        cicloItems.add(new NamedItem<>("Selecciona el período académico", null));
         docenteItems.add(new NamedItem<>(getString(R.string.curso_sin_docente), null));
         bindSpinner(spinnerCarrera, carreraItems);
+        bindSpinner(spinnerPeriodo, cicloItems);
         bindSpinner(spinnerDocente, docenteItems);
     }
 
@@ -238,6 +253,23 @@ public class CursoFormActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ciclosCall = academicoApiService.ciclosAdministrativos();
+        ciclosCall.enqueue(new Callback<List<Ciclo>>() {
+            @Override public void onResponse(Call<List<Ciclo>> call, Response<List<Ciclo>> response) {
+                ciclosCall = null; ciclosLoaded = true;
+                cicloItems.clear(); cicloItems.add(new NamedItem<>("Selecciona el período académico", null));
+                if (response.isSuccessful() && response.body() != null) {
+                    for (Ciclo ciclo : response.body()) if (ciclo.activo) cicloItems.add(new NamedItem<>(ciclo.nombre + " · " + ciclo.anio + " (" + ciclo.fechaInicio + " a " + ciclo.fechaFin + ")", ciclo));
+                }
+                ciclosAvailable = cicloItems.size() > 1; bindSpinner(spinnerPeriodo, cicloItems); applyPendingSelections();
+                if (!ciclosAvailable) showToast("No hay períodos académicos activos configurados.");
+                finishInitialLoadIfReady();
+            }
+            @Override public void onFailure(Call<List<Ciclo>> call, Throwable t) {
+                if (!call.isCanceled()) { ciclosCall = null; ciclosLoaded = true; ciclosAvailable = false; finishInitialLoadIfReady(); showToast("No se pudieron cargar los períodos académicos."); }
+            }
+        });
     }
 
     private void loadCurso() {
@@ -288,6 +320,7 @@ public class CursoFormActivity extends AppCompatActivity {
 
     private void submitCurso() {
         if (loading) return;
+        final boolean creatingNew = !isEditMode();
         setLoading(true);
         CursoRequest request = new CursoRequest(
                 getText(edtCodigo).trim(),
@@ -306,9 +339,12 @@ public class CursoFormActivity extends AppCompatActivity {
                 saveCursoCall = null;
                 if (response.isSuccessful()) {
                     CursoResponse saved = response.body();
-                    if (saved != null && shouldSyncDocente()) {
-                        syncDocente(saved.id);
-                        return;
+                    if (saved != null) {
+                        createdDuringFlow = createdDuringFlow || creatingNew;
+                        pendingCurso = saved;
+                        cursoId = saved.id;
+                        if (saved.cicloId == null || saved.cicloId.longValue() != selectedCicloId()) { syncCiclo(saved.id); return; }
+                        if (shouldSyncDocente()) { syncDocente(saved.id); return; }
                     }
                     setLoading(false);
                     finishSuccessfully();
@@ -360,6 +396,11 @@ public class CursoFormActivity extends AppCompatActivity {
             showToast(getString(R.string.curso_error_carrera_requerida));
             valid = false;
         }
+        Ciclo periodo=selectedCiclo();
+        Integer anioCurso=parseIntOrNull(getText(edtCiclo).trim());
+        if(periodo==null){showToast("Selecciona el período académico de oferta.");valid=false;}
+        else if(anioCurso==null||anioCurso.intValue()!=periodo.anio){tilCiclo.setError("El año académico debe coincidir con el período seleccionado.");valid=false;}
+        else tilCiclo.setError(null);
         return valid;
     }
 
@@ -410,6 +451,20 @@ public class CursoFormActivity extends AppCompatActivity {
         });
     }
 
+    private void syncCiclo(long savedCursoId) {
+        cicloMutationCall = cursoApiService.asignarCiclo(savedCursoId, new CicloRequest(selectedCicloId()));
+        cicloMutationCall.enqueue(new Callback<CursoResponse>() {
+            @Override public void onResponse(Call<CursoResponse> call, Response<CursoResponse> response) {
+                cicloMutationCall = null;
+                if (!response.isSuccessful()) { setLoading(false); showToast(CursoErrorMapper.fromResponse(CursoFormActivity.this,response)); return; }
+                CursoResponse saved=response.body(); if(saved!=null)pendingCurso=saved;
+                if(shouldSyncDocente()){syncDocente(savedCursoId);return;}
+                setLoading(false);finishSuccessfully();
+            }
+            @Override public void onFailure(Call<CursoResponse> call,Throwable t){if(!call.isCanceled()){cicloMutationCall=null;setLoading(false);showToast(CursoErrorMapper.fromFailure(CursoFormActivity.this,t));}}
+        });
+    }
+
     private void applyPendingSelections() {
         if (pendingCurso == null) {
             return;
@@ -420,6 +475,7 @@ public class CursoFormActivity extends AppCompatActivity {
         if (docentesLoaded && pendingCurso.docenteId != null) {
             selectDocente(pendingCurso.docenteId);
         }
+        if (ciclosLoaded && pendingCurso.cicloId != null) selectCiclo(pendingCurso.cicloId);
     }
 
     private void selectCarrera(long carreraId) {
@@ -442,8 +498,15 @@ public class CursoFormActivity extends AppCompatActivity {
         }
     }
 
+    private void selectCiclo(long cicloId) {
+        for (int index = 0; index < cicloItems.size(); index++) {
+            Ciclo ciclo = cicloItems.get(index).value;
+            if (ciclo != null && ciclo.id == cicloId) { spinnerPeriodo.setSelection(index); return; }
+        }
+    }
+
     private void finishInitialLoadIfReady() {
-        if (carrerasLoaded && docentesLoaded && loadCursoCall == null && saveCursoCall == null) {
+        if (carrerasLoaded && docentesLoaded && ciclosLoaded && loadCursoCall == null && saveCursoCall == null) {
             setLoading(false);
         }
     }
@@ -460,7 +523,7 @@ public class CursoFormActivity extends AppCompatActivity {
     private void setLoading(boolean loading) {
         this.loading = loading;
         progressBar.setVisibility(loading ? View.VISIBLE : View.GONE);
-        btnGuardar.setEnabled(!loading && (!carrerasLoaded || carrerasAvailable));
+        btnGuardar.setEnabled(!loading && carrerasAvailable && ciclosAvailable);
         tilCodigo.setEnabled(!loading);
         tilNombre.setEnabled(!loading);
         tilDescripcion.setEnabled(!loading);
@@ -468,6 +531,7 @@ public class CursoFormActivity extends AppCompatActivity {
         tilHoras.setEnabled(!loading);
         tilCiclo.setEnabled(!loading);
         spinnerCarrera.setEnabled(!loading);
+        spinnerPeriodo.setEnabled(!loading);
         spinnerDocente.setEnabled(!loading);
     }
 
@@ -481,7 +545,7 @@ public class CursoFormActivity extends AppCompatActivity {
     }
 
     private void finishSuccessfully() {
-        showSuccess(getString(isEditMode() ? R.string.curso_actualizado : R.string.curso_creado));
+        showSuccess(getString(isEditMode() && !createdDuringFlow ? R.string.curso_actualizado : R.string.curso_creado));
         setResult(RESULT_OK);
         finish();
     }
@@ -500,6 +564,9 @@ public class CursoFormActivity extends AppCompatActivity {
         NamedItem<DocenteResumenResponse> item = selectedItem(spinnerDocente);
         return item == null || item.value == null ? null : item.value.id;
     }
+
+    private Ciclo selectedCiclo() { NamedItem<Ciclo> item=selectedItem(spinnerPeriodo);return item==null?null:item.value; }
+    private long selectedCicloId() { Ciclo item=selectedCiclo();return item==null?-1L:item.id; }
 
     @SuppressWarnings("unchecked")
     private <T> NamedItem<T> selectedItem(Spinner spinner) {
@@ -565,5 +632,7 @@ public class CursoFormActivity extends AppCompatActivity {
         if (docentesCall != null) {
             docentesCall.cancel();
         }
+        if(ciclosCall!=null)ciclosCall.cancel();
+        if(cicloMutationCall!=null)cicloMutationCall.cancel();
     }
 }

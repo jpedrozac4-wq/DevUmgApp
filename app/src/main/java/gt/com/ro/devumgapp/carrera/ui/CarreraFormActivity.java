@@ -42,6 +42,7 @@ public class CarreraFormActivity extends AppCompatActivity {
     private TextInputEditText edtNombre;
     private TextInputEditText edtDescripcion;
     private TextInputEditText edtDuracion;
+    private TextInputEditText edtMensualidad, edtCuotas, edtDiaVencimiento;
     private MaterialButton btnGuardar;
     private LinearProgressIndicator progressBar;
     private TextView txtHeroTitle;
@@ -95,6 +96,7 @@ public class CarreraFormActivity extends AppCompatActivity {
         edtNombre = findViewById(R.id.edtCarreraNombre);
         edtDescripcion = findViewById(R.id.edtCarreraDescripcion);
         edtDuracion = findViewById(R.id.edtCarreraDuracion);
+        edtMensualidad = findViewById(R.id.edtCarreraMensualidad); edtCuotas=findViewById(R.id.edtCarreraCuotas); edtDiaVencimiento=findViewById(R.id.edtCarreraDiaVencimiento);
         btnGuardar = findViewById(R.id.btnGuardarCarrera);
         progressBar = findViewById(R.id.progressCarreraForm);
         txtHeroTitle = findViewById(R.id.txtCarreraFormHeroTitle);
@@ -191,7 +193,7 @@ public class CarreraFormActivity extends AppCompatActivity {
                 getText(edtCodigo).trim(),
                 getText(edtNombre).trim(),
                 getText(edtDescripcion).trim(),
-                Integer.parseInt(getText(edtDuracion).trim()));
+                Integer.parseInt(getText(edtDuracion).trim()), new java.math.BigDecimal(getText(edtMensualidad).trim()), Integer.parseInt(getText(edtCuotas).trim()), Integer.parseInt(getText(edtDiaVencimiento).trim()));
         saveCall = isEditMode()
                 ? apiService.actualizarCarrera(carreraId, request)
                 : apiService.crearCarrera(request);
@@ -234,6 +236,9 @@ public class CarreraFormActivity extends AppCompatActivity {
         edtNombre.setText(carrera.nombre);
         edtDescripcion.setText(carrera.descripcion);
         edtDuracion.setText(String.valueOf(carrera.duracionAnios));
+        if(carrera.mensualidad!=null) edtMensualidad.setText(carrera.mensualidad.toPlainString());
+        if(carrera.cantidadCuotas!=null) edtCuotas.setText(String.valueOf(carrera.cantidadCuotas));
+        if(carrera.diaVencimiento!=null) edtDiaVencimiento.setText(String.valueOf(carrera.diaVencimiento));
     }
 
     private boolean validateForm() {
@@ -281,6 +286,10 @@ public class CarreraFormActivity extends AppCompatActivity {
             tilDuracion.setError(null);
         }
 
+        try { java.math.BigDecimal amount=new java.math.BigDecimal(getText(edtMensualidad).trim()); if(amount.signum()<=0) throw new NumberFormatException(); } catch(Exception ex) { edtMensualidad.setError("Ingresa una mensualidad mayor que cero."); valid=false; }
+        Integer cuotas=parseIntOrNull(getText(edtCuotas).trim()); if(cuotas==null||cuotas<1||cuotas>24){edtCuotas.setError("Ingresa entre 1 y 24 cuotas.");valid=false;}else edtCuotas.setError(null);
+        Integer dia=parseIntOrNull(getText(edtDiaVencimiento).trim()); if(dia==null||dia<1||dia>31){edtDiaVencimiento.setError("Ingresa un día entre 1 y 31.");valid=false;}else edtDiaVencimiento.setError(null);
+
         return valid;
     }
 
@@ -300,6 +309,7 @@ public class CarreraFormActivity extends AppCompatActivity {
         tilNombre.setEnabled(!loading);
         tilDescripcion.setEnabled(!loading);
         tilDuracion.setEnabled(!loading);
+        edtMensualidad.setEnabled(!loading); edtCuotas.setEnabled(!loading); edtDiaVencimiento.setEnabled(!loading);
     }
 
     private void showErrorAndFinish(String message) {

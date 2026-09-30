@@ -136,6 +136,16 @@
                     android:textColor="@color/dashboard_text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout android:id="@+id/tilCarreraMensualidad" style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:hint="Mensualidad (Q)">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtCarreraMensualidad" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="numberDecimal" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Cantidad de cuotas">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtCarreraCuotas" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputLayout style="@style/Widget.Material3.TextInputLayout.OutlinedBox" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:hint="Día de vencimiento (1 a 31)">
+                <com.google.android.material.textfield.TextInputEditText android:id="@+id/edtCarreraDiaVencimiento" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCarreraNombre"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"

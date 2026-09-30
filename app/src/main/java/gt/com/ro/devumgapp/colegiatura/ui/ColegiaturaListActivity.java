@@ -114,6 +114,9 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
         findViewById(R.id.btnAgregarColegiatura).setVisibility(Permissions.has("COLEGIATURAS_CREAR") ? View.VISIBLE : View.GONE);
         findViewById(R.id.btnAgregarColegiatura).setOnClickListener(v ->
                 startActivity(new Intent(this, ColegiaturaFormActivity.class)));
+        View revisionPagos = findViewById(R.id.btnRevisionPagos);
+        revisionPagos.setVisibility(Permissions.hasRole("ADMIN") && Permissions.has(Permissions.COLEGIATURAS_CAMBIAR_ESTADO) ? View.VISIBLE : View.GONE);
+        revisionPagos.setOnClickListener(v -> startActivity(new Intent(this, RevisionPagosActivity.class)));
 
         btnAnterior.setOnClickListener(v -> {
             if (pagina > 0) {

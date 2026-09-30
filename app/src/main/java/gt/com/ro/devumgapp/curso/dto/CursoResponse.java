@@ -31,6 +31,9 @@ public class CursoResponse {
     @SerializedName("cicloAnio")
     public int cicloAnio;
 
+    @SerializedName("cicloId")
+    public Long cicloId;
+
     @SerializedName("activo")
     public boolean activo;
 

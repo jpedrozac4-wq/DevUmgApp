@@ -43,7 +43,7 @@
     <string name="curso_descripcion_hint">Descripción</string>
     <string name="curso_creditos_hint">Créditos</string>
     <string name="curso_horas_hint">Horas semanales</string>
-    <string name="curso_ciclo_hint">Ciclo o año</string>
+    <string name="curso_ciclo_hint">Año académico</string>
     <string name="curso_selecciona_carrera">Selecciona una carrera</string>
     <string name="curso_sin_docente">Sin docente</string>
     <string name="curso_accion_guardar">Guardar curso</string>

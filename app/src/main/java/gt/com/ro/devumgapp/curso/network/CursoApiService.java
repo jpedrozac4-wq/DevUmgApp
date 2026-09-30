@@ -5,6 +5,7 @@ import java.util.List;
 import gt.com.ro.devumgapp.carrera.dto.EstadoRequest;
 import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.curso.dto.CursoRequest;
+import gt.com.ro.devumgapp.curso.dto.CicloRequest;
 import gt.com.ro.devumgapp.curso.dto.CursoResponse;
 import gt.com.ro.devumgapp.curso.dto.CursoResumenResponse;
 import gt.com.ro.devumgapp.curso.dto.DocenteRequest;
@@ -45,6 +46,9 @@ public interface CursoApiService {
 
     @PATCH("api/cursos/{id}/docente")
     Call<CursoResponse> asignarDocente(@Path("id") long id, @Body DocenteRequest request);
+
+    @PATCH("api/cursos/{id}/ciclo")
+    Call<CursoResponse> asignarCiclo(@Path("id") long id, @Body CicloRequest request);
 
     @DELETE("api/cursos/{id}/docente")
     Call<CursoResponse> quitarDocente(@Path("id") long id);
