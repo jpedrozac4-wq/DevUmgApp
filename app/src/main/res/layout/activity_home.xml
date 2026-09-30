@@ -221,33 +221,6 @@ andrea.lopez" />
                                 app:icon="@drawable/ic_grade"
                                 app:iconGravity="textStart" />
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginTop="18dp"
-                            android:background="@color/dashboard_border" />
-
-                        <TextView
-                            android:id="@+id/txtDailyTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="16dp"
-                            android:fontFamily="sans-serif-black"
-                            android:text="@string/dashboard_daily_title"
-                            android:textColor="@color/dashboard_text_primary"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/txtDailyState"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:lineSpacingExtra="2dp"
-                            android:textColor="@color/dashboard_text_secondary"
-                            android:textSize="14sp"
-                            tools:text="El backend no proporciona horarios." />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 

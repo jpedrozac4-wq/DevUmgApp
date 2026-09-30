@@ -3,8 +3,11 @@ package gt.com.ro.devumgapp.academico.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -21,6 +24,7 @@ import gt.com.ro.devumgapp.academico.network.AcademicoApiService;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.session.SessionManager;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,6 +32,9 @@ import retrofit2.Response;
 public class DocenteAcademicActivity extends AcademicBaseActivity {
     private AcademicoApiService api;
     private EditText cycleInput;
+    private LinearLayout filterControls;
+    private ImageView filterChevron;
+    private boolean filtersExpanded;
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -38,7 +45,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         progress = findViewById(R.id.progressAcademic);
         MaterialToolbar toolbar = findViewById(R.id.toolbarAcademic);
         toolbar.setTitle("Mis cursos");
-        toolbar.setNavigationOnClickListener(v -> finish());
+        ModuleNavigation.attach(this, toolbar);
         configureHero("Mis cursos", "Consulta tus cursos asignados y administra las notas de tus estudiantes.",
                 R.drawable.bg_curso_header, R.drawable.ic_teacher, R.color.dashboard_course);
         api = RetrofitClient.getClient().create(AcademicoApiService.class);
@@ -71,6 +78,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
     }
 
     private void addCycleFilter(Integer cycle) {
+        filtersExpanded = false;
         MaterialCardView filterCard = new MaterialCardView(this);
         filterCard.setCardBackgroundColor(getColor(R.color.dashboard_surface));
         filterCard.setCardElevation(dp(4));
@@ -80,7 +88,22 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         LinearLayout box = new LinearLayout(this);
         box.setOrientation(LinearLayout.VERTICAL);
         box.setPadding(dp(16), dp(14), dp(16), dp(14));
-        box.addView(text("Filtrar cursos", 17, true));
+        LinearLayout header = new LinearLayout(this);
+        header.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        TextView headerTitle = text("Filtrar cursos", 17, true);
+        headerTitle.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
+        header.addView(headerTitle);
+        filterChevron = new ImageView(this);
+        filterChevron.setImageResource(R.drawable.ic_chevron_right);
+        header.addView(filterChevron, new LinearLayout.LayoutParams(dp(24), dp(24)));
+        header.setContentDescription("Mostrar filtros");
+        header.setClickable(true);
+        header.setFocusable(true);
+        box.addView(header);
+
+        filterControls = new LinearLayout(this);
+        filterControls.setOrientation(LinearLayout.VERTICAL);
+        filterControls.setVisibility(View.GONE);
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(android.view.Gravity.CENTER_VERTICAL);
@@ -104,12 +127,29 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(-2, dp(56));
         buttonParams.topMargin = dp(10);
         row.addView(apply, buttonParams);
-        box.addView(row);
+        filterControls.addView(row);
+        box.addView(filterControls);
+        header.setOnClickListener(v -> setFiltersExpanded(!filtersExpanded, header));
         filterCard.addView(box);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(-1, -2);
         cardParams.topMargin = dp(12);
         filterCard.setLayoutParams(cardParams);
         content.addView(filterCard);
+    }
+
+    private void setFiltersExpanded(boolean expanded, View header) {
+        filtersExpanded = expanded;
+        header.setContentDescription(expanded ? "Ocultar filtros" : "Mostrar filtros");
+        filterChevron.animate().rotation(expanded ? 90f : 0f).setDuration(180).start();
+        if (expanded) {
+            filterControls.setVisibility(View.VISIBLE);
+            filterControls.setAlpha(0f);
+            filterControls.setTranslationY(-dp(8));
+            filterControls.animate().alpha(1f).translationY(0f).setDuration(180).start();
+            return;
+        }
+        filterControls.animate().alpha(0f).translationY(-dp(8)).setDuration(140)
+                .withEndAction(() -> filterControls.setVisibility(View.GONE)).start();
     }
 
     private Integer readCycle() {

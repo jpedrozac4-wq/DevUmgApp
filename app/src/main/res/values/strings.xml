@@ -70,12 +70,10 @@
     <string name="dashboard_student_summary_title">Resumen académico</string>
     <string name="dashboard_student_summary_unavailable">Aún no es posible cargar tus cursos ni calcular tu promedio: el perfil autenticado no incluye el identificador de estudiante.</string>
     <string name="dashboard_teacher_summary_title">Cursos asignados</string>
-    <string name="dashboard_teacher_summary_unavailable">Aún no es posible identificar tus cursos asignados: el perfil autenticado no incluye el identificador de docente.</string>
+    <string name="dashboard_teacher_summary">Consulta tus cursos asignados y administra las notas de tus estudiantes.</string>
     <string name="dashboard_admin_summary_title">Panel de gestión</string>
     <string name="dashboard_admin_summary">Tienes acceso a %1$d módulos de SGAU. Usa los accesos disponibles para administrarlos.</string>
     <string name="dashboard_admin_access_summary">Acceso a %1$d módulos de SGAU</string>
-    <string name="dashboard_daily_title">Próxima clase y actividades de hoy</string>
-    <string name="dashboard_schedule_unavailable">La API no proporciona días, horas ni salones para los cursos. Esta sección se activará cuando exista información de horario.</string>
     <string name="dashboard_action_courses">Ver cursos</string>
     <string name="dashboard_action_grades">Ver notas</string>
     <string name="dashboard_profile_description">Perfil de usuario</string>

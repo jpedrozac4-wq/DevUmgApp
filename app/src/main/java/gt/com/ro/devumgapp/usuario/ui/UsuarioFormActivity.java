@@ -1,5 +1,6 @@
 package gt.com.ro.devumgapp.usuario.ui;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
@@ -22,9 +23,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import gt.com.ro.devumgapp.R;
@@ -99,7 +102,7 @@ public class UsuarioFormActivity extends AppCompatActivity {
         rolApi = RetrofitClient.getClient().create(RolApiService.class);
         docenteApi = RetrofitClient.getClient().create(DocenteApiService.class);
         estudianteApi = RetrofitClient.getClient().create(EstudianteApiService.class);
-        bindViews(); setupUi(); loadInitialData();
+        bindViews(); setupUi(); setupStudentBirthDatePicker(); loadInitialData();
     }
 
     private void bindViews() {
@@ -133,6 +136,26 @@ public class UsuarioFormActivity extends AppCompatActivity {
         apellido.setOnEditorActionListener((v, action, event) -> { if (action == EditorInfo.IME_ACTION_DONE) { save(); return true; } return false; });
         hero.setAlpha(0f); hero.setTranslationY(20f); hero.animate().alpha(1f).translationY(0f).setDuration(360).start();
         panel.setAlpha(0f); panel.setTranslationY(18f); panel.animate().alpha(1f).translationY(0f).setStartDelay(120).setDuration(320).start();
+    }
+
+    private void setupStudentBirthDatePicker() {
+        View.OnClickListener listener = view -> {
+            Calendar selected = Calendar.getInstance();
+            try {
+                String[] parts = text(studentBirth).trim().split("-");
+                if (parts.length == 3) selected.set(Integer.parseInt(parts[0]),
+                        Integer.parseInt(parts[1]) - 1, Integer.parseInt(parts[2]));
+            } catch (Exception ignored) { }
+
+            DatePickerDialog dialog = new DatePickerDialog(this, (picker, year, month, day) -> {
+                studentBirth.setText(String.format(Locale.US, "%04d-%02d-%02d", year, month + 1, day));
+                tilStudentBirth.setError(null);
+            }, selected.get(Calendar.YEAR), selected.get(Calendar.MONTH), selected.get(Calendar.DAY_OF_MONTH));
+            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+            dialog.show();
+        };
+        studentBirth.setOnClickListener(listener);
+        tilStudentBirth.setEndIconOnClickListener(listener);
     }
 
     private void loadInitialData() {
@@ -310,7 +333,7 @@ public class UsuarioFormActivity extends AppCompatActivity {
         call.enqueue(new Callback<UsuarioAltaConjuntaResponse>() {
             @Override public void onResponse(Call<UsuarioAltaConjuntaResponse> c, Response<UsuarioAltaConjuntaResponse> r) {
                 untrack(c);
-                if (r.code() == 400) { showJointValidationErrors(r); return; }
+                if (r.code() == 400 || r.code() == 422) { showJointValidationErrors(r); return; }
                 if (r.code() != 201 || r.body() == null || !hasExpectedJointIds(r.body(), selectedRole)) {
                     setLoading(false); UiNotifier.error(UsuarioFormActivity.this, r.isSuccessful()
                             ? "El backend no confirmó una respuesta completa del alta conjunta. No se confirmó el alta."
@@ -338,19 +361,79 @@ public class UsuarioFormActivity extends AppCompatActivity {
         String message = "La solicitud contiene datos inválidos.";
         try {
             JsonObject root = new JsonParser().parse(body == null ? "{}" : body).getAsJsonObject();
-            JsonElement backendMessage = root.get("message");
-            if (backendMessage != null && !backendMessage.isJsonNull()) message = backendMessage.getAsString();
-            JsonElement errorsElement = root.get("fieldErrors");
-            if (errorsElement != null && errorsElement.isJsonObject()) {
-                for (Map.Entry<String, JsonElement> error : errorsElement.getAsJsonObject().entrySet()) {
-                    String detail = error.getValue().isJsonNull() ? "Dato inválido." : error.getValue().getAsString();
-                    applyFieldError(error.getKey(), detail);
-                    message += "\n" + error.getKey() + ": " + detail;
+            JsonElement backendMessage = first(root, "message", "detail", "error", "title");
+            if (backendMessage != null && backendMessage.isJsonPrimitive()) message = backendMessage.getAsString();
+            Map<String, String> errors = new LinkedHashMap<>();
+            collectValidationErrors(root.get("fieldErrors"), errors);
+            collectValidationErrors(root.get("errors"), errors);
+            collectValidationErrors(root.get("validationErrors"), errors);
+            collectValidationErrors(root.get("violations"), errors);
+            if (!errors.isEmpty()) {
+                StringBuilder details = new StringBuilder(message);
+                for (Map.Entry<String, String> error : errors.entrySet()) {
+                    applyFieldError(error.getKey(), error.getValue());
+                    details.append("\n").append(fieldLabel(error.getKey())).append(": ").append(error.getValue());
                 }
+                message = details.toString();
             }
         } catch (Exception ignored) { }
         setLoading(false);
         UiNotifier.error(this, message);
+    }
+
+    private void collectValidationErrors(JsonElement element, Map<String, String> errors) {
+        if (element == null || element.isJsonNull()) return;
+        if (element.isJsonArray()) {
+            for (JsonElement item : element.getAsJsonArray()) collectValidationErrors(item, errors);
+            return;
+        }
+        if (!element.isJsonObject()) return;
+        JsonObject object = element.getAsJsonObject();
+        JsonElement field = first(object, "field", "property", "name", "path");
+        JsonElement detail = first(object, "defaultMessage", "message", "detail", "error", "reason");
+        if (field != null && field.isJsonPrimitive() && detail != null && detail.isJsonPrimitive()) {
+            errors.put(field.getAsString(), detail.getAsString());
+            return;
+        }
+        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+            JsonElement value = entry.getValue();
+            if (value == null || value.isJsonNull()) continue;
+            if (value.isJsonPrimitive()) errors.put(entry.getKey(), value.getAsString());
+            else if (value.isJsonArray() && value.getAsJsonArray().size() > 0
+                    && value.getAsJsonArray().get(0).isJsonPrimitive()) {
+                StringBuilder joined = new StringBuilder();
+                for (JsonElement item : value.getAsJsonArray()) {
+                    if (joined.length() > 0) joined.append("; ");
+                    joined.append(item.getAsString());
+                }
+                errors.put(entry.getKey(), joined.toString());
+            } else collectValidationErrors(value, errors);
+        }
+    }
+
+    private JsonElement first(JsonObject object, String... names) {
+        for (String name : names) {
+            JsonElement value = object.get(name);
+            if (value != null && !value.isJsonNull()) return value;
+        }
+        return null;
+    }
+
+    private String fieldLabel(String field) {
+        switch (field) {
+            case "username": return "Usuario";
+            case "password": return "Contraseña";
+            case "nombre": return "Nombre";
+            case "apellido": return "Apellido";
+            case "correo": case "email": return "Correo";
+            case "rolIds": return "Rol";
+            case "estudiante.codigoEstudiantil": case "codigoEstudiantil": return "Código estudiantil";
+            case "estudiante.numeroIdentificacion": case "numeroIdentificacion": return "Número de identificación";
+            case "estudiante.fechaNacimiento": case "fechaNacimiento": return "Fecha de nacimiento";
+            case "estudiante.telefono": case "docente.telefono": case "telefono": return "Teléfono";
+            case "estudiante.direccion": case "direccion": return "Dirección";
+            default: return field;
+        }
     }
 
     private void applyFieldError(String field, String message) {

@@ -117,9 +117,24 @@ public final class AcademicDtos {
         public String cursoNombre;
         public int cicloAnio;
         public String tipoEvaluacion;
-        public double calificacion;
+        public Double calificacion;
         public String observaciones;
         public boolean activo;
+    }
+
+    public static class Colegiatura {
+        public long id; public int cicloAnio; public String concepto;
+        public double montoTotal; public double montoPagado; public double saldoPendiente;
+        public String fechaEmision; public String fechaVencimiento; public String estado; public boolean activo;
+    }
+    public static class PagoRegistro {
+        public double monto; public String fechaPago; public String referencia;
+        public String metodoPago; public String comprobanteUrl; public String idempotencyKey;
+    }
+    public static class Pago {
+        public long id; public long colegiaturaId; public double monto; public String fechaPago;
+        public String referencia; public String metodoPago; public String comprobanteUrl;
+        public String estado; public String motivoRechazo; public String fechaCreacion; public String fechaRevision;
     }
 
     public static class Promedio {

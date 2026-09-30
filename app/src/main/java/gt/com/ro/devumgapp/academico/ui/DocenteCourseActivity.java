@@ -25,6 +25,7 @@ import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.session.SessionManager;
+import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
 import gt.com.ro.devumgapp.nota.dto.NotaRequest;
 import gt.com.ro.devumgapp.nota.dto.NotaResponse;
 import gt.com.ro.devumgapp.nota.dto.NotaUpdateRequest;
@@ -57,7 +58,7 @@ public class DocenteCourseActivity extends AcademicBaseActivity {
         progress = findViewById(R.id.progressAcademic);
         MaterialToolbar toolbar = findViewById(R.id.toolbarAcademic);
         toolbar.setTitle(getIntent().getStringExtra(EXTRA_CURSO_NOMBRE));
-        toolbar.setNavigationOnClickListener(v -> finish());
+        ModuleNavigation.attach(this, toolbar);
         configureHero(getIntent().getStringExtra(EXTRA_CURSO_NOMBRE),
                 "Estudiantes inscritos y notas del ciclo " + cycleYear + ".",
                 R.drawable.bg_nota_header, R.drawable.ic_grade, R.color.dashboard_grade);

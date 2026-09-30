@@ -3,6 +3,8 @@ package gt.com.ro.devumgapp.estudiante.ui;
 import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,6 +39,8 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
 
     private TextInputEditText edtBuscar;
     private MaterialButtonToggleGroup toggleEstado;
+    private LinearLayout filtersHeader, filterControls;
+    private ImageView filtersChevron;
     private RecyclerView recycler;
     private LinearProgressIndicator progress;
     private TextView empty, error, pageInfo;
@@ -47,6 +51,7 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
     private int pagina = 0;
     private int totalPages = 0;
     private Boolean activo = null;
+    private boolean filtersExpanded;
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +75,9 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
         MaterialToolbar toolbar = findViewById(R.id.toolbarEstudiantes);
         edtBuscar = findViewById(R.id.edtBuscarEstudiante);
         toggleEstado = findViewById(R.id.toggleEstadoEstudiante);
+        filtersHeader = findViewById(R.id.estudianteFiltersHeader);
+        filterControls = findViewById(R.id.estudianteFilterControls);
+        filtersChevron = findViewById(R.id.imgEstudiantesFiltersChevron);
         recycler = findViewById(R.id.recyclerEstudiantes);
         progress = findViewById(R.id.progressEstudiantes);
         empty = findViewById(R.id.txtEstudiantesEmpty);
@@ -105,15 +113,32 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
     }
 
     private void setupActions() {
+        filtersHeader.setOnClickListener(v -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(v -> { pagina = 0; loadEstudiantes(pagina); });
         btnAnterior.setOnClickListener(v -> { if (pagina > 0) loadEstudiantes(--pagina); });
         btnSiguiente.setOnClickListener(v -> { if (pagina + 1 < totalPages) loadEstudiantes(++pagina); });
         btnAbrirBusqueda.setOnClickListener(v -> {
+            setFiltersExpanded(true);
             edtBuscar.requestFocus();
             edtBuscar.post(() -> ((android.view.inputmethod.InputMethodManager)
                     getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(edtBuscar,
                     android.view.inputmethod.InputMethodManager.SHOW_IMPLICIT));
         });
+    }
+
+    private void setFiltersExpanded(boolean expanded) {
+        filtersExpanded = expanded;
+        filtersHeader.setContentDescription(expanded ? "Ocultar filtros" : "Mostrar filtros");
+        filtersChevron.animate().rotation(expanded ? 90f : 0f).setDuration(180).start();
+        if (expanded) {
+            filterControls.setVisibility(View.VISIBLE);
+            filterControls.setAlpha(0f);
+            filterControls.setTranslationY(-8f);
+            filterControls.animate().alpha(1f).translationY(0f).setDuration(180).start();
+            return;
+        }
+        filterControls.animate().alpha(0f).translationY(-8f).setDuration(140)
+                .withEndAction(() -> filterControls.setVisibility(View.GONE)).start();
     }
 
     private void loadEstudiantes(int page) {

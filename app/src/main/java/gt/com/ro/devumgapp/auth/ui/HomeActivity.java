@@ -82,8 +82,6 @@ public class HomeActivity extends AppCompatActivity {
     private View contextActions;
     private TextView txtContextTitle;
     private TextView txtContextDescription;
-    private TextView txtDailyTitle;
-    private TextView txtDailyState;
     private MaterialButton btnContextCourses;
     private MaterialButton btnContextGrades;
     private SessionManager sessionManager;
@@ -256,8 +254,6 @@ public class HomeActivity extends AppCompatActivity {
         contextActions = findViewById(R.id.contextActions);
         txtContextTitle = findViewById(R.id.txtContextTitle);
         txtContextDescription = findViewById(R.id.txtContextDescription);
-        txtDailyTitle = findViewById(R.id.txtDailyTitle);
-        txtDailyState = findViewById(R.id.txtDailyState);
         btnContextCourses = findViewById(R.id.btnContextCourses);
         btnContextGrades = findViewById(R.id.btnContextGrades);
     }
@@ -414,15 +410,12 @@ public class HomeActivity extends AppCompatActivity {
 
         contextSummaryCard.setVisibility(View.VISIBLE);
         txtAdminAccessSummary.setVisibility(View.GONE);
-        txtDailyTitle.setVisibility(View.VISIBLE);
-        txtDailyState.setVisibility(View.VISIBLE);
-        txtDailyState.setText(R.string.dashboard_schedule_unavailable);
         if (student) {
             txtContextTitle.setText(R.string.dashboard_student_summary_title);
             txtContextDescription.setText(R.string.dashboard_student_summary_unavailable);
         } else {
             txtContextTitle.setText(R.string.dashboard_teacher_summary_title);
-            txtContextDescription.setText(R.string.dashboard_teacher_summary_unavailable);
+            txtContextDescription.setText(R.string.dashboard_teacher_summary);
         }
     }
 
@@ -469,8 +462,16 @@ public class HomeActivity extends AppCompatActivity {
             icon.setVisibility(View.VISIBLE);
             icon.setAlpha(1f);
             icon.setScaleType(ImageView.ScaleType.FIT_CENTER);
-            name.setText(module.titleRes);
-            description.setText(module.descriptionRes);
+            if (Permissions.hasRole("ESTUDIANTE") && !Permissions.hasRole("ADMIN")) {
+                name.setText(module.menuItemId == R.id.nav_inscripciones ? "Mi carrera"
+                        : module.menuItemId == R.id.nav_cursos ? "Mis cursos"
+                        : module.menuItemId == R.id.nav_notas ? "Mis notas"
+                        : module.menuItemId == R.id.nav_colegiaturas ? "Colegiatura"
+                        : module.menuItemId == R.id.nav_profile ? "Mi perfil" : getString(module.titleRes));
+                description.setText(module.menuItemId == R.id.nav_profile ? "Datos de mi cuenta"
+                        : module.menuItemId == R.id.nav_inscripciones ? "Plan y avance de créditos"
+                        : getString(module.descriptionRes));
+            } else { name.setText(module.titleRes); description.setText(module.descriptionRes); }
             applyModuleStyle(module, card, icon, iconContainer);
             card.setContentDescription(getString(R.string.dashboard_module_available,
                     getString(module.titleRes)));
@@ -591,6 +592,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void openModule(DashboardModule module) {
+        if (module.menuItemId == R.id.nav_profile) { showProfile(); return; }
         navView.setCheckedItem(module.menuItemId);
         syncBottomSelection(module.menuItemId);
         setDashboardTitle(module.titleRes);
@@ -692,12 +694,14 @@ public class HomeActivity extends AppCompatActivity {
     private Intent moduleIntentFor(int itemId) {
         if (!Permissions.hasRole("ADMIN") && Permissions.hasRole("DOCENTE")
                 && (itemId == R.id.nav_cursos || itemId == R.id.nav_notas)) {
-            return new Intent(this, DocenteAcademicActivity.class);
+            return new Intent(this, DocenteAcademicActivity.class)
+                    .putExtra(EXTRA_CURRENT_DESTINATION, itemId);
         }
         if (!Permissions.hasRole("ADMIN") && Permissions.hasRole("ESTUDIANTE")
-                && (itemId == R.id.nav_cursos || itemId == R.id.nav_inscripciones
+                && (itemId == R.id.nav_carreras || itemId == R.id.nav_cursos || itemId == R.id.nav_inscripciones
                 || itemId == R.id.nav_notas || itemId == R.id.nav_colegiaturas)) {
-            return new Intent(this, EstudianteAcademicActivity.class);
+            return new Intent(this, EstudianteAcademicActivity.class)
+                    .putExtra(EXTRA_CURRENT_DESTINATION, itemId);
         }
         if (itemId == R.id.nav_carreras) {
             return new Intent(this, CarreraListActivity.class);
@@ -862,6 +866,11 @@ public class HomeActivity extends AppCompatActivity {
                 R.string.module_auditoria_description,
                 R.drawable.ic_description,
                 R.color.dashboard_permiso, Permissions.AUDITORIA_LEER));
+        if (Permissions.hasRole("ESTUDIANTE") && !Permissions.hasRole("ADMIN")) {
+            modules.add(new DashboardModule(R.id.nav_profile, R.string.bottom_profile,
+                    R.string.dashboard_profile_description, R.drawable.ic_user,
+                    R.color.dashboard_student, null));
+        }
         return modules;
     }
 

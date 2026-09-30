@@ -16,6 +16,8 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.POST;
+import retrofit2.http.Body;
 
 /** Consultas acotadas a la identidad académica contenida en el JWT. */
 public interface AcademicoApiService {
@@ -37,5 +39,14 @@ public interface AcademicoApiService {
     Call<PageResponse<Inscripcion>> inscripcionesEstudiante(@Query("page") int page, @Query("size") int size);
     @GET("api/academico/estudiante/me/notas")
     Call<PageResponse<Nota>> notasEstudiante(@Query("page") int page, @Query("size") int size);
+    @GET("api/academico/estudiante/me/notas")
+    Call<PageResponse<Nota>> notasEstudianteFiltradas(@Query("cicloAnio") Integer cicloAnio, @Query("page") int page, @Query("size") int size);
     @GET("api/academico/estudiante/me/promedio") Call<Promedio> promedioEstudiante();
+    @GET("api/academico/estudiante/me/colegiaturas")
+    Call<PageResponse<gt.com.ro.devumgapp.academico.dto.AcademicDtos.Colegiatura>> colegiaturas(@Query("page") int page, @Query("size") int size);
+    @GET("api/academico/estudiante/me/pagos")
+    Call<List<gt.com.ro.devumgapp.academico.dto.AcademicDtos.Pago>> pagos();
+    @POST("api/academico/estudiante/me/colegiaturas/{id}/pagos")
+    Call<gt.com.ro.devumgapp.academico.dto.AcademicDtos.Pago> registrarPago(@Path("id") long id,
+        @Body gt.com.ro.devumgapp.academico.dto.AcademicDtos.PagoRegistro request);
 }

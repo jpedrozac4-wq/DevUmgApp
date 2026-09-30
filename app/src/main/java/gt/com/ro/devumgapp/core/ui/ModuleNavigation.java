@@ -24,6 +24,9 @@ public final class ModuleNavigation {
     }
 
     private static int destinationFor(Activity activity) {
+        int currentDestination = activity.getIntent().getIntExtra(
+                HomeActivity.EXTRA_CURRENT_DESTINATION, -1);
+        if (currentDestination != -1) return currentDestination;
         switch (activity.getClass().getSimpleName()) {
             case "CarreraListActivity": return R.id.nav_carreras;
             case "CursoListActivity": return R.id.nav_cursos;
@@ -36,6 +39,8 @@ public final class ModuleNavigation {
             case "RolListActivity": return R.id.nav_roles;
             case "PermisoListActivity": return R.id.nav_permisos;
             case "AuditoriaActivity": return R.id.nav_auditoria;
+            case "DocenteAcademicActivity": case "DocenteCourseActivity": return R.id.nav_cursos;
+            case "EstudianteAcademicActivity": return currentDestination == -1 ? R.id.nav_cursos : currentDestination;
             default: return R.id.nav_inicio;
         }
     }
