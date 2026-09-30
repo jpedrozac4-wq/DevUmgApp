@@ -93,14 +93,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".colegiatura.ui.PagoColegiaturaActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".colegiatura.ui.RevisionPagosActivity"
-            android:exported="false" />
-
-        <activity
             android:name=".estudiante.ui.EstudianteListActivity"
             android:exported="false" />
 

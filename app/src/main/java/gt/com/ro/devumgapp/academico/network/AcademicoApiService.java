@@ -45,6 +45,8 @@ public interface AcademicoApiService {
     @GET("api/academico/estudiante/me/promedio") Call<Promedio> promedioEstudiante();
     @GET("api/academico/estudiante/me/colegiaturas")
     Call<PageResponse<gt.com.ro.devumgapp.academico.dto.AcademicDtos.Colegiatura>> colegiaturas(@Query("page") int page, @Query("size") int size);
+    @GET("api/academico/estudiante/me/estado-cuenta")
+    Call<gt.com.ro.devumgapp.academico.dto.AcademicDtos.EstadoCuenta> estadoCuenta();
     @GET("api/academico/estudiante/me/pagos")
     Call<List<gt.com.ro.devumgapp.academico.dto.AcademicDtos.Pago>> pagos();
     @POST("api/academico/estudiante/me/colegiaturas/{id}/pagos")

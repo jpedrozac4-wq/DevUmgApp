@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -16,12 +17,17 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.DecisionPago;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Pago;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.PagoRevision;
+import gt.com.ro.devumgapp.academico.network.AcademicoApiService;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaResponse;
 import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
@@ -52,11 +58,13 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
 
     private ColegiaturaAdapter adapter;
     private ColegiaturaApiService service;
+    private AcademicoApiService pagosApi;
 
     private final List<EstudianteResumenResponse> estudiantes = new ArrayList<>();
     private long selectedEstudianteId = -1L;
     private int pagina = 0;
     private int totalPaginas = 0;
+    private int listRequestGeneration;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,7 +76,13 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
         bindViews();
         configurarVista();
         cargarEstudiantes();
-        cargarColegiaturas();
+        long paymentId = getIntent().getLongExtra("notificationPaymentId", -1L);
+        if (paymentId > 0 && Permissions.hasRole("ADMIN")
+                && Permissions.has(Permissions.COLEGIATURAS_CAMBIAR_ESTADO)) {
+            cargarColegiaturaDeReporte(paymentId);
+        } else {
+            cargarColegiaturas();
+        }
     }
 
     private void bindViews() {
@@ -114,9 +128,7 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
         findViewById(R.id.btnAgregarColegiatura).setVisibility(Permissions.has("COLEGIATURAS_CREAR") ? View.VISIBLE : View.GONE);
         findViewById(R.id.btnAgregarColegiatura).setOnClickListener(v ->
                 startActivity(new Intent(this, ColegiaturaFormActivity.class)));
-        View revisionPagos = findViewById(R.id.btnRevisionPagos);
-        revisionPagos.setVisibility(Permissions.hasRole("ADMIN") && Permissions.has(Permissions.COLEGIATURAS_CAMBIAR_ESTADO) ? View.VISIBLE : View.GONE);
-        revisionPagos.setOnClickListener(v -> startActivity(new Intent(this, RevisionPagosActivity.class)));
+        pagosApi = RetrofitClient.getClient().create(AcademicoApiService.class);
 
         btnAnterior.setOnClickListener(v -> {
             if (pagina > 0) {
@@ -201,6 +213,7 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
     }
 
     private void cargarColegiaturas() {
+        final int requestGeneration = ++listRequestGeneration;
         setLoading(true);
         Long estudianteId = selectedEstudianteId > 0 ? selectedEstudianteId : null;
         Integer cicloAnio = parseInteger(edtCiclo.getText() == null ? null : edtCiclo.getText().toString().trim());
@@ -218,11 +231,16 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
                         if (response.isSuccessful() && response.body() != null) {
                             PageResponse<ColegiaturaResponse> page = response.body();
                             adapter.setItems(page.content);
+                            adapter.setPendingPayments(new ArrayList<>());
+                            if (Permissions.hasRole("ADMIN") && Permissions.has(Permissions.COLEGIATURAS_CAMBIAR_ESTADO)) {
+                                cargarReportesPendientes(requestGeneration, 0, new ArrayList<>());
+                            }
                             totalPaginas = page.totalPages;
                             actualizarEstadoLista(page);
                             actualizarPaginacion(page);
                         } else {
                             adapter.setItems(new ArrayList<>());
+                            adapter.setPendingPayments(new ArrayList<>());
                             mostrarError(leerError(response));
                         }
                     }
@@ -231,11 +249,74 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
                     public void onFailure(Call<PageResponse<ColegiaturaResponse>> call, Throwable t) {
                         setLoading(false);
                         adapter.setItems(new ArrayList<>());
+                        adapter.setPendingPayments(new ArrayList<>());
                         estadoLista.setVisibility(View.VISIBLE);
                         estadoLista.setText(R.string.colegiatura_error_network);
                         paginaInfo.setText("");
                     }
                 });
+    }
+
+    private void cargarReportesPendientes(int generation, int page, List<PagoRevision> reports) {
+        pagosApi.buscarPagosRevision("PENDIENTE", null, page, 100)
+                .enqueue(new Callback<PageResponse<PagoRevision>>() {
+                    @Override public void onResponse(Call<PageResponse<PagoRevision>> call,
+                                                     Response<PageResponse<PagoRevision>> response) {
+                        if (generation != listRequestGeneration) return;
+                        if (!response.isSuccessful() || response.body() == null) {
+                            adapter.setPendingPayments(reports);
+                            return;
+                        }
+                        PageResponse<PagoRevision> result = response.body();
+                        if (result.content != null) reports.addAll(result.content);
+                        if (page + 1 < result.totalPages) cargarReportesPendientes(generation, page + 1, reports);
+                        else adapter.setPendingPayments(reports);
+                    }
+                    @Override public void onFailure(Call<PageResponse<PagoRevision>> call, Throwable error) {
+                        if (generation == listRequestGeneration) adapter.setPendingPayments(reports);
+                    }
+                });
+    }
+
+    private void cargarColegiaturaDeReporte(long paymentId) {
+        int generation = ++listRequestGeneration;
+        setLoading(true);
+        pagosApi.detallePagoRevision(paymentId).enqueue(new Callback<PagoRevision>() {
+            @Override public void onResponse(Call<PagoRevision> call, Response<PagoRevision> response) {
+                if (!response.isSuccessful() || response.body() == null) {
+                    setLoading(false);
+                    mostrarError("No se encontró el reporte de pago.");
+                    return;
+                }
+                service.obtener(response.body().colegiaturaId).enqueue(new Callback<ColegiaturaResponse>() {
+                    @Override public void onResponse(Call<ColegiaturaResponse> detailCall, Response<ColegiaturaResponse> detail) {
+                        setLoading(false);
+                        if (!detail.isSuccessful() || detail.body() == null) {
+                            mostrarError("No se encontró la colegiatura del reporte.");
+                            return;
+                        }
+                        List<ColegiaturaResponse> one = new ArrayList<>();
+                        one.add(detail.body());
+                        adapter.setItems(one);
+                        adapter.setPendingPayments(new ArrayList<>());
+                        totalPaginas = 1;
+                        estadoLista.setVisibility(View.GONE);
+                        paginaInfo.setText("Reporte de pago");
+                        btnAnterior.setEnabled(false);
+                        btnSiguiente.setEnabled(false);
+                        cargarReportesPendientes(generation, 0, new ArrayList<>());
+                    }
+                    @Override public void onFailure(Call<ColegiaturaResponse> detailCall, Throwable error) {
+                        setLoading(false);
+                        mostrarError("No se pudo cargar la colegiatura del reporte.");
+                    }
+                });
+            }
+            @Override public void onFailure(Call<PagoRevision> call, Throwable error) {
+                setLoading(false);
+                mostrarError("No se pudo cargar el reporte de pago.");
+            }
+        });
     }
 
     private void actualizarEstadoLista(PageResponse<ColegiaturaResponse> page) {
@@ -310,10 +391,64 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
     }
 
     @Override
-    public void onPay(ColegiaturaResponse item) {
-        Intent intent = new Intent(this, PagoColegiaturaActivity.class);
-        intent.putExtra("colegiaturaId", item.id);
-        startActivity(intent);
+    public void onReviewPayment(PagoRevision payment, String decision) {
+        if (!Permissions.hasRole("ADMIN") || !Permissions.has(Permissions.COLEGIATURAS_CAMBIAR_ESTADO)) {
+            Toast.makeText(this, "No tienes permiso para revisar reportes de pago.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if ("RECHAZADO".equals(decision)) {
+            EditText reason = new EditText(this);
+            reason.setHint("Motivo obligatorio para el estudiante");
+            AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                    .setTitle("Rechazar pago")
+                    .setMessage("Indica por qué se rechaza este reporte.")
+                    .setView(reason)
+                    .setNegativeButton("Cancelar", null)
+                    .setPositiveButton("Rechazar", null)
+                    .create();
+            dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(view -> {
+                String value = reason.getText() == null ? "" : reason.getText().toString().trim();
+                if (value.isEmpty()) {
+                    reason.setError("El motivo es obligatorio");
+                    return;
+                }
+                dialog.dismiss();
+                enviarDecisionPago(payment, decision, value);
+            }));
+            dialog.show();
+            return;
+        }
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Aceptar pago")
+                .setMessage("Se aplicarán Q" + String.format(java.util.Locale.getDefault(), "%.2f", payment.monto)
+                        + " al saldo de " + payment.estudianteNombre + ".")
+                .setNegativeButton("Cancelar", null)
+                .setPositiveButton("Aceptar", (dialog, which) -> enviarDecisionPago(payment, decision, null))
+                .show();
+    }
+
+    private void enviarDecisionPago(PagoRevision payment, String decision, String reason) {
+        setLoading(true);
+        pagosApi.revisarPago(payment.id, new DecisionPago(decision, reason)).enqueue(new Callback<Pago>() {
+            @Override public void onResponse(Call<Pago> call, Response<Pago> response) {
+                setLoading(false);
+                if (response.isSuccessful() && response.body() != null
+                        && !"PENDIENTE".equalsIgnoreCase(response.body().estado)) {
+                    Toast.makeText(ColegiaturaListActivity.this,
+                            "Pago " + ("APROBADO".equalsIgnoreCase(response.body().estado) ? "aceptado" : "rechazado") + ".",
+                            Toast.LENGTH_LONG).show();
+                    cargarColegiaturas();
+                } else {
+                    Toast.makeText(ColegiaturaListActivity.this,
+                            response.isSuccessful() ? "El servidor no confirmó la revisión del pago." : leerError(response),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+            @Override public void onFailure(Call<Pago> call, Throwable error) {
+                setLoading(false);
+                Toast.makeText(ColegiaturaListActivity.this, "No se pudo revisar el pago. Actualiza la lista e inténtalo de nuevo.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override

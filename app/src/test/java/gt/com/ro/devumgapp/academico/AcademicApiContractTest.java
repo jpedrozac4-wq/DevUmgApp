@@ -28,6 +28,10 @@ public class AcademicApiContractTest {
         assertGet("inscripcionesEstudiante", "api/academico/estudiante/me/inscripciones", int.class, int.class);
         assertGet("notasEstudiante", "api/academico/estudiante/me/notas", int.class, int.class);
         assertGet("promedioEstudiante", "api/academico/estudiante/me/promedio");
+        assertGet("colegiaturas", "api/academico/estudiante/me/colegiaturas", int.class, int.class);
+        assertGet("estadoCuenta", "api/academico/estudiante/me/estado-cuenta");
+        assertGet("colegiaturas", "api/academico/estudiante/me/colegiaturas", int.class, int.class);
+        assertGet("estadoCuenta", "api/academico/estudiante/me/estado-cuenta");
     }
 
     @Test public void documentedFiltersAndPaginationAreSent() throws Exception {

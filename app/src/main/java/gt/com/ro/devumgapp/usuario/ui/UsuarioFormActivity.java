@@ -90,8 +90,11 @@ public class UsuarioFormActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
-        String permission = getIntent().hasExtra(EXTRA_ID) ? "USUARIOS_EDITAR" : "USUARIOS_CREAR";
-        if (!Permissions.requireAll(this, Permissions.USUARIOS_LEER, permission)) return;
+        boolean editing = getIntent().hasExtra(EXTRA_ID);
+        if (editing) {
+            if (!Permissions.requireAll(this, Permissions.USUARIOS_LEER, "USUARIOS_EDITAR")) return;
+        } else if (!Permissions.requireAll(this, Permissions.USUARIOS_LEER,
+                "USUARIOS_CREAR", "USUARIOS_ASIGNAR_ROLES")) return;
         setContentView(R.layout.activity_usuario_form);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));
         getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.dashboard_surface));

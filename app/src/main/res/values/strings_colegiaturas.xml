@@ -18,7 +18,6 @@
     <string name="colegiatura_accion_agregar">Agregar colegiatura</string>
     <string name="colegiatura_accion_buscar">Buscar</string>
     <string name="colegiatura_accion_editar">Editar</string>
-    <string name="colegiatura_accion_pagar">Pagar</string>
     <string name="colegiatura_accion_estado">Cambiar estado</string>
     <string name="colegiatura_accion_anterior">Anterior</string>
     <string name="colegiatura_accion_siguiente">Siguiente</string>

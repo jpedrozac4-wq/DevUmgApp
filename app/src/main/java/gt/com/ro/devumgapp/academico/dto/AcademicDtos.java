@@ -137,6 +137,10 @@ public final class AcademicDtos {
         public double montoTotal; public double montoPagado; public double saldoPendiente;
         public String fechaEmision; public String fechaVencimiento; public String estado; public boolean activo;
     }
+    public static class EstadoCuenta {
+        public long estudianteId; public double totalCargos; public double totalPagado; public double saldoPendiente;
+        public int cantidadCargos; public int cantidadPendientes; public List<Colegiatura> detalle;
+    }
     public static class PagoRegistro {
         public double monto; public String fechaPago; public String referencia;
         public String metodoPago; public String comprobanteUrl; public String idempotencyKey;

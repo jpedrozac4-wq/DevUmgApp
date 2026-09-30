@@ -167,7 +167,8 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
         usuarioFilterControls = findViewById(R.id.usuarioFilterControls);
         btnBuscar = findViewById(R.id.btnBuscarUsuario);
         btnAgregar = findViewById(R.id.btnAgregarUsuario);
-        btnAgregar.setVisibility(Permissions.has("USUARIOS_CREAR") ? View.VISIBLE : View.GONE);
+        btnAgregar.setVisibility(Permissions.has("USUARIOS_CREAR")
+                && Permissions.has("USUARIOS_ASIGNAR_ROLES") ? View.VISIBLE : View.GONE);
     }
 
     private void setupToolbar() {

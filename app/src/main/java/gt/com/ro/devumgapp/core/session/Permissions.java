@@ -51,13 +51,6 @@ public final class Permissions {
         if (destinationId == R.id.nav_auditoria) {
             return hasRole("ADMIN") && has(AUDITORIA_LEER);
         }
-        if (!hasRole("ADMIN") && hasRole("DOCENTE")) {
-            return destinationId == R.id.nav_cursos || destinationId == R.id.nav_notas;
-        }
-        if (!hasRole("ADMIN") && hasRole("ESTUDIANTE")) {
-            return destinationId == R.id.nav_profile || destinationId == R.id.nav_cursos || destinationId == R.id.nav_inscripciones
-                    || destinationId == R.id.nav_notas || destinationId == R.id.nav_colegiaturas;
-        }
         String permission = readingPermissionFor(destinationId);
         return permission == null || has(permission);
     }
