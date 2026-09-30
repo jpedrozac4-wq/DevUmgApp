@@ -301,7 +301,7 @@ public class NotaListActivity extends AppCompatActivity implements NotaAdapter.L
     }
 
     private void setupActions() {
-        notaFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(notaFiltersHeader, notaFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadNotas(0));
         edtTipo.setOnEditorActionListener((view, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {

@@ -113,7 +113,7 @@ public class EstudianteListActivity extends AppCompatActivity implements Estudia
     }
 
     private void setupActions() {
-        filtersHeader.setOnClickListener(v -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(filtersHeader, filterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(v -> { pagina = 0; loadEstudiantes(pagina); });
         btnAnterior.setOnClickListener(v -> { if (pagina > 0) loadEstudiantes(--pagina); });
         btnSiguiente.setOnClickListener(v -> { if (pagina + 1 < totalPages) loadEstudiantes(++pagina); });

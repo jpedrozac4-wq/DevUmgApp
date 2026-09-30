@@ -187,7 +187,7 @@ public class DocenteListActivity extends AppCompatActivity implements DocenteAda
     }
 
     private void setupActions() {
-        docenteFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(docenteFiltersHeader, docenteFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadDocentes(0));
         tilBuscar.setEndIconOnClickListener(view -> loadDocentes(0));
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {

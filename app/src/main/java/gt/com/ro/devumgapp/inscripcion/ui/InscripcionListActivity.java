@@ -264,7 +264,7 @@ public class InscripcionListActivity extends AppCompatActivity implements Inscri
     }
 
     private void setupActions() {
-        inscripcionFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(inscripcionFiltersHeader, inscripcionFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadInscripciones(0));
         edtSeccion.setOnEditorActionListener((view, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {

@@ -95,7 +95,7 @@ public class ColegiaturaListActivity extends AppCompatActivity implements Colegi
         adapter = new ColegiaturaAdapter(this);
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
-        filtersHeader.setOnClickListener(v -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(filtersHeader, filterControls, () -> setFiltersExpanded(!filtersExpanded));
 
         ArrayAdapter<String> estadoAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_dropdown_item_1line,

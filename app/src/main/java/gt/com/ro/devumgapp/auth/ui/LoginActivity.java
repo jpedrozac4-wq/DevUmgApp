@@ -296,9 +296,16 @@ public class LoginActivity extends AppCompatActivity {
             SessionManager.getInstance().clearRememberedUsername();
         }
         SessionManager.getInstance().saveSession(response);
+        gt.com.ro.devumgapp.notificacion.PushRegistrationManager.register(this);
     }
 
     private void navigateToHome() {
+        String pendingNotificationId = getIntent().getStringExtra("pendingNotificationId");
+        if (pendingNotificationId != null) {
+            Intent inbox = new Intent(this, gt.com.ro.devumgapp.notificacion.ui.NotificationInboxActivity.class);
+            inbox.putExtra(gt.com.ro.devumgapp.notificacion.ui.NotificationInboxActivity.EXTRA_NOTIFICATION_ID, pendingNotificationId);
+            startActivity(inbox); finish(); return;
+        }
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("profileVerified", true);
         startActivity(intent);

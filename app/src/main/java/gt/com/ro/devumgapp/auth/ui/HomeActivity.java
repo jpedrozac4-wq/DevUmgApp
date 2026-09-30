@@ -60,6 +60,8 @@ import gt.com.ro.devumgapp.usuario.ui.UsuarioListActivity;
 import gt.com.ro.devumgapp.academico.ui.DocenteAcademicActivity;
 import gt.com.ro.devumgapp.academico.ui.EstudianteAcademicActivity;
 import gt.com.ro.devumgapp.auditoria.ui.AuditoriaActivity;
+import gt.com.ro.devumgapp.notificacion.NotificationBadge;
+import gt.com.ro.devumgapp.notificacion.PushRegistrationManager;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String EXTRA_OPEN_DRAWER = "open_drawer";
@@ -111,6 +113,7 @@ public class HomeActivity extends AppCompatActivity {
                 syncingBottomNavigation = false;
             }
             setDashboardTitle(R.string.dashboard_title);
+            NotificationBadge.refresh(toolbar);
             if (profileRefreshNeeded && profileCall == null) refreshProfileThenInitialize();
         }
     }
@@ -154,6 +157,8 @@ public class HomeActivity extends AppCompatActivity {
 
         bindViews();
         setupToolbar();
+        NotificationBadge.attach(this, toolbar);
+        PushRegistrationManager.register(this);
         setupDrawer();
         setupDrawerOnlyMode();
         openDrawerIfRequested();
@@ -778,8 +783,10 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        sessionManager.logout();
-        navigateToLogin();
+        PushRegistrationManager.unregister(this, () -> runOnUiThread(() -> {
+            sessionManager.logout();
+            navigateToLogin();
+        }));
     }
 
     private void navigateToLogin() {

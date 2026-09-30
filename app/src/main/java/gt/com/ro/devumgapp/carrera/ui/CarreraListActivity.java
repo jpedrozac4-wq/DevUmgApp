@@ -248,7 +248,7 @@ public class CarreraListActivity extends AppCompatActivity implements CarreraAda
     }
 
     private void setupActions() {
-        carreraFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(carreraFiltersHeader, carreraFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadCarreras(0));
         tilBuscar.setEndIconOnClickListener(view -> loadCarreras(0));
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {

@@ -139,7 +139,7 @@ public class PromedioNotasActivity extends AppCompatActivity {
         promedioFiltersHeader = findViewById(R.id.promedioFiltersHeader);
         promedioFilterControls = findViewById(R.id.promedioFilterControls);
         txtPromedioFiltrosChevron = findViewById(R.id.txtPromedioFiltrosChevron);
-        promedioFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(promedioFiltersHeader, promedioFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         promedioResultado = findViewById(R.id.promedioResultado);
         txtPromedioValor = findViewById(R.id.txtNotaPromedioValor);
         txtPromedioCantidad = findViewById(R.id.txtNotaPromedioCantidad);

@@ -260,7 +260,7 @@ public class RolListActivity extends AppCompatActivity implements RolAdapter.Lis
     }
 
     private void setupActions() {
-        rolFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(rolFiltersHeader, rolFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadRoles(0));
         tilBuscar.setEndIconOnClickListener(view -> loadRoles(0));
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {

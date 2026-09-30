@@ -74,7 +74,7 @@ public class AuditoriaActivity extends androidx.appcompat.app.AppCompatActivity 
         previous = findViewById(R.id.btnAuditPrevious);
         next = findViewById(R.id.btnAuditNext);
         createFilters();
-        filtersHeader.setOnClickListener(v -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(filtersHeader, filterControls, () -> setFiltersExpanded(!filtersExpanded));
         previous.setOnClickListener(v -> { if (page > 0) load(page - 1); });
         next.setOnClickListener(v -> { if (page + 1 < totalPages) load(page + 1); });
         api = RetrofitClient.getClient().create(AuditoriaApiService.class);

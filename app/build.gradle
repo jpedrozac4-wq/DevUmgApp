@@ -54,6 +54,8 @@ dependencies {
     implementation libs.okhttp
     implementation libs.logging.interceptor
     implementation libs.firebase.firestore
+    implementation platform(libs.firebase.bom)
+    implementation libs.firebase.messaging
     testImplementation libs.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit

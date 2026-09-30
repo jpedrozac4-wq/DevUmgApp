@@ -251,7 +251,7 @@ public class CursoListActivity extends AppCompatActivity implements CursoAdapter
     }
 
     private void setupActions() {
-        cursoFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(cursoFiltersHeader, cursoFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadCursos(0));
         tilBuscar.setEndIconOnClickListener(view -> loadCursos(0));
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {

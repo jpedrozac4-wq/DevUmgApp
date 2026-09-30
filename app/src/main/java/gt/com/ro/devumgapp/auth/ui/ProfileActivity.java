@@ -180,11 +180,13 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void redirectForNewLogin(String newUsername) {
+        gt.com.ro.devumgapp.notificacion.PushRegistrationManager.unregister(this, () -> runOnUiThread(() -> {
         sessionManager.logout();
         Intent intent = new Intent(this, LoginActivity.class);
         intent.putExtra(LoginActivity.EXTRA_PREFILL_USERNAME, newUsername);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent); finish();
+        }));
     }
 
     private void renderStoredProfile() {

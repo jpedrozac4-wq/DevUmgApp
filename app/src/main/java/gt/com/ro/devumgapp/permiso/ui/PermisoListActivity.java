@@ -250,7 +250,7 @@ public class PermisoListActivity extends AppCompatActivity implements PermisoAda
     }
 
     private void setupActions() {
-        permisoFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(permisoFiltersHeader, permisoFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> loadPermisos(0));
         tilBuscar.setEndIconOnClickListener(view -> loadPermisos(0));
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {

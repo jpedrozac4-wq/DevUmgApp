@@ -207,7 +207,7 @@ public class UsuarioListActivity extends AppCompatActivity implements UsuarioAda
     }
 
     private void setupActions() {
-        usuarioFiltersHeader.setOnClickListener(view -> setFiltersExpanded(!filtersExpanded));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(usuarioFiltersHeader, usuarioFilterControls, () -> setFiltersExpanded(!filtersExpanded));
         btnBuscar.setOnClickListener(view -> applyFilter());
         tilBuscar.setEndIconOnClickListener(view -> applyFilter());
         edtBuscar.setOnEditorActionListener((view, actionId, event) -> {

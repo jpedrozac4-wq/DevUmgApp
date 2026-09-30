@@ -25,6 +25,7 @@ import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.session.SessionManager;
 import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
+import gt.com.ro.devumgapp.notificacion.NotificationBadge;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,6 +47,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         MaterialToolbar toolbar = findViewById(R.id.toolbarAcademic);
         toolbar.setTitle("Mis cursos");
         ModuleNavigation.attach(this, toolbar);
+        NotificationBadge.attach(this, toolbar);
         configureHero("Mis cursos", "Consulta tus cursos asignados y administra las notas de tus estudiantes.",
                 R.drawable.bg_curso_header, R.drawable.ic_teacher, R.color.dashboard_course);
         api = RetrofitClient.getClient().create(AcademicoApiService.class);
@@ -63,6 +65,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
                 List<Curso> courses = response.body() == null ? Collections.emptyList() : response.body();
                 content.addView(section("Cursos asignados"));
                 if (courses.isEmpty()) { content.addView(messageCard("Aún no tienes cursos asignados para este ciclo.", false)); return; }
+                long requestedCourse = getIntent().getLongExtra("notificationDestinationId", -1);
                 for (Curso course : courses) {
                     String detail = safe(course.carreraNombre) + " · Ciclo " + course.cicloAnio + " · " + course.creditos + " créditos";
                     MaterialCardView card = card(safe(course.codigo) + " · " + safe(course.nombre), detail);
@@ -71,6 +74,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
                             .putExtra(DocenteCourseActivity.EXTRA_CURSO_NOMBRE, course.nombre)
                             .putExtra(DocenteCourseActivity.EXTRA_CICLO_ANIO, course.cicloAnio)));
                     content.addView(card);
+                    if (requestedCourse == course.id) card.performClick();
                 }
             }
             @Override public void onFailure(Call<List<Curso>> call, Throwable error) { loading(false); showError("No se pudo conectar con el servidor."); }
@@ -129,7 +133,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         row.addView(apply, buttonParams);
         filterControls.addView(row);
         box.addView(filterControls);
-        header.setOnClickListener(v -> setFiltersExpanded(!filtersExpanded, header));
+        gt.com.ro.devumgapp.core.ui.FilterPanelTouch.bind(header, filterControls, () -> setFiltersExpanded(!filtersExpanded, header));
         filterCard.addView(box);
         LinearLayout.LayoutParams cardParams = new LinearLayout.LayoutParams(-1, -2);
         cardParams.topMargin = dp(12);

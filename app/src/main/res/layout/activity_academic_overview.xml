@@ -16,6 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_arrow_back"
+        app:menu="@menu/menu_notifications"
         app:titleTextColor="@color/dashboard_text_primary" />
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
