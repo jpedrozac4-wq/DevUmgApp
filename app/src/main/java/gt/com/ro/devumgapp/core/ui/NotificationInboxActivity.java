@@ -159,8 +159,15 @@ public class NotificationInboxActivity extends AppCompatActivity {
 
     private void askPushPermission() {
         if (Build.VERSION.SDK_INT < 33 || ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) return;
-        boolean asked = getPreferences(0).getBoolean("push_asked", false);
-        if (asked) return;
+        if (getPreferences(0).getBoolean("push_asked", false)) {
+            // Already asked once, but the grant can still be missing: the OS resets
+            // runtime permissions when the app is reinstalled, while `push_asked`
+            // lives in shared preferences and survives. Re-issuing the request is
+            // safe -- if the user denied permanently, the system answers immediately
+            // without showing anything.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, REQ_PUSH);
+            return;
+        }
         new MaterialAlertDialogBuilder(this).setTitle("Recibir avisos de SGAU")
                 .setMessage("Puedes activar avisos discretos cuando haya novedades. El buzón seguirá disponible si los omites.")
                 .setNegativeButton("Ahora no", (d, w) -> getPreferences(0).edit().putBoolean("push_asked", true).apply())
