@@ -3,6 +3,8 @@ package gt.com.ro.devumgapp;
 import android.app.Application;
 import android.content.Context;
 
+import gt.com.ro.devumgapp.notificacion.push.SgauFirebaseMessagingService;
+
 /**
  * Application entry point.
  * Keeps a global reference to the application context so core classes
@@ -18,6 +20,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        // Register the notification channel up front. A channel that does not exist
+        // yet cannot be used, so without this the OS falls back to its own generic
+        // channel for every push that arrives before the first onMessageReceived.
+        SgauFirebaseMessagingService.ensureChannel(this);
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override public void onActivityStarted(android.app.Activity activity) { startedActivities++; }
             @Override public void onActivityStopped(android.app.Activity activity) { startedActivities=Math.max(0,startedActivities-1); }

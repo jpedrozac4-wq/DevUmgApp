@@ -152,6 +152,18 @@
         </service>
         <activity android:name=".auditoria.ui.AuditoriaActivity" android:exported="false" />
 
+        <!-- FCM defaults. The channel id must match SgauFirebaseMessagingService.CHANNEL,
+             and the icon must be a white-on-transparent vector. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="sgau_updates" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_sgau_logo" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/card_blue" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="gt.com.ro.devumgapp.fileprovider"
