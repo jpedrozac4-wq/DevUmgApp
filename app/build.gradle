@@ -3,6 +3,35 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
+// --- Automatic versioning ----------------------------------------------------
+// versionCode = 100 + commits reachable from HEAD, and versionName keeps the
+// beta convention as beta.<commit count>.
+//
+// Why the 100 offset: the previously published versionCode values are small
+// (1..N) and the in-app update check compares `firebaseVersionCode >
+// currentVersionCode`. A commit count only grows on a released branch, so
+// 100 + count stays above every published version with no manual bump.
+//
+// Why providers.exec: the configuration cache is enabled (gradle.properties)
+// and providers.exec is tracked as a build input. project.exec was removed in
+// Gradle 9, and Runtime.exec would not be recorded as an input at all.
+def commitCount
+try {
+    commitCount = providers.exec {
+        commandLine 'git', 'rev-list', '--count', 'HEAD'
+        workingDir rootDir
+    }.standardOutput.asText.get().trim().toInteger()
+} catch (Exception e) {
+    // Fail loudly: a silent low fallback would ship an APK that cannot be
+    // installed over an already published version.
+    throw new GradleException(
+            "Cannot derive versionCode: 'git rev-list --count HEAD' failed " +
+            "(${e.message}). Build from a git clone with full history.", e)
+}
+
+def appVersionCode = 100 + commitCount
+def appVersionName = "1.0.0-beta.${commitCount}"
+
 android {
     namespace 'gt.com.ro.devumgapp'
     compileSdk {
@@ -15,8 +44,8 @@ android {
         applicationId "gt.com.ro.devumgapp"
         minSdk 29
         targetSdk 36
-        versionCode 4
-        versionName "1.0.0-beta.4"
+        versionCode appVersionCode
+        versionName appVersionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
