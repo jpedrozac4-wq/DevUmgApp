@@ -18,6 +18,8 @@ import java.util.Collections;
 import java.util.List;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.auth.dto.LoginResponse;
+import gt.com.ro.devumgapp.auth.network.AuthApiService;
 import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Inscripcion;
 import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Nota;
 import gt.com.ro.devumgapp.academico.network.AcademicoApiService;
@@ -45,6 +47,7 @@ public class DocenteCourseActivity extends AcademicBaseActivity {
     private NotaApiService gradeApi;
     private final List<StudentChoice> students = new ArrayList<>();
     private int pending;
+    private boolean canCreateGrades;
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -53,6 +56,7 @@ public class DocenteCourseActivity extends AcademicBaseActivity {
         courseId = getIntent().getLongExtra(EXTRA_CURSO_ID, -1);
         cycleYear = getIntent().getIntExtra(EXTRA_CICLO_ANIO, 0);
         if (courseId <= 0) { finish(); return; }
+        canCreateGrades = Permissions.has("NOTAS_CREAR");
         setContentView(R.layout.activity_academic_overview);
         content = findViewById(R.id.academicContent);
         progress = findViewById(R.id.progressAcademic);
@@ -64,7 +68,30 @@ public class DocenteCourseActivity extends AcademicBaseActivity {
                 R.drawable.bg_nota_header, R.drawable.ic_grade, R.color.dashboard_grade);
         academicApi = RetrofitClient.getClient().create(AcademicoApiService.class);
         gradeApi = RetrofitClient.getClient().create(NotaApiService.class);
-        loadAll();
+        refreshPermissionsAndLoad();
+    }
+
+    private void refreshPermissionsAndLoad() {
+        loading(true);
+        RetrofitClient.getClient().create(AuthApiService.class).me().enqueue(new Callback<LoginResponse>() {
+            @Override public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.code() == 401) { SessionManager.handleUnauthorized(DocenteCourseActivity.this); return; }
+                if (response.isSuccessful() && response.body() != null) {
+                    canCreateGrades = hasPermission(response.body(), "NOTAS_CREAR");
+                    SessionManager.getInstance().refreshProfile(response.body());
+                }
+                loadAll();
+            }
+            @Override public void onFailure(Call<LoginResponse> call, Throwable error) { loadAll(); }
+        });
+    }
+
+    private boolean hasPermission(LoginResponse profile, String permission) {
+        if (profile.permisos == null) return false;
+        for (String granted : profile.permisos) {
+            if (permission.equalsIgnoreCase(granted == null ? "" : granted.trim())) return true;
+        }
+        return false;
     }
 
     private void loadAll() {
@@ -102,7 +129,7 @@ public class DocenteCourseActivity extends AcademicBaseActivity {
             content.addView(card(safe(row.estudianteCodigo) + " · " + safe(row.estudianteNombre),
                     safe(row.grado) + " " + safe(row.seccion) + " · " + safe(row.estado)), position++);
         }
-        if (Permissions.has("NOTAS_CREAR")) {
+        if (canCreateGrades) {
             MaterialButton add = new MaterialButton(this);
             add.setText("Crear nota"); add.setIconResource(R.drawable.ic_add);
             add.setCornerRadius(dp(8));

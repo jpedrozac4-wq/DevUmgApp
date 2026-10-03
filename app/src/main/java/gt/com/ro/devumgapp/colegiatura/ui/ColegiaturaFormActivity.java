@@ -27,11 +27,13 @@ import java.util.List;
 import java.util.Locale;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 
 import gt.com.ro.devumgapp.R;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaRequest;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaResponse;
+import gt.com.ro.devumgapp.colegiatura.dto.ConfiguracionColegiaturaResponse;
 import gt.com.ro.devumgapp.colegiatura.network.ColegiaturaApiService;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
@@ -54,6 +56,7 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
     private long estudianteId = -1L;
     private long colegiaturaId = -1L;
     private ColegiaturaApiService service;
+    private Call<ConfiguracionColegiaturaResponse> configuracionCall;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
         colegiaturaId = getIntent().getLongExtra("colegiaturaId", -1L);
         bindViews();
         configurarVista();
+        if (colegiaturaId <= 0) edtFechaEmision.setText(LocalDate.now().toString());
         cargarEstudiantes();
     }
 
@@ -109,6 +113,7 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
                     actEstudiante.setOnItemClickListener((parent, view, position, id) -> {
                         if (position >= 0 && position < estudiantes.size()) {
                             estudianteId = estudiantes.get(position).id;
+                            if (colegiaturaId <= 0) cargarConfiguracionEstudiante();
                         }
                     });
                     if (colegiaturaId <= 0) setLoading(false);
@@ -125,6 +130,62 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
                 Toast.makeText(ColegiaturaFormActivity.this, R.string.colegiatura_error_network, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void cargarConfiguracionEstudiante() {
+        if (configuracionCall != null) configuracionCall.cancel();
+        setLoading(true);
+        configuracionCall = service.obtenerConfiguracionEstudiante(estudianteId);
+        configuracionCall.enqueue(new Callback<ConfiguracionColegiaturaResponse>() {
+            @Override public void onResponse(Call<ConfiguracionColegiaturaResponse> call,
+                    Response<ConfiguracionColegiaturaResponse> response) {
+                if (call.isCanceled()) return;
+                configuracionCall = null;
+                setLoading(false);
+                if (!response.isSuccessful() || response.body() == null) {
+                    limpiarConfiguracionAutomatica();
+                    UiNotifier.error(ColegiaturaFormActivity.this, leerError(response));
+                    return;
+                }
+                aplicarConfiguracion(response.body());
+            }
+
+            @Override public void onFailure(Call<ConfiguracionColegiaturaResponse> call, Throwable error) {
+                if (call.isCanceled()) return;
+                configuracionCall = null;
+                setLoading(false);
+                limpiarConfiguracionAutomatica();
+                UiNotifier.error(ColegiaturaFormActivity.this, getString(R.string.colegiatura_error_network));
+            }
+        });
+    }
+
+    private void aplicarConfiguracion(ConfiguracionColegiaturaResponse config) {
+        LocalDate emision;
+        try { emision = LocalDate.parse(config.fechaEmision); }
+        catch (Exception ignored) { emision = LocalDate.now(); }
+        edtCiclo.setText(String.valueOf(config.cicloAnio));
+        edtConcepto.setText("Colegiatura - " + (config.carreraNombre == null ? "Carrera" : config.carreraNombre));
+        edtMontoTotal.setText(config.mensualidad == null ? "" : config.mensualidad.toPlainString());
+        edtFechaEmision.setText(emision.toString());
+        if (config.diaVencimiento != null) {
+            YearMonth mes = YearMonth.from(emision);
+            int dia = Math.min(config.diaVencimiento, mes.lengthOfMonth());
+            LocalDate vencimiento = mes.atDay(dia);
+            if (vencimiento.isBefore(emision)) {
+                mes = mes.plusMonths(1);
+                vencimiento = mes.atDay(Math.min(config.diaVencimiento, mes.lengthOfMonth()));
+            }
+            edtFechaVencimiento.setText(vencimiento.toString());
+        }
+    }
+
+    private void limpiarConfiguracionAutomatica() {
+        edtCiclo.setText("");
+        edtConcepto.setText("");
+        edtMontoTotal.setText("");
+        edtFechaEmision.setText(LocalDate.now().toString());
+        edtFechaVencimiento.setText("");
     }
 
     private void cargarColegiatura() {
@@ -239,6 +300,11 @@ public class ColegiaturaFormActivity extends AppCompatActivity {
         new DatePickerDialog(this, (view, year, month, dayOfMonth) ->
                 target.setText(String.format(Locale.US, "%04d-%02d-%02d", year, month + 1, dayOfMonth)),
                 c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+    }
+
+    @Override protected void onDestroy() {
+        if (configuracionCall != null) configuracionCall.cancel();
+        super.onDestroy();
     }
 
     private String textOf(TextInputEditText e) { return e.getText() == null ? "" : e.getText().toString().trim(); }

@@ -1,6 +1,9 @@
 package gt.com.ro.devumgapp.auth.ui;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -61,7 +64,9 @@ import gt.com.ro.devumgapp.academico.ui.DocenteAcademicActivity;
 import gt.com.ro.devumgapp.academico.ui.EstudianteAcademicActivity;
 import gt.com.ro.devumgapp.auditoria.ui.AuditoriaActivity;
 import gt.com.ro.devumgapp.notificacion.NotificationBadge;
+import gt.com.ro.devumgapp.notificacion.NotificationPermission;
 import gt.com.ro.devumgapp.notificacion.PushRegistrationManager;
+import gt.com.ro.devumgapp.notificacion.push.SgauFirebaseMessagingService;
 
 public class HomeActivity extends AppCompatActivity {
     public static final String EXTRA_OPEN_DRAWER = "open_drawer";
@@ -92,6 +97,32 @@ public class HomeActivity extends AppCompatActivity {
     private Call<LoginResponse> profileCall;
     private boolean drawerOnlyMode;
     private boolean drawerDestinationSelected;
+    private boolean notificationReceiverRegistered;
+    private final BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) {
+            if (toolbar != null) NotificationBadge.refresh(toolbar);
+        }
+    };
+
+    @Override protected void onStart() {
+        super.onStart();
+        if (notificationReceiverRegistered) return;
+        IntentFilter filter = new IntentFilter(SgauFirebaseMessagingService.ACTION_NOTIFICATION_RECEIVED);
+        if (android.os.Build.VERSION.SDK_INT >= 33) {
+            registerReceiver(notificationReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(notificationReceiver, filter);
+        }
+        notificationReceiverRegistered = true;
+    }
+
+    @Override protected void onStop() {
+        if (notificationReceiverRegistered) {
+            unregisterReceiver(notificationReceiver);
+            notificationReceiverRegistered = false;
+        }
+        super.onStop();
+    }
 
     @Override
     protected void onResume() {
@@ -159,6 +190,7 @@ public class HomeActivity extends AppCompatActivity {
         setupToolbar();
         NotificationBadge.attach(this, toolbar);
         PushRegistrationManager.register(this);
+        if (!drawerOnlyMode) NotificationPermission.requestIfNeeded(this);
         setupDrawer();
         setupDrawerOnlyMode();
         openDrawerIfRequested();
@@ -698,7 +730,8 @@ public class HomeActivity extends AppCompatActivity {
 
     private Intent moduleIntentFor(int itemId) {
         if (!Permissions.hasRole("ADMIN") && Permissions.hasRole("DOCENTE")
-                && (itemId == R.id.nav_cursos || itemId == R.id.nav_notas)) {
+                && (itemId == R.id.nav_cursos || itemId == R.id.nav_notas
+                || itemId == R.id.nav_estudiantes || itemId == R.id.nav_inscripciones)) {
             return new Intent(this, DocenteAcademicActivity.class)
                     .putExtra(EXTRA_CURRENT_DESTINATION, itemId);
         }

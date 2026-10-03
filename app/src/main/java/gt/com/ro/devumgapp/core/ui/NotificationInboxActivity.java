@@ -36,6 +36,7 @@ import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.session.SessionManager;
 import gt.com.ro.devumgapp.notificacion.NotificationApi;
 import gt.com.ro.devumgapp.notificacion.NotificationModels;
+import gt.com.ro.devumgapp.notificacion.NotificationPermission;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,7 +63,7 @@ public class NotificationInboxActivity extends AppCompatActivity {
         }
         api = RetrofitClient.getClient().create(NotificationApi.class);
         buildScreen();
-        askPushPermission();
+        NotificationPermission.requestIfNeeded(this);
         load(true);
         String id = getIntent().getStringExtra(EXTRA_NOTIFICATION_ID);
         if (id != null) openPush(id);

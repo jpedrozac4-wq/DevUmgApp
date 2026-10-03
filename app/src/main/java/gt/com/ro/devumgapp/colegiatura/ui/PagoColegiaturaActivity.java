@@ -69,6 +69,7 @@ public class PagoColegiaturaActivity extends AppCompatActivity {
                     ColegiaturaResponse c = response.body();
                     txtResumen.setText(getString(R.string.colegiatura_pago_resumen,
                             c.concepto, c.montoTotal, c.montoPagado, c.saldoPendiente, c.estado));
+                    edtMonto.setText(String.format(Locale.US, "%.2f", c.saldoPendiente));
                     edtFecha.setText(fechaHoy());
                 } else Toast.makeText(PagoColegiaturaActivity.this, leerError(response), Toast.LENGTH_LONG).show();
             }

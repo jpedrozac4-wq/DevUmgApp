@@ -19,13 +19,17 @@ import java.util.Collections;
 import java.util.List;
 
 import gt.com.ro.devumgapp.R;
+import gt.com.ro.devumgapp.auth.ui.HomeActivity;
+import gt.com.ro.devumgapp.auth.dto.LoginResponse;
+import gt.com.ro.devumgapp.auth.network.AuthApiService;
 import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Curso;
+import gt.com.ro.devumgapp.academico.dto.AcademicDtos.Inscripcion;
 import gt.com.ro.devumgapp.academico.network.AcademicoApiService;
+import gt.com.ro.devumgapp.core.dto.PageResponse;
 import gt.com.ro.devumgapp.core.network.RetrofitClient;
 import gt.com.ro.devumgapp.core.session.Permissions;
 import gt.com.ro.devumgapp.core.session.SessionManager;
 import gt.com.ro.devumgapp.core.ui.ModuleNavigation;
-import gt.com.ro.devumgapp.notificacion.NotificationBadge;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,6 +40,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
     private LinearLayout filterControls;
     private ImageView filterChevron;
     private boolean filtersExpanded;
+    private int destination;
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
@@ -44,14 +49,45 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         setContentView(R.layout.activity_academic_overview);
         content = findViewById(R.id.academicContent);
         progress = findViewById(R.id.progressAcademic);
+        destination = getIntent().getIntExtra(HomeActivity.EXTRA_CURRENT_DESTINATION, R.id.nav_cursos);
         MaterialToolbar toolbar = findViewById(R.id.toolbarAcademic);
-        toolbar.setTitle("Mis cursos");
+        toolbar.setTitle(screenTitle());
         ModuleNavigation.attach(this, toolbar);
-        NotificationBadge.attach(this, toolbar);
-        configureHero("Mis cursos", "Consulta tus cursos asignados y administra las notas de tus estudiantes.",
-                R.drawable.bg_curso_header, R.drawable.ic_teacher, R.color.dashboard_course);
+        boolean gradesMode = destination == R.id.nav_notas;
+        configureHero(screenTitle(), screenSubtitle(),
+                gradesMode ? R.drawable.bg_nota_header : R.drawable.bg_curso_header,
+                gradesMode ? R.drawable.ic_grade : R.drawable.ic_teacher,
+                gradesMode ? R.color.dashboard_grade : R.color.dashboard_course);
         api = RetrofitClient.getClient().create(AcademicoApiService.class);
-        load(null);
+        refreshPermissionsAndLoad();
+    }
+
+    private String screenTitle() {
+        if (destination == R.id.nav_notas) return "Notas";
+        if (destination == R.id.nav_estudiantes) return "Estudiantes";
+        if (destination == R.id.nav_inscripciones) return "Inscripciones";
+        return "Mis cursos";
+    }
+
+    private String screenSubtitle() {
+        if (destination == R.id.nav_notas) return "Selecciona un curso para consultar y administrar sus calificaciones.";
+        if (destination == R.id.nav_estudiantes) return "Selecciona un curso para ver únicamente tus estudiantes asignados.";
+        if (destination == R.id.nav_inscripciones) return "Selecciona un curso para consultar sus inscripciones activas.";
+        return "Consulta tus cursos asignados y administra las notas de tus estudiantes.";
+    }
+
+    private void refreshPermissionsAndLoad() {
+        loading(true);
+        RetrofitClient.getClient().create(AuthApiService.class).me().enqueue(new Callback<LoginResponse>() {
+            @Override public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.code() == 401) { SessionManager.handleUnauthorized(DocenteAcademicActivity.this); return; }
+                if (response.isSuccessful() && response.body() != null) {
+                    SessionManager.getInstance().refreshProfile(response.body());
+                }
+                load(null);
+            }
+            @Override public void onFailure(Call<LoginResponse> call, Throwable error) { load(null); }
+        });
     }
 
     private void load(Integer cycle) {
@@ -63,7 +99,11 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
                 loading(false);
                 if (!response.isSuccessful()) { showError(AcademicErrors.from(DocenteAcademicActivity.this, response)); return; }
                 List<Curso> courses = response.body() == null ? Collections.emptyList() : response.body();
-                content.addView(section("Cursos asignados"));
+                if (destination == R.id.nav_estudiantes || destination == R.id.nav_inscripciones) {
+                    renderStudentsFromCourses(courses, cycle);
+                    return;
+                }
+                content.addView(section(destination == R.id.nav_cursos ? "Cursos asignados" : "Selecciona un curso"));
                 if (courses.isEmpty()) { content.addView(messageCard("Aún no tienes cursos asignados para este ciclo.", false)); return; }
                 long requestedCourse = getIntent().getLongExtra("notificationDestinationId", -1);
                 for (Curso course : courses) {
@@ -81,6 +121,50 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         });
     }
 
+    private void renderStudentsFromCourses(List<Curso> courses, Integer selectedCycle) {
+        content.addView(section(destination == R.id.nav_estudiantes
+                ? "Estudiantes asignados" : "Inscripciones de mis cursos"));
+        if (courses.isEmpty()) {
+            content.addView(messageCard("No tienes cursos asignados para este ciclo.", false));
+            return;
+        }
+
+        loading(true);
+        int[] pendingCourses = {courses.size()};
+        int[] renderedStudents = {0};
+        for (Curso course : courses) {
+            Integer cycle = selectedCycle != null ? selectedCycle : course.cicloAnio;
+            api.estudiantesCurso(course.id, cycle, 0, 200).enqueue(new Callback<PageResponse<Inscripcion>>() {
+                @Override public void onResponse(Call<PageResponse<Inscripcion>> call,
+                        Response<PageResponse<Inscripcion>> response) {
+                    if (response.isSuccessful() && response.body() != null && response.body().content != null) {
+                        for (Inscripcion enrollment : response.body().content) {
+                            renderedStudents[0]++;
+                            String title = safe(enrollment.estudianteCodigo) + " · " + safe(enrollment.estudianteNombre);
+                            String detail = safe(course.codigo) + " · " + safe(course.nombre)
+                                    + "\n" + safe(enrollment.grado) + " " + safe(enrollment.seccion)
+                                    + " · " + safe(enrollment.estado);
+                            content.addView(card(title, detail));
+                        }
+                    }
+                    finishStudentsLoad(pendingCourses, renderedStudents);
+                }
+
+                @Override public void onFailure(Call<PageResponse<Inscripcion>> call, Throwable error) {
+                    finishStudentsLoad(pendingCourses, renderedStudents);
+                }
+            });
+        }
+    }
+
+    private void finishStudentsLoad(int[] pendingCourses, int[] renderedStudents) {
+        if (--pendingCourses[0] > 0) return;
+        loading(false);
+        if (renderedStudents[0] == 0) {
+            content.addView(messageCard("No hay estudiantes inscritos en tus cursos para este ciclo.", false));
+        }
+    }
+
     private void addCycleFilter(Integer cycle) {
         filtersExpanded = false;
         MaterialCardView filterCard = new MaterialCardView(this);
@@ -94,7 +178,7 @@ public class DocenteAcademicActivity extends AcademicBaseActivity {
         box.setPadding(dp(16), dp(14), dp(16), dp(14));
         LinearLayout header = new LinearLayout(this);
         header.setGravity(android.view.Gravity.CENTER_VERTICAL);
-        TextView headerTitle = text("Filtrar cursos", 17, true);
+        TextView headerTitle = text("Filtrar por ciclo", 17, true);
         headerTitle.setLayoutParams(new LinearLayout.LayoutParams(0, -2, 1));
         header.addView(headerTitle);
         filterChevron = new ImageView(this);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaRequest;
 import gt.com.ro.devumgapp.colegiatura.dto.ColegiaturaResponse;
+import gt.com.ro.devumgapp.colegiatura.dto.ConfiguracionColegiaturaResponse;
 import gt.com.ro.devumgapp.colegiatura.dto.EstadoRequest;
 import gt.com.ro.devumgapp.estudiante.dto.EstudianteResumenResponse;
 import gt.com.ro.devumgapp.colegiatura.dto.PagoRequest;
@@ -18,6 +19,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ColegiaturaApiService {
+    @GET("api/colegiaturas/configuracion-estudiante/{estudianteId}")
+    Call<ConfiguracionColegiaturaResponse> obtenerConfiguracionEstudiante(@Path("estudianteId") long estudianteId);
+
     @POST("api/colegiaturas")
     Call<ColegiaturaResponse> crear(@Body ColegiaturaRequest request);
 
